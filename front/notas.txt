@@ -1,0 +1,1 @@
+Pasta direcionada aos arquivos, pastas e afins, do front-end do projeto.
