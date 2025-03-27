@@ -1,402 +1,107 @@
-RF01: Focos de calor por estado
-User Story: Como: O usuário\ Quero: Visualizar focos de calor organizados por estado \ Para que: Posso identificar rapidamente as áreas afetadas em cada estado
+| RF01 | Focos de calor por estado |
+|------|---------------------------|
+| **User Story** | Como: O usuário<br>Quero: Visualizar focos de calor organizados por estado<br>Para que: Posso identificar rapidamente as áreas afetadas em cada estado |
+| **DoR** | Os dados de focos de calor por estado estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (estado, número de focos de calor, etc.), está documentada.<br>Os critérios de aceitação para a funcionalidade estão definidos e compreendidos pela equipe de desenvolvimento.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).<br>O protótipo do Figma para a interface de listagem por estado foi aprovado pelo Product Owner.<br>O ambiente de desenvolvimento do front-end (React + TypeScript).<br>O banco de dados PostgreSQL foi criado com a tabela focos_calor seguindo o modelo definido. |
+| **DoD** | A funcionalidade de visualização de focos de calor por estado está implementada e funcionando conforme detalhamento no Figma.<br>Os dados de focos de calor são exibidos corretamente na interface de usuário, organizados por estado.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs que interferem na aplicação.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção.<br>A listagem de focos por estado é exibida em uma tabela responsiva, com dados carregados da API do back-end.<br>O desenvolvedor testou manualmente a funcionalidade em 3 cenários: sem dados, com dados máximos, e filtro por estado.<br>O código foi revisado em um Pull Request por pelo menos 2 membros da equipe. |
 
-Definition of Ready (DoR):
-Os dados de focos de calor por estado estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (estado, número de focos de calor, etc.), está documentada.
-Os critérios de aceitação para a funcionalidade estão definidos e compreendidos pela equipe de desenvolvimento.
-A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).
-O protótipo do Figma para a interface de listagem por estado foi aprovado pelo Product Owner. 
-O ambiente de desenvolvimento do front-end (React + TypeScript) 
-O banco de dados PostgreSQL foi criado com a tabela focos_calor seguindo o modelo definido.
+| RF02 | Focos de calor por bioma |
+|------|--------------------------|
+| **User Story** | Como: O usuário<br>Quero: Visualizar focos de calor organizados por bioma<br>Para que: Posso acompanhar os focos de calor em biomas específicos como a Amazônia ou o Cerrado |
+| **DoR** | Os dados de focos de calor por bioma estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (bioma, número de focos de calor, etc.), está documentada.<br>Os critérios de aceitação para a funcionalidade estão definidos e compreendidos pela equipe de desenvolvimento.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).<br>O protótipo da interface de usuário (Figma) que exibe os focos de calor por bioma é claro e objetivo.<br>As dependências da funcionalidade (se houver) foram identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estipuladas os valores e datas de conclusão. |
+| **DoD** | A funcionalidade de visualização de focos de calor por bioma está implementada e funcionando conforme detalhamento no Figma.<br>Os dados de focos de calor são exibidos corretamente na interface de usuário, organizados por bioma.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pelo time de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi testada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-Definition of Done (DoD):
-A funcionalidade de visualização de focos de calor por estado está implementada e funcionando conforme detalhamento no figma.
-Os dados de focos de calor são exibidos corretamente na interface de usuário, organizados por estado.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs que interferem na aplicação.
-O código da funcionalidade foi revisado pela time dev.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
- A listagem de focos por estado é exibida em uma tabela responsiva, com dados carregados da API do back-end. 
-O desenvolvedor testou manualmente a funcionalidade em 3 cenários: sem dados, com dados máximos, e filtro por estado. 
-O código foi revisado em um Pull Request por pelo menos 2 membros da equipe
+| RF03 | Risco de fogo por estado |
+|------|--------------------------|
+| **User Story** | Como: O usuário<br>Quero: Ver o risco de fogo categorizado por estado<br>Para que: Posso saber quais áreas em cada estado estão em maior risco de incêndio |
+| **DoR** | Os dados de risco de fogo por estado estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (estado, nível de risco de fogo, caixa mostrando os detalhes), está documentada.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).<br>O protótipo da interface de usuário (Figma) que exibe o risco de fogo por estado está disponível para implementação.<br>As dependências da funcionalidade (se houver) foram identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estipuladas os valores e datas de conclusão. |
+| **DoD** | A funcionalidade de visualização do risco de fogo por estado está implementada e funcionando conforme detalhamento no Figma.<br>Os dados de risco de fogo estão exibidos corretamente na interface de usuário, categorizados por estado.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada (pelo time) e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
+| RF04 | Risco de fogo por bioma |
+|------|--------------------------|
+| **User Story** | Como: O usuário<br>Quero: Ver o risco de fogo categorizado por bioma<br>Para que: Posso identificar quais áreas em biomas específicos estão mais propensas a incêndios |
+| **DoR** | Os dados de risco de fogo por bioma estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (bioma, nível de risco de fogo), foi documentada.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).<br>O protótipo da interface de usuário (Figma) que exibe o risco de fogo por bioma está disponível.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de visualização do risco de fogo por bioma está implementada e funcionando conforme detalhamento no Figma.<br>Os dados de risco de fogo são exibidos corretamente na interface de usuário, categorizados por bioma.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-RF02: Focos de calor por bioma
-User Story: Como: O usuário \ Quero: Visualizar focos de calor organizados por bioma \ Para que: Posso acompanhar os focos de calor em biomas específicos como a Amazônia ou o Cerrado
+| RF05 | Área queimada por estado |
+|------|--------------------------|
+| **User Story** | Como: O usuário<br>Quero: Visualizar áreas queimadas agrupadas por estado<br>Para que: Posso analisar a extensão das áreas queimadas em cada estado |
+| **DoR** | Os dados de área queimada por estado estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (estado, extensão da área queimada, etc.), está documentada.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).<br>O protótipo da interface de usuário (Figma) que exibe a área queimada por estado está disponível.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de visualização da área queimada por estado está implementada e funcionando conforme detalhamento no Figma.<br>Os dados de área queimada são exibidos corretamente na interface de usuário, agrupados por estado.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-Definition of Ready (DoR):
-Os dados de focos de calor por bioma estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (bioma, número de focos de calor, etc.), está documentada.
-Os critérios de aceitação para a funcionalidade estão definidos e compreendidos pela equipe de desenvolvimento.(Tarefa)
-A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).
-O protótipo da interface de usuário (Figma) que exibe os focos de calor por bioma é clara e objetiva? Todos têm acesso ao template do figma.
-As dependências da funcionalidade (se houver) foram identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estipuladas os valores e datas de conclusão.
+| RF06 | Área queimada por bioma |
+|------|--------------------------|
+| **User Story** | Como: O usuário<br>Quero: Visualizar áreas queimadas agrupadas por bioma<br>Para que: Posso compreender a extensão das áreas queimadas em cada bioma |
+| **DoR** | Os dados de área queimada por bioma estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (bioma, extensão da área queimada, etc.), está documentada.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).<br>O protótipo da interface de usuário (Figma) que exibe a área queimada por bioma está disponível.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de visualização da área queimada por bioma está implementada e funcionando conforme detalhamento no Figma.<br>Os dados de área queimada são exibidos corretamente na interface de usuário, agrupados por bioma.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-Definition of Done (DoD):
-A funcionalidade de visualização de focos de calor por bioma está implementada e funcionando conforme detalhamento no figma.
-Os dados de focos de calor são exibidos corretamente na interface de usuário, organizados por bioma.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pelo time dev.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi testada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
+| RF07 | Gráficos de focos de calor por estado e bioma |
+|------|----------------------------------------------|
+| **User Story** | Como: O usuário<br>Quero: Ver gráficos de focos de calor por estado e bioma<br>Para que: Posso entender as tendências de focos de calor ao longo do tempo |
+| **DoR** | Os dados históricos de focos de calor estão disponíveis no PostgreSQL, com os campos: estado, bioma, numero_focos, data.<br>A estrutura dos dados, incluindo os campos relevantes (estado, bioma, número de focos de calor, data, etc.), está documentada.<br>Os tipos de gráficos a serem gerados (por exemplo, gráficos de linha, barras, etc.) estão definidos.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe optou por usar Chart.js/D3.js (precisamos definir) para implementação dos gráficos.<br>O protótipo do Figma define o uso de gráficos de linha para tendências temporais e gráficos de barras para comparação por estado/bioma.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de geração e visualização de gráficos de focos de calor por estado e bioma está implementada e funcionando conforme detalhamento no Figma.<br>Os gráficos de linha e barras foram implementados com Chart.js/D3.js (precisamos definir), permitindo interação básica (hover para detalhes).<br>A interface de usuário é responsiva e permite a interação com os gráficos (por exemplo, zoom, tooltips, etc.).<br>Os dados são carregados dinamicamente do back-end via endpoint /api/focos-calor/graficos.<br>O código dos gráficos foi revisado em um Pull Request, com foco na performance de carregamento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi testada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-RF03: Risco de fogo por estado
-User Story: Como: O usuário \ Quero: Ver o risco de fogo categorizado por estado \ Para que: Posso saber quais áreas em cada estado estão em maior risco de incêndio
+| RF08 | Gráficos de risco de fogo por estado e bioma |
+|------|---------------------------------------------|
+| **User Story** | Como: O usuário<br>Quero: Ver gráficos do risco de fogo por estado e bioma<br>Para que: Posso acompanhar o risco de fogo em diferentes regiões |
+| **DoR** | Os dados históricos de risco de fogo por estado e bioma estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (estado, bioma, nível de risco de fogo, data, etc.), está documentada.<br>Os tipos de gráficos a serem gerados (por exemplo, gráficos de linha, barras, etc.) estão definidos.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de geração de gráficos).<br>O protótipo da interface de usuário (Figma) que exibe os gráficos de risco de fogo por estado e bioma está disponível.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de geração e visualização de gráficos de risco de fogo por estado e bioma está implementada e funcionando conforme detalhamento no Figma.<br>Os gráficos exibem os dados corretamente e são fáceis de interpretar.<br>A interface de usuário é responsiva e permite a interação com os gráficos (por exemplo, zoom, tooltips, etc.).<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-Definition of Ready (DoR):
-Os dados de risco de fogo por estado estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (estado, nível de risco de fogo, caixa mostrando os detalhes), está documentada.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento está conseguindo acessar as ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).
-O protótipo da interface de usuário (Figma) que exibe o risco de fogo por estado está disponível para implementação.
-As dependências da funcionalidade (se houver) foram identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estipuladas os valores e datas de conclusão.
+| RF09 | Gráficos de área queimada por estado e bioma |
+|------|---------------------------------------------|
+| **User Story** | Como: O usuário<br>Quero: Ver gráficos da extensão da área queimada por estado e bioma<br>Para que: Posso comparar áreas queimadas em diferentes regiões |
+| **DoR** | Os dados históricos de área queimada por estado e bioma estão disponíveis e acessíveis através do BDQueimadas.<br>A estrutura dos dados, incluindo os campos relevantes (estado, bioma, extensão da área queimada, data, etc.), está documentada.<br>Os tipos de gráficos a serem gerados (por exemplo, gráficos de linha, barras, etc.) estão definidos.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de geração de gráficos).<br>O protótipo da interface de usuário (Figma) que exibe os gráficos de área queimada por estado e bioma está disponível.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de geração e visualização de gráficos de área queimada por estado e bioma está implementada e funcionando conforme detalhamento no Figma.<br>Os gráficos exibem os dados corretamente e são fáceis de interpretar.<br>A interface de usuário é responsiva e permite a interação com os gráficos (por exemplo, zoom, tooltips, etc.).<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-Definition of Done (DoD):
-A funcionalidade de visualização do risco de fogo por estado está implementada e funcionando conforme detalhamento no figma.
-Os dados de risco de fogo estão exibidos corretamente na interface de usuário, categorizados por estado.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada (pelo time) e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de dev.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
+| RF10 | Restringir as consultas por intervalo de tempo |
+|------|----------------------------------------------|
+| **User Story** | Como: Um usuário<br>Quero: Filtrar dados por intervalos de tempo específicos<br>Para que: Posso analisar informações apenas de períodos de interesse |
+| **DoR** | O banco de dados PostgreSQL possui os campos data_inicio e data_fim na tabela focos_calor.<br>O endpoint do back-end /api/focos-calor/filtrar aceita parâmetros de data no formato YYYY-MM-DD.<br>O filtro por data permite selecionar intervalo, com validação de datas inválidas (ex: data futura).<br>Ao aplicar o filtro, os dados são recarregados da API e exibidos na interface sem erros.<br>O protótipo da interface de usuário (Figma) que permite a seleção de intervalos de tempo está disponível.<br>O desenvolvedor testou o filtro com 3 intervalos: última semana, último mês, último ano.<br>O código do filtro foi revisado em um Pull Request, com atenção ao tratamento de timezone UTC. |
+| **DoD** | A funcionalidade de restringir as consultas por intervalo de tempo está implementada e funcionando conforme detalhamento da tela no Figma.<br>O usuário pode selecionar um intervalo de tempo específico e os dados exibidos são filtrados de acordo.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-RF04: Risco de fogo por bioma
-User Story: Como: O usuário \ Quero: Ver o risco de fogo categorizado por bioma \ Para que: Posso identificar quais áreas em biomas específicos estão mais propensas a incêndios
+| RF11 | Identificar os meses com maior risco de fogo |
+|------|---------------------------------------------|
+| **User Story** | Como: Um usuário<br>Quero: Identificar os meses com maior risco de fogo<br>Para que: Posso preparar e planejar ações preventivas nos períodos críticos |
+| **DoR** | Os dados históricos de risco de fogo estão disponíveis e acessíveis através do BDQueimadas, com informações de data/hora.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de manipulação de datas e análise estatística).<br>O protótipo da interface de usuário (Figma) que exibe os meses com maior risco de fogo está disponível.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de identificar os meses com maior risco de fogo está implementada e funcionando conforme detalhamento no Figma.<br>O sistema identifica e exibe os meses com maior risco de fogo, com base nos dados históricos.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-Definition of Ready (DoR):
-Os dados de risco de fogo por bioma estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (bioma, nível de risco de fogo), foi documentada.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento está conseguindo acessar as ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).
-O protótipo da interface de usuário (Figma) que exibe o risco de fogo por bioma está disponível.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
+| RF12 | Associação entre risco de fogo e área queimada |
+|------|----------------------------------------------|
+| **User Story** | Como: O usuário<br>Quero: Verificar a correlação entre áreas de maior risco e maior incidência de queimadas<br>Para que: Posso entender melhor a relação entre risco de fogo e áreas queimadas |
+| **DoR** | Os dados históricos de risco de fogo e área queimada estão disponíveis e acessíveis através do BDQueimadas, com informações geográficas e de data/hora e mês.<br>Os critérios de aceitação para a funcionalidade atendem aos campos relevantes de filtro que o usuário quer ver.<br>A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de análise estatística e visualização de dados geográficos).<br>O protótipo da interface de usuário (Figma) que exibe a associação entre risco de fogo e área queimada (por exemplo, mapas de calor, gráficos de dispersão) está disponível.<br>As dependências da funcionalidade (se houver) estão identificadas e resolvidas.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | A funcionalidade de verificar a correlação entre risco de fogo e área queimada está implementada e funcionando conforme detalhamento no Figma.<br>O sistema analisa e exibe a associação entre risco de fogo e área queimada, utilizando métodos estatísticos e/ou visualizações geográficas.<br>A interface de usuário é responsiva e fácil de usar.<br>A funcionalidade foi testada e não apresenta erros ou bugs críticos.<br>O código da funcionalidade foi revisado pela equipe de desenvolvimento.<br>A funcionalidade está integrada com o restante do sistema.<br>A documentação técnica da funcionalidade foi criada e está atualizada.<br>A funcionalidade foi demonstrada e aprovada pelo Product Owner.<br>O código da funcionalidade foi versionado no repositório do GitHub.<br>A funcionalidade está pronta para ser implantada em ambiente de produção. |
 
-Definition of Done (DoD):
-A funcionalidade de visualização do risco de fogo por bioma está implementada e funcionando conforme detalhamento no figma.
-Os dados de risco de fogo são exibidos corretamente na interface de usuário, categorizados por bioma.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
+| RF13 | Fazer diagramas UML |
+|------|-------------------------------|
+| **User Story** | Como: Professor André<br>Quero: Ter acesso a documentação completa, com diagramas de casos de uso, classe e sequência<br>Para que: Validar contratação ou licitação de compra para o sistema e realizar manutenções básicas necessárias |
+| **DoR** | Os requisitos funcionais estão documentados no GitHub para referência.<br>A equipe utilizará Astah community para criar diagramas de caso de uso, classe e sequência.<br>O Professor André forneceu exemplos de diagramas esperados.<br>Os critérios de aceitação para os diagramas atendem ao que foi proposto pelo Professor André.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | Diagramas de caso de uso foram criados, incluindo todos os RFs do backlog.<br>Diagramas de classe mostram as entidades do banco (ex: FocoCalor, Bioma).<br>Diagramas de sequência foram validados para o fluxo de filtragem por data.<br>Os arquivos diagrama foram commitados no GitHub na pasta/branch combinada.<br>O Professor André aprovou os diagramas por e-mail/Teams. |
 
-RF05: Área queimada por estado
-User Story: Como: O usuário \ Quero: Visualizar áreas queimadas agrupadas por estado \ Para que: Posso analisar a extensão das áreas queimadas em cada estado
+| RF14 | Junção de Tabelas |
+|------|------------------|
+| **User Story** | Como: Professora Lucineide de BD<br>Quero: Combinar informações de diferentes tabelas do banco de dados<br>Para que: Seja possível realizar consultas integradas e obter dados consolidados de múltiplas fontes |
+| **DoR** | O modelo de dados do banco de dados (PostgreSQL) está definido e documentado, incluindo as tabelas relevantes e seus relacionamentos.<br>Os critérios de aceitação para as junções de tabelas atendem ao que foi proposto pela Professora Lucineide.<br>A equipe de desenvolvimento tem conhecimento sobre SQL e junções de tabelas.<br>As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | As junções de tabelas foram implementadas e funcionam corretamente.<br>As consultas SQL que utilizam junções retornam os resultados esperados, combinando informações de diferentes tabelas.<br>As junções foram testadas com diferentes conjuntos de dados e não apresentaram erros.<br>O código SQL foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.<br>As consultas SQL estão otimizadas para garantir o desempenho do sistema.<br>A documentação técnica com as consultas SQL foi criada e está atualizada.<br>As junções de tabelas foram demonstradas e aprovadas pela Professora Lucineide. |
 
-Definition of Ready (DoR):
-Os dados de área queimada por estado estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (estado, extensão da área queimada, etc.), está documentada.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento está conseguindo acessar as ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).
-O protótipo da interface de usuário (Figma) que exibe a área queimada por estado está disponível.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
+| RF15 | Funções Agrupadoras |
+|------|--------------------|
+| **User Story** | Como: Professora Lucineide de BD<br>Quero: Realizar cálculos e estatísticas como somas, médias e contagens<br>Para que: Eu possa obter análises resumidas e relatórios mais eficientes |
+| **DoR** | O modelo de dados do banco de dados (PostgreSQL) está definido e documentado.<br>Os critérios de aceitação para as funções agrupadoras atendem ao que foi proposto pela Professora Lucineide.<br>A equipe de desenvolvimento tem conhecimento sobre SQL e funções agrupadoras.<br>As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | As funções agrupadoras foram implementadas e funcionam corretamente.<br>As consultas SQL que utilizam funções agrupadoras (por exemplo, SUM, AVG, COUNT) retornam os resultados esperados.<br>As funções agrupadoras foram testadas com diferentes conjuntos de dados e não apresentaram erros.<br>O código SQL foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.<br>As consultas SQL estão otimizadas para garantir o desempenho do sistema.<br>A documentação técnica com as consultas SQL foi criada e está atualizada.<br>As funções agrupadoras foram demonstradas e aprovadas pela Professora Lucineide. |
 
-Definition of Done (DoD):
-A funcionalidade de visualização da área queimada por estado está implementada e funcionando conforme detalhamento no figma.
-Os dados de área queimada são exibidos corretamente na interface de usuário, agrupados por estado.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
+| RF16 | Stored Procedures |
+|------|-------------------|
+| **User Story** | Como: Professora Lucineide de BD<br>Quero: Reutilizar blocos de código SQL para operações frequentes e complexas<br>Para que: O sistema se torne mais automatizado e as operações sejam padronizadas |
+| **DoR** | O modelo de dados do banco de dados (PostgreSQL) está definido e documentado.<br>Os critérios de aceitação para as stored procedures atendem ao que foi proposto pela Professora Lucineide.<br>A equipe de desenvolvimento tem conhecimento sobre SQL e stored procedures.<br>As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | As stored procedures foram implementadas e funcionam corretamente.<br>As stored procedures encapsulam blocos de código SQL para operações frequentes e complexas.<br>As stored procedures foram testadas e não apresentaram erros.<br>O código SQL das stored procedures foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.<br>As stored procedures estão otimizadas para garantir o desempenho do sistema.<br>A documentação técnica com as stored procedures foi criada e está atualizada.<br>As stored procedures foram demonstradas e aprovadas pela Professora Lucineide. |
 
-RF06: Área queimada por bioma
-User Story: Como: O usuário \ Quero: Visualizar áreas queimadas agrupadas por bioma \ Para que: Posso compreender a extensão das áreas queimadas em cada bioma
+| RF17 | Triggers |
+|------|---------|
+| **User Story** | Como: Professora Lucineide de BD<br>Quero: Automatizar ações específicas no banco de dados em resposta a eventos críticos<br>Para que: A integridade dos dados seja mantida e os processos sejam otimizados automaticamente |
+| **DoR** | O modelo de dados do banco de dados (PostgreSQL) está definido e documentado.<br>Os critérios de aceitação para as triggers atendem ao que foi proposto pela Professora Lucineide.<br>A equipe de desenvolvimento tem conhecimento sobre SQL e triggers.<br>As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.<br>As tarefas de desenvolvimento para esta User Story estão criadas e estimadas. |
+| **DoD** | As triggers foram implementadas e funcionam corretamente.<br>As triggers automatizam ações específicas no banco de dados em resposta a eventos críticos (por exemplo, inserção, atualização, exclusão de dados).<br>As triggers foram testadas e não apresentaram erros.<br>O código SQL das triggers foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.<br>As triggers estão otimizadas para garantir o desempenho do sistema.<br>A documentação técnica com as triggers foi criada e está atualizada.<br>As triggers foram demonstradas e aprovadas pela Professora Lucineide. |
 
-Definition of Ready (DoR):
-Os dados de área queimada por bioma estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (bioma, extensão da área queimada, etc.), está documentada.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento está conseguindo acessar as ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, PostgreSQL).
-O protótipo da interface de usuário (Figma) que exibe a área queimada por bioma está disponível.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-A funcionalidade de visualização da área queimada por bioma está implementada e funcionando conforme detalhamento no figma.
-Os dados de área queimada são exibidos corretamente na interface de usuário, agrupados por bioma.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
-
-RF07: Gráficos de focos de calor por estado e bioma
-User Story: Como: O usuário \ Quero: Ver gráficos de focos de calor por estado e bioma \ Para que: Posso entender as tendências de focos de calor ao longo do tempo
-
-Definition of Ready (DoR):
- Os dados históricos de focos de calor estão disponíveis no PostgreSQL, com os campos: estado , bioma , numero_focos , data .
-A estrutura dos dados, incluindo os campos relevantes (estado, bioma, número de focos de calor, data, etc.), está documentada.
-Os tipos de gráficos a serem gerados (por exemplo, gráficos de linha, barras, etc.) estão definidos.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe optou por usar Chart.js/D3.js (precisamos definir) para implementação dos gráficos.
-O protótipo do Figma define o uso de gráficos de linha para tendências temporais e gráficos de barras para comparação por estado/bioma.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-A funcionalidade de geração e visualização de gráficos de focos de calor por estado e bioma está implementada e funcionando conforme detalhamento no figma.
-Os gráficos de linha e barras foram implementados com Chart.js/D3.js (precisamos definir), permitindo interação básica (hover para detalhes).
-A interface de usuário é responsiva e permite a interação com os gráficos (por exemplo, zoom, tooltips (é uma mensagem que aparece quando o usuário interage com um elemento de uma interface), etc.).
- Os dados são carregados dinamicamente do back-end via endpoint   /api/focos-calor/graficos.
-O código dos gráficos foi revisado em um Pull Request, com foco na performance de carregamento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi testada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
-
-RF08: Gráficos de risco de fogo por estado e bioma
-User Story: Como: O usuário \ Quero: Ver gráficos do risco de fogo por estado e bioma \ Para que: Posso acompanhar o risco de fogo em diferentes regiões
-
-
-
-Definition of Ready (DoR):
-Os dados históricos de risco de fogo por estado e bioma estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (estado, bioma, nível de risco de fogo, data, etc.), está documentada.
-Os tipos de gráficos a serem gerados (por exemplo, gráficos de linha, barras, etc.) estão definidos.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de geração de gráficos).
-O protótipo da interface de usuário (Figma) que exibe os gráficos de risco de fogo por estado e bioma está disponível.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-A funcionalidade de geração e visualização de gráficos de risco de fogo por estado e bioma está implementada e funcionando conforme detalhamento no figma.
-Os gráficos exibem os dados corretamente e são fáceis de interpretar.
-A interface de usuário é responsiva e permite a interação com os gráficos (por exemplo, zoom, tooltips, etc.).
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
-
-RF09: Gráficos de área queimada por estado e bioma
-User Story: Como: O usuário \ Quero: Ver gráficos da extensão da área queimada por estado e bioma \ Para que: Posso comparar áreas queimadas em diferentes regiões
-
-Definition of Ready (DoR):
-Os dados históricos de área queimada por estado e bioma estão disponíveis e acessíveis através do BDQueimadas.
-A estrutura dos dados, incluindo os campos relevantes (estado, bioma, extensão da área queimada, data, etc.), está documentada.
-Os tipos de gráficos a serem gerados (por exemplo, gráficos de linha, barras, etc.) estão definidos.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de geração de gráficos).
-O protótipo da interface de usuário (Figma) que exibe os gráficos de área queimada por estado e bioma está disponível.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-
-Definition of Done (DoD):
-A funcionalidade de geração e visualização de gráficos de área queimada por estado e bioma está implementada e funcionando conforme detalhamento no figma.
-Os gráficos exibem os dados corretamente e são fáceis de interpretar.
-A interface de usuário é responsiva e permite a interação com os gráficos (por exemplo, zoom, tooltips, etc.).
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
-
-RF10: Restringir as consultas por intervalo de tempo
-User Story: Como: Um usuário \ Quero: Filtrar dados por intervalos de tempo específicos \ Para que: Posso analisar informações apenas de períodos de interesse
-
-Definition of Ready (DoR):
-O banco de dados PostgreSQL possui os campos data_inicio e data_fim na tabela focos_calor 
-O endpoint do back-end DoD: /api/focos-calor/filtrar aceita parâmetros de data no formato YYYY-MM-DD.
-O filtro por data permite selecionar intervalo, com validação de datas inválidas (ex: data futura).
- Ao aplicar o filtro, os dados são recarregados da API e exibidos na interface sem erros. 
-O protótipo da interface de usuário (Figma) que permite a seleção de intervalos de tempo está disponível.
- O desenvolvedor testou o filtro com 3 intervalos: última semana, último mês, último ano. 
- O código do filtro foi revisado em um Pull Request, com atenção ao tratamento de timezone UTC.
-
-Definition of Done (DoD):
-A funcionalidade de restringir as consultas por intervalo de tempo está implementada e funcionando conforme detalhamento da tela no figma.
-O usuário pode selecionar um intervalo de tempo específico e os dados exibidos são filtrados de acordo.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
-
-
-RF11: Identificar os meses com maior risco de fogo
-User Story: Como: Um usuário \ Quero: Identificar os meses com maior risco de fogo \ Para que: Posso preparar e planejar ações preventivas nos períodos críticos
-
-Definition of Ready (DoR):
-Os dados históricos de risco de fogo estão disponíveis e acessíveis através do BDQueimadas, com informações de data/hora.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de manipulação de datas e análise estatística).
-O protótipo da interface de usuário (Figma) que exibe os meses com maior risco de fogo está disponível.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-A funcionalidade de identificar os meses com maior risco de fogo está implementada e funcionando conforme detalhamento no figma.
-O sistema identifica e exibe os meses com maior risco de fogo, com base nos dados históricos.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
-
-RF12: Associação entre risco de fogo e área queimada
-User Story: Como: O usuário \ Quero: Verificar a correlação entre áreas de maior risco e maior incidência de queimadas \ Para que: Posso entender melhor a relação entre risco de fogo e áreas queimadas
-
-Definition of Ready (DoR):
-Os dados históricos de risco de fogo e área queimada estão disponíveis e acessíveis através do BDQueimadas, com informações geográficas e de data/hora e mês.
-Os critérios de aceitação para a funcionalidade é atender os campos relevantes de filtro que o usuário quer ver.
-A equipe de desenvolvimento tem acesso às ferramentas e tecnologias necessárias para implementar a funcionalidade (Node.js, React TypeScript, bibliotecas de análise estatística e visualização de dados geográficos).
-O protótipo da interface de usuário (Figma) que exibe a associação entre risco de fogo e área queimada (por exemplo, mapas de calor, gráficos de dispersão) está disponível.
-As dependências da funcionalidade (se houver) estão identificadas e resolvidas.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-A funcionalidade de verificar a correlação entre risco de fogo e área queimada está implementada e funcionando conforme detalhamento no figma.
-O sistema analisa e exibe a associação entre risco de fogo e área queimada, utilizando métodos estatísticos e/ou visualizações geográficas.
-A interface de usuário é responsiva e fácil de usar.
-A funcionalidade foi testada e não apresenta erros ou bugs críticos.
-O código da funcionalidade foi revisado pela equipe de desenvolvimento.
-A funcionalidade está integrada com o restante do sistema.
-A documentação técnica da funcionalidade foi criada e está atualizada.
-A funcionalidade foi demonstrada e aprovada pelo Product Owner.
-O código da funcionalidade foi versionado no repositório do GitHub.
-A funcionalidade está pronta para ser implantada em ambiente de produção.
-
-RF13: Fazer diagramas de caso de uso
-User Story: Como: Professor André \ Quero: Ter acesso a documentação completa, com diagramas de casos de uso, classe e sequência \ Para que: Validar contratação ou licitação de compra para o sistema e realizar manutenções básicas necessárias
-
-Definition of Ready (DoR):
- Os requisitos funcionais estão documentados no GitHub para referência. 
- A equipe utilizará Astah community para criar diagramas de caso de uso, classe e sequência
- O Professor André forneceu exemplos de diagramas esperados. 
-Os critérios de aceitação para os diagramas atendem ao que foi proposto pelo Professor André.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-Diagramas de caso de uso foram criados, incluindo todos os RFs do backlog. 
-Diagramas de classe mostram as entidades do banco (ex: FocoCalor , Bioma ). 
-Diagramas de sequência foram validados para o fluxo de filtragem por data. 
-Os arquivos diagrama foram commitados no GitHub na pasta/branch combinada. 
-O Professor André aprovou os diagramas por e-mail./Teams
-
-
-RF14: Junção de Tabelas
-User Story: Como Professora Lucineide de BD/ Quero combinar informações de diferentes tabelas do banco de dados/ Para que seja possível realizar consultas integradas e obter dados consolidados de múltiplas fontes
-
-Definition of Ready (DoR):
-O modelo de dados do banco de dados (PostgreSQL) está definido e documentado, incluindo as tabelas relevantes e seus relacionamentos.
-Os critérios de aceitação para as junções de tabelas, atendem ao que foi proposto pela professora Lucineide.
-A equipe de desenvolvimento tem conhecimento sobre SQL e junções de tabelas.
-As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-As junções de tabelas foram implementadas e funcionam corretamente.
-As consultas SQL que utilizam junções retornam os resultados esperados, combinando informações de diferentes tabelas.
-As junções foram testadas com diferentes conjuntos de dados e não apresentaram erros.
-O código SQL foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.
-As consultas SQL estão otimizadas para garantir o desempenho do sistema.
-A documentação técnica com as consultas SQL foi criada e está atualizada.
-As junções de tabelas foram demonstradas e aprovadas pela Professora Lucineide.
-
-RF15: Funções Agrupadoras
-User Story: Como Professora Lucineide de BD/ Quero realizar cálculos e estatísticas como somas, médias e contagens/  Para que eu possa obter análises resumidas e relatórios mais eficientes
-
-Definition of Ready (DoR):
-O modelo de dados do banco de dados (PostgreSQL) está definido e documentado.
-Os critérios de aceitação para as funções agrupadoras atendem ao que foi proposto pela professora Lucineide.
-A equipe de desenvolvimento tem conhecimento sobre SQL e funções agrupadoras.
-As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-As funções agrupadoras foram implementadas e funcionam corretamente.
-As consultas SQL que utilizam funções agrupadoras (por exemplo, SUM, AVG, COUNT) retornam os resultados esperados.
-As funções agrupadoras foram testadas com diferentes conjuntos de dados e não apresentaram erros.
-O código SQL foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.
-As consultas SQL estão otimizadas para garantir o desempenho do sistema.
-A documentação técnica com as consultas SQL foi criada e está atualizada.
-As funções agrupadoras foram demonstradas e aprovadas pela Professora Lucineide.
-
-RF16: Stored Procedures
-User Story: Como Professora Lucineide de BD/ Quero reutilizar blocos de código SQL para operações frequentes e complexas/ Para que o sistema se torne mais automatizado e as operações sejam padronizadas
-
-Definition of Ready (DoR):
-O modelo de dados do banco de dados (PostgreSQL) está definido e documentado.
-Os critérios de aceitação para as stored procedures, atendem ao que foi proposto pela professora Lucineide.
-A equipe de desenvolvimento tem conhecimento sobre SQL e stored procedures.
-As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-As stored procedures foram implementadas e funcionam corretamente.
-As stored procedures encapsulam blocos de código SQL para operações frequentes e complexas.
-As stored procedures foram testadas e não apresentaram erros.
-O código SQL das stored procedures foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.
-As stored procedures estão otimizadas para garantir o desempenho do sistema.
-A documentação técnica com as stored procedures foi criada e está atualizada.
-As stored procedures foram demonstradas e aprovadas pela Professora Lucineide.
-
-RF17: Triggers
-User Story: Como Professora Lucineide de BD/Quero automatizar ações específicas no banco de dados em resposta a eventos críticos/ Para que a integridade dos dados seja mantida e os processos sejam otimizados automaticamente
-
-Definition of Ready (DoR):
-O modelo de dados do banco de dados (PostgreSQL) está definido e documentado.
-Os critérios de aceitação para as triggers, atendem ao que foi proposto pela professora Lucineide.
-A equipe de desenvolvimento tem conhecimento sobre SQL e triggers.
-As ferramentas de acesso ao banco de dados (por exemplo, pgAdmin) estão disponíveis.
-As tarefas de desenvolvimento para esta User Story estão criadas e estimadas.
-
-Definition of Done (DoD):
-As triggers foram implementadas e funcionam corretamente.
-As triggers automatizam ações específicas no banco de dados em resposta a eventos críticos (por exemplo, inserção, atualização, exclusão de dados).
-As triggers foram testadas e não apresentaram erros.
-O código SQL das triggers foi revisado pela equipe de desenvolvimento e pela Professora Lucineide.
-As triggers estão otimizadas para garantir o desempenho do sistema.
-A documentação técnica com as triggers foi criada e está atualizada.
-As triggers foram demonstradas e aprovadas pela Professora Lucineide.
-RF18 - Setup do Banco de Dados 
-User Story: Como: A equipe de desenvolvimento /Quero: Configurar o banco de dados PostgreSQL com as tabelas e relacionamentos necessários /Para que: Possamos ter um ambiente de dados pronto para o desenvolvimento das funcionalidades da aplicação.
-
-DoR: 
-O PostgreSQL está instalado no ambiente de desenvolvimento. 
-O modelo do banco (entidades, relacionamentos) foi definido em um documento compartilhado. 
-
-DoD:
-O banco de dados queimadas_db foi criado no PostgreSQL.
-As tabelas focos_calor , risco_fogo , e area_queimada foram criadas com seus campos e tipos. Um script SQL inicial ( /backend/sql/setup.sql ) foi commitado no GitHub. 
-A conexão do back-end com o PostgreSQL foi testada e funciona sem erros. 
-O Scrum Master validou o setup em uma reunião de equipe
+| RF18 | Setup do Banco de Dados |
+|------|-------------------------|
+| **User Story** | Como: A equipe de desenvolvimento<br>Quero: Configurar o banco de dados PostgreSQL com as tabelas e relacionamentos necessários<br>Para que: Possamos ter um ambiente de dados pronto para o desenvolvimento das funcionalidades da aplicação. |
+| **DoR** | O PostgreSQL está instalado no ambiente de desenvolvimento.<br>O modelo do banco (entidades, relacionamentos) foi definido em um documento compartilhado. |
+| **DoD** | O banco de dados queimadas_db foi criado no PostgreSQL.<br>As tabelas focos_calor, risco_fogo, e area_queimada foram criadas com seus campos e tipos.<br>Um script SQL inicial (/backend/sql/setup.sql) foi commitado no GitHub.<br>A conexão do back-end com o PostgreSQL foi testada e funciona sem erros.<br>O Scrum Master validou o setup em uma reunião de equipe. |
