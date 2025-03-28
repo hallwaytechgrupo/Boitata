@@ -1,49 +1,46 @@
 ## RF0
 
-1. Criar protótipo no Figma.
-2. Definir o CSS para o projeto.
-3. Modelar o banco de dados.
-4. Criar o banco de dados normalizado no PostgreSQL.
-5. Implementar o PostGIS.
-6. Criar tabelas para armazenar os shapefiles dos estados.
-7. Pesquisar e obter os shapefiles dos biomas.
-8. Criar tabelas para armazenar os shapefiles dos biomas.
-9. Criar método Curl para obter os dados do banco de queimadas do INPE.
-10. Criar importador CSV para inserir os dados no banco de dados normalizado.
-11. Pesquisar melhores práticas e técnicas para documentação de APIs e documentações técnicas relacionadas.
+1. Criar protótipo no Figma.  (5)
+2. Definir o CSS para o projeto. (3)
+3. Modelar o banco de dados. (13)
+4. Criar o banco de dados normalizado no PostgreSQL. (8)
+5. Implementar o PostGIS. (5)
+6. inserção dos shapefiles dos estados. (2)
+7. Pesquisar e obter os shapefiles dos biomas. (2)
+8. inserção dos shapefiles dos biomas. (2) 
+9. Criar método Curl para obter os dados do banco de queimadas do INPE. (8)
+10. Criar importador CSV para inserir os dados no banco de dados normalizado. (13)
+11. Pesquisar melhores práticas e técnicas para documentação de APIs e documentações técnicas relacionadas. (2)
 
 -----
 
 ## RF01
 
 ### **1. Configuração Inicial**
-- **Preparar o Ambiente de Desenvolvimento**:
-  - Configurar o ambiente com Node.js, React (TypeScript) e PostgreSQL.
-  - Instalar dependências necessárias, como `pg` para comunicação com o banco.
+- **Preparar o Ambiente de Desenvolvimento**: 
+  - Configurar o ambiente com Node.js, React (TypeScript) e PostgreSQL. (1)
+  - Instalar dependências necessárias, como `pg` para comunicação com o banco. (1)
 - **Configurar o Banco de Dados**:
-  - Criar a tabela `focos_calor` no PostgreSQL com os campos apropriados (estado, número de focos, coordenadas geográficas, etc.).
-  - Configurar o PostGIS para suporte a dados geoespaciais.
+  - Criar a tabela `focos_calor` no PostgreSQL com os campos apropriados (estado, número de focos, coordenadas geográficas, etc.). (2)
+  - Configurar o PostGIS para suporte a dados geoespaciais. (1)
 
 ### **2. Back-End**
 - **Implementar API REST**:
-  - Criar um servidor Node.js para gerenciar as requisições.
-  - Criar endpoints como:
+  - Criar um servidor Node.js para gerenciar as requisições. (8)
+  - Criar endpoints como: (5)
     - `GET /focos-calor`: Retorna os focos de calor organizados por estado.
     - `GET /focos-calor/:estado`: Retorna os focos de calor filtrados por estado específico.
-  - Testar a conexão com o PostgreSQL e configurar queries SQL para obter os dados.
-- **Lógica de Dados**:
-  - Implementar consultas SQL eficientes para calcular e agrupar os focos por estado.
-  - Caso necessário, usar funções PostGIS para manipulação de dados geoespaciais.
+  - Testar a conexão com o PostgreSQL e configurar queries SQL para obter os dados. (5)
 
 ### **3. Front-End**
 - **Criar Interface de Usuário**:
-  - Desenvolver o protótipo aprovado no Figma.
-  - Criar uma tabela responsiva para exibir os dados organizados por estado.
+  - Desenvolver o protótipo aprovado no Figma. (2)
+  - Gerar grafico dinamico, para o estado selecionado. (13) 
 - **Chamada à API**:
-  - Implementar funções para consumir os endpoints do back-end.
-  - Adicionar funcionalidades de filtro por estado e tratamento de erros (como mensagens para dados inexistentes).
+  - Implementar funções para consumir os endpoints do back-end. (5)
+  - Adicionar funcionalidades de filtro por estado e tratamento de erros (como mensagens para dados inexistentes). (13)
 - **UX e Responsividade**:
-  - Garantir que a tabela funcione bem em diferentes tamanhos de tela.
+  - Garantir que a tabela funcione bem em diferentes tamanhos de tela. (8)
 
 -----
 
