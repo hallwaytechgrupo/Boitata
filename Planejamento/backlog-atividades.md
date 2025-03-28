@@ -37,7 +37,7 @@
 
 ### **3. Front-End**
 - **Criar Interface de Usuário**:
-  - Desenvolver o protótipo aprovado no Figma em React com TypeScript.
+  - Desenvolver o protótipo aprovado no Figma.
   - Criar uma tabela responsiva para exibir os dados organizados por estado.
 - **Chamada à API**:
   - Implementar funções para consumir os endpoints do back-end.
