@@ -44,335 +44,209 @@
 
 -----
 
-## RF02
+## **RF02**
 
-### **1. Configuração Inicial**
-- **Preparar o Ambiente de Desenvolvimento**:
-  - Certificar que Node.js, React (TypeScript) e PostgreSQL estão configurados corretamente.
-  - Garantir que o PostGIS está habilitado para suporte a dados geoespaciais.
-- **Configurar o Banco de Dados**:
-  - Ajustar a tabela `focos_calor` no PostgreSQL para incluir um campo de bioma (se já não existir).
-  - Popular os dados do BDQueimadas, organizados por bioma e verificados quanto à integridade e qualidade.
+### **1. Configuração Inicial** 
+- Ajustar a tabela `focos_calor` no PostgreSQL para incluir um campo de bioma (se já não existir). **(5)**  
+- Popular os dados do BDQueimadas, organizados por bioma e verificados quanto à integridade e qualidade. **(8)**  
 
 ### **2. Back-End**
-- **Implementar API REST**:
-  - Criar endpoints para gerenciar e fornecer dados:
-    - `GET /focos-calor/biomas`: Retorna focos de calor agrupados por bioma.
-    - `GET /focos-calor/biomas/:bioma`: Retorna dados para um bioma específico.
-  - Desenvolver consultas SQL otimizadas para agrupar e filtrar os focos de calor por bioma, utilizando, se necessário, funções do PostGIS.
-- **Testar a API**:
-  - Verificar a funcionalidade dos endpoints com dados reais de teste.
+- Criar endpoints para gerenciar e fornecer dados:  
+  - `GET /focos-calor/biomas`: Retorna focos de calor agrupados por bioma. **(5)**  
+  - `GET /focos-calor/biomas/:bioma`: Retorna dados para um bioma específico. **(5)**  
+- Desenvolver consultas SQL otimizadas para agrupar e filtrar os focos de calor por bioma, utilizando funções do PostGIS quando necessário. **(8)**  
+-
 
 ### **3. Front-End**
-- **Criar Interface de Usuário**:
-  - Basear-se no protótipo aprovado no Figma para criar uma tabela responsiva que exiba os dados de focos por bioma.
-  - Adicionar um seletor ou filtro para escolher biomas específicos (como Amazônia ou Cerrado).
-- **Integração com API**:
-  - Implementar chamadas aos endpoints do back-end e renderizar os dados retornados.
-  - Garantir feedback apropriado para casos como ausência de dados.
-- **Aprimoramento de UX**:
-  - Garantir usabilidade e responsividade em diferentes tamanhos de tela e dispositivos.
+- Criar grafico dinamico com base no protótipo aprovado no Figma, exibindo dados de focos por bioma. **(8)**  
+- Adicionar filtro para selecionar biomas específicos (como Amazônia ou Cerrado). **(5)**  
+- Implementar chamadas aos endpoints do back-end e renderizar os dados retornados. **(5)**  
+ 
 
-### **4. Documentação**
-- **Documentação Técnica**:
-  - Registrar detalhes do modelo de dados, consultas SQL e endpoints de API.
-  - Documentar as dependências e instruções de configuração.
-- **Documentação de Front-End**:
-  - Explicar como consumir a API e renderizar os dados no React.
 
------
-
-## RF03
+## **RF03**
 
 ### **1. Configuração Inicial**
-- **Preparar o Ambiente de Desenvolvimento**:
-  - Garantir que o ambiente com Node.js, React (TypeScript) e PostgreSQL esteja configurado adequadamente.
-  - Verificar a configuração do PostGIS para suporte a dados geoespaciais.
-- **Configurar o Banco de Dados**:
-  - Adicionar ao banco de dados um modelo de dados que suporte o risco de fogo por estado.
-  - Verificar e popular os dados no BDQueimadas, categorizados por estado e nível de risco.
+- Adicionar ao banco de dados um modelo de dados que suporte o risco de fogo por estado. **(5)**  
+- Popular os dados no BDQueimadas, categorizados por estado e nível de risco. **(8)**  
 
 ### **2. Back-End**
-- **Implementar API REST**:
-  - Criar endpoints para fornecer dados de risco de fogo:
-    - `GET /risco-fogo/estados`: Retorna risco de fogo categorizado por estado.
-    - `GET /risco-fogo/estados/:estado`: Retorna detalhes do risco de fogo de um estado específico.
-  - Implementar consultas SQL otimizadas para filtrar e categorizar os dados de risco por estado.
-- **Testar a API**:
-  - Validar que os endpoints retornam dados precisos em diferentes cenários.
+- Criar endpoints:  
+  - `GET /risco-fogo/estados`: Retorna risco de fogo categorizado por estado. **(5)**  
+  - `GET /risco-fogo/estados/:estado`: Retorna detalhes do risco de fogo de um estado específico. **(5)**  
+- Implementar consultas SQL otimizadas para filtrar e categorizar os dados de risco por estado. **(8)**  
 
 ### **3. Front-End**
-- **Desenvolver Interface do Usuário**:
-  - Implementar a interface de acordo com o protótipo do Figma.
-  - Criar uma tabela para exibir os dados do risco de fogo categorizados por estado.
-  - Adicionar caixas de detalhes para informações adicionais de estados específicos.
-- **Integração com API**:
-  - Consumir os endpoints do back-end e renderizar os dados retornados.
-- **Aprimorar Responsividade e Usabilidade**:
-  - Certificar que a interface funcione bem em diferentes dispositivos e tamanhos de tela.
+- Criar grafico para exibir os dados do risco de fogo por estado. **(8)**  
+- Consumir os endpoints do back-end e renderizar os dados retornados. **(5)**  
 
 ### **4. Documentação**
-- **Documentação Técnica**:
-  - Documentar a estrutura de banco, consultas SQL e detalhes dos endpoints.
-- **Documentação do Front-End**:
-  - Fornecer instruções sobre como consumir a API e integrar os dados.
+- Documentar a estrutura de banco, consultas SQL e detalhes dos endpoints. **(3)**  
+ 
 
------
+---
 
-## RF04 - Risco de fogo por bioma
+## **RF04**
 
-**Configuração**:
-- Ajustar a tabela no PostgreSQL para incluir o campo de bioma, caso necessário.
-- Preparar o ambiente de desenvolvimento com suporte a dados categorizados por bioma.
+### **Back-End**
+- Criar endpoints:  **(5)**
+  - `GET /risco-fogo/biomas`: Retorna os riscos de fogo categorizados por bioma. 
+  - `GET /risco-fogo/biomas/:bioma`: Retorna detalhes de um bioma específico. 
+- Configurar consultas SQL para organizar os dados por bioma. **(8)**  
 
-**Back-End**:
-- Criar endpoints:
-  - `GET /risco-fogo/biomas`: Retorna os riscos de fogo categorizados por bioma.
-  - `GET /risco-fogo/biomas/:bioma`: Retorna detalhes de um bioma específico.
-- Configurar consultas SQL otimizadas para organizar os dados por bioma.
+### **Front-End**
+- Implementar interface com base no protótipo do Figma. **(5)**  
+- Exibir dados de riscos de fogo por bioma em grafico responsivo. **(8)**  
 
-**Front-End**:
-- Implementar a interface com base no protótipo do Figma.
-- Exibir os dados de riscos de fogo por bioma em uma tabela interativa e responsiva.
 
-**Documentação**:
-- Detalhar a estrutura de banco, SQL e APIs.
-- Documentar os passos para exibição no front-end.
+## **RF05 - Área queimada por estado**
 
------
+### **Configuração**
+- Configurar a tabela do PostgreSQL para armazenar a extensão da área queimada agrupada por estado. **(5)**  
 
-## RF05 - Área queimada por estado
 
-**Configuração**:
-- Configurar a tabela do PostgreSQL para armazenar a extensão da área queimada agrupada por estado.
-- Configurar o ambiente para desenvolver visualizações de dados.
+### **Back-End**
+- Criar endpoints:  **(5)**
+  - `GET /areas-queimadas/estados`: Retorna as áreas queimadas agrupadas por estado. 
+  - `GET /areas-queimadas/estados/:estado`: Detalha os dados de um estado específico.  
+- Implementar queries SQL para calcular e organizar as áreas queimadas. **(8)**  
 
-**Back-End**:
-- Criar endpoints:
-  - `GET /areas-queimadas/estados`: Retorna as áreas queimadas agrupadas por estado.
-  - `GET /areas-queimadas/estados/:estado`: Detalha os dados de um estado específico.
-- Implementar queries SQL para calcular e organizar as áreas queimadas.
+### **Front-End**
+- Adicionar gráficos para representação visual da evolução das areas queimadas por estado em relação temporal. **(13)**  
 
-**Front-End**:
-- Desenvolver uma interface de usuário intuitiva com tabelas que agrupem por estado.
-- Adicionar gráficos ou mapas, se necessário, para representação visual.
 
-**Documentação**:
-- Documentar o modelo de dados, API e instruções para o front-end.
-- Criar especificações para consumo de dados pelo React.
+## **RF06 - Área queimada por bioma**
 
------
+### **Configuração**
+- Garantir que a tabela `areas_queimadas` no PostgreSQL contemple o agrupamento por bioma. **(5)**  
 
-## RF06 - Área queimada por bioma
+### **Back-End**
+- Criar endpoints:  **(5)**
+  - `GET /areas-queimadas/biomas`: Lista áreas queimadas agrupadas por bioma. 
+  - `GET /areas-queimadas/biomas/:bioma`: Exibe detalhes específicos de cada bioma. 
+- Utilizar consultas SQL adequadas para obter dados confiáveis e relevantes. **(8)**  
 
-**Configuração**:
-- Garantir que a tabela `areas_queimadas` no PostgreSQL contemple o agrupamento por bioma.
-- Validar os dados de biomas e áreas queimadas.
+### **Front-End**
+- Exibir os dados organizados de forma clara em gráficos dinâmicos. **(13)**  
 
-**Back-End**:
-- Criar endpoints:
-  - `GET /areas-queimadas/biomas`: Lista áreas queimadas agrupadas por bioma.
-  - `GET /areas-queimadas/biomas/:bioma`: Exibe detalhes específicos de cada bioma.
-- Utilizar consultas SQL adequadas para obter dados confiáveis e relevantes.
 
-**Front-End**:
-- Basear-se no protótipo do Figma para projetar uma interface atrativa.
-- Exibir os dados organizados de forma clara em tabelas ou gráficos dinâmicos.
+## **RF07 - Gráficos de focos de calor por estado e bioma**
 
-**Documentação**:
-- Registrar detalhes das APIs e instruções para front-end.
-- Criar guias técnicos para manutenção e integração da funcionalidade.
+### **Configuração**
+- Decidir entre Chart.js e D3.js para implementação dos gráficos. **(2)**  
 
------
+### **Back-End**
+- Criar endpoints:  **(5)**
+  - `GET /graficos/focos-calor/estados`: Dados de focos de calor por estado. 
+  - `GET /graficos/focos-calor/biomas`: Dados de focos de calor por bioma. 
+- Implementar consultas SQL para filtrar e agrupar os dados necessários. **(8)**  
 
-## RF07 - Gráficos de focos de calor por estado e bioma
+### **Front-End**
+- Utilizar a biblioteca definida (Chart.js ou D3.js) para criar gráficos de linha e barras. **(13)**  
+ 
 
-**Configuração**:
-- Certificar que os dados históricos (estado, bioma, número de focos e data) estão organizados no PostgreSQL.
-- Decidir entre Chart.js e D3.js para implementação dos gráficos.
 
-**Back-End**:
-- Criar endpoints:
-  - `GET /graficos/focos-calor/estados`: Dados de focos de calor por estado.
-  - `GET /graficos/focos-calor/biomas`: Dados de focos de calor por bioma.
-- Implementar consultas SQL para filtrar e agrupar os dados necessários.
+## **RF08 - Gráficos de risco de fogo por estado e bioma**
 
-**Front-End**:
-- Utilizar a biblioteca definida (Chart.js ou D3.js) para criar gráficos de linha e barras.
-- Implementar a interação dos gráficos (tooltips, zoom, etc.) com base no protótipo do Figma.
+### **Configuração**
+- Configurar dependências para a biblioteca de gráficos escolhida. **(3)**  
 
-**Documentação**:
-- Registrar a estrutura dos endpoints e detalhar o uso da biblioteca de gráficos.
-- Documentar a integração entre front-end e back-end para exibição dos gráficos.
+### **Back-End**
+- Criar endpoints:  **(5)**
+  - `GET /graficos/risco-fogo/estados`: Dados de risco de fogo por estado.  
+  - `GET /graficos/risco-fogo/biomas`: Dados de risco de fogo por bioma. 
+- Desenvolver consultas SQL para organizar os dados em agrupamentos relevantes. **(8)**  
 
------
+### **Front-End**
+- Projetar gráficos de linha para tendências utilizando as bibliotecas selecionadas. **(13)**  
 
-## RF08 - Gráficos de risco de fogo por estado e bioma
 
-**Configuração**:
-- Garantir que os dados históricos de risco de fogo estão disponíveis e categorizados no banco de dados.
-- Configurar dependências para a biblioteca de gráficos escolhida.
+## **RF09 - Gráficos de área queimada por estado e bioma**
 
-**Back-End**:
-- Criar endpoints:
-  - `GET /graficos/risco-fogo/estados`: Dados de risco de fogo por estado.
-  - `GET /graficos/risco-fogo/biomas`: Dados de risco de fogo por bioma.
-- Desenvolver consultas SQL para organizar os dados em agrupamentos relevantes.
+### **Configuração**
+- Validar que os dados históricos de área queimada estão categorizados no banco por estado e bioma. **(5)**   
 
-**Front-End**:
-- Projetar gráficos de linha para tendências e de barras para comparações, conforme o protótipo.
-- Adicionar funcionalidades interativas, como hover para exibir detalhes.
+### **Back-End**
+- Criar endpoints:  **(5)**
+  - `GET /graficos/areas-queimadas/estados`: Dados de áreas queimadas por estado.   
+  - `GET /graficos/areas-queimadas/biomas`: Dados de áreas queimadas por bioma. 
+- Configurar consultas SQL para agrupar e filtrar os dados com base nos critérios. **(8)**  
 
-**Documentação**:
-- Detalhar a implementação da API para gráficos de risco de fogo.
-- Especificar os requisitos técnicos para a criação e integração dos gráficos.
+### **Front-End**
+- Implementar gráficos de linha para análise temporal. **(13)**  
+- Assegurar a responsividade e interação nos gráficos criados. **(8)**  
 
------
 
-## RF09 - Gráficos de área queimada por estado e bioma
+## **RF10 - Restringir as consultas por intervalo de tempo**
 
-**Configuração**:
-- Validar que os dados históricos de área queimada estão categorizados no banco por estado e bioma.
-- Preparar o ambiente para utilização da biblioteca de gráficos selecionada.
+### **Back-End**
+- Criar o endpoint:  **(8)**
+  - `GET /focos-calor/filtrar`: Aceita parâmetros de `data_inicio` e `data_fim` no formato YYYY-MM-DD.  
+- Implementar validações de intervalo e tratamento de erros para datas inválidas.  
 
-**Back-End**:
-- Criar endpoints:
-  - `GET /graficos/areas-queimadas/estados`: Dados de áreas queimadas por estado.
-  - `GET /graficos/areas-queimadas/biomas`: Dados de áreas queimadas por bioma.
-- Configurar consultas SQL para agrupar e filtrar os dados com base nos critérios.
+### **Front-End**
+- Desenvolver a interface de seleção de intervalos de tempo com base no protótipo do Figma. **(5)**  
+- Atualizar a exibição dos dados após aplicação do filtro, garantindo responsividade. **(8)**  
 
-**Front-End**:
-- Implementar gráficos de linha para análise temporal e gráficos de barras para comparações regionais.
-- Assegurar a responsividade e interação nos gráficos criados.
 
-**Documentação**:
-- Documentar como os dados são consultados, processados e visualizados.
-- Fornecer instruções detalhadas para manutenção e expansão dos gráficos.
+## **RF11 - Identificar os meses com maior risco de fogo**
 
------
+### **Configuração**
+- Validar que os dados de risco de fogo possuem informações de data formatadas corretamente no banco, ou corrigir se necessario. **(5)**  
 
-## RF10 - Restringir as consultas por intervalo de tempo
 
-**Configuração**:
-- Confirmar que os campos `data_inicio` e `data_fim` estão corretamente configurados na tabela `focos_calor`.
-- Preparar o ambiente para validações de data e timezone.
+### **Back-End**
+- Criar o endpoint:  **(8)**
+  - `GET /risco-fogo/meses-maiores-riscos`: Retorna os meses com maior risco de fogo, agrupados por região ou bioma.   
+- Desenvolver lógica de análise para identificar os meses críticos com base nos dados históricos. **(13)**
 
-**Back-End**:
-- Criar o endpoint:
-  - `GET /focos-calor/filtrar`: Aceita parâmetros de `data_inicio` e `data_fim` no formato YYYY-MM-DD.
-- Implementar validações de intervalo e tratamento de erros para datas inválidas.
+### **Front-End**
+- Criar uma visualização clara e intuitiva dos meses identificados, utilizando gráficos. **(8)**  
 
-**Front-End**:
-- Desenvolver a interface de seleção de intervalos de tempo com base no protótipo do Figma.
-- Atualizar a exibição dos dados após aplicação do filtro, garantindo responsividade.
 
-**Documentação**:
-- Registrar a implementação do filtro por intervalo de tempo na API.
-- Documentar os passos para uso e validação de datas no front-end.
+🚀## **RF12 - Associação entre risco de fogo e área queimada**
 
------
+### **Back-End**
+- Criar endpoints:  **(8)**
+  - `GET /associacao/risco-area`: Retorna dados sobre correlação entre risco de fogo e áreas queimadas.  
+  - `GET /associacao/risco-area/mapa`: Fornece dados geoespaciais para visualizações de mapas de calor.  
+- Implementar métodos estatísticos para calcular a correlação entre os dois conjuntos de dados. **(13)**  
 
-## RF11 - Identificar os meses com maior risco de fogo
+### **Front-End**
+- Sobrescrever o mapa de focos de calor e aresas queimadas para gerar esclarecimento visual ao usuario assim conseguindo determinar a realação entre elas. **(13)**  
 
-**Configuração**:
-- Validar que os dados de risco de fogo possuem informações de data formatadas corretamente no banco.
-- Configurar dependências para análise estatística e manipulação de datas.
 
-**Back-End**:
-- Criar o endpoint:
-  - `GET /risco-fogo/meses-maiores-riscos`: Retorna os meses com maior risco de fogo, agrupados por região ou bioma.
-- Desenvolver lógica de análise para identificar os meses críticos com base nos dados históricos.
 
-**Front-End**:
-- Criar uma visualização clara e intuitiva dos meses identificados, utilizando tabelas ou gráficos.
-- Adicionar interação para detalhamento das informações por mês e região.
+## **RF13 - Fazer diagramas UML**
 
-**Documentação**:
-- Detalhar a lógica de agrupamento de meses na API.
-- Especificar a exibição dos dados no front-end e instruções para atualização.
+### **Documentação**
+- Criar diagramas:  
+  - **Casos de Uso**: Cobrir todos os RFs do backlog. **(5)**  
+  - **Classe**: Incluir entidades principais, como `FocoCalor` e `Bioma`. **(5)**  
+  - **Sequência**: Representar o fluxo de filtragem por data. **(5)**  
+ **garantindo sempre que o diagramas foram validados com o professor Andre
 
------
+---
 
-## RF12 - Associação entre risco de fogo e área queimada
+## **RF14 - Junção de Tabelas**
 
-**Configuração**:
-- Verificar que os dados históricos de risco de fogo e área queimada estão integrados, com informações geográficas e temporais.
-- Preparar o ambiente para utilização de bibliotecas de visualização geográfica.
+### **Configuração**
+- Validar e documentar o modelo de dados existente, incluindo tabelas e relacionamentos. **(3)**    
 
-**Back-End**:
-- Criar endpoints:
-  - `GET /associacao/risco-area`: Retorna dados sobre correlação entre risco de fogo e áreas queimadas.
-  - `GET /associacao/risco-area/mapa`: Fornece dados geoespaciais para visualizações de mapas de calor.
-- Implementar métodos estatísticos para calcular a correlação entre os dois conjuntos de dados.
+### **Back-End**
+- Confirmar se as consultas SQL combinam informações de multiplas tabelas , utiliando junções como 'inner join' e 'left join' **(2)**  
 
-**Front-End**:
-- Desenvolver gráficos de dispersão e mapas de calor para exibir a associação entre risco de fogo e área queimada.
-- Garantir que a interface seja responsiva e intuitiva.
 
-**Documentação**:
-- Documentar os cálculos de correlação e visualizações geográficas.
-- Especificar os recursos utilizados para integração no front-end.
 
------
+## **RF15 - Funções Agrupadoras**
 
-## RF13 - Fazer diagramas UML
+### **Back-End**
+- Validar o uso de funções agrupadoras como 'sum', 'avg', 'count' e similares durante o desenvolvimento **(2)**  
 
-**Configuração**:
-- Reunir todos os requisitos funcionais documentados no GitHub.
-- Instalar o Astah Community para criação dos diagramas de casos de uso, classes e sequência.
 
-**Back-End**:
-- Não se aplica diretamente, já que a atividade envolve documentação.
+______________________________________________________
+# CONTINUAR DAQUI..... >>>>>
 
-**Front-End**:
-- Não se aplica diretamente, já que a atividade envolve documentação.
-
-**Documentação**:
-- Criar diagramas:
-  - **Casos de Uso**: Cobrir todos os RFs do backlog.
-  - **Classe**: Incluir entidades principais, como `FocoCalor` e `Bioma`.
-  - **Sequência**: Representar o fluxo de filtragem por data.
-- Salvar os diagramas em arquivos apropriados e commitar no GitHub.
-- Validar os diagramas com o Professor André.
-
------
-
-## RF14 - Junção de Tabelas
-
-**Configuração**:
-- Validar e documentar o modelo de dados existente, incluindo tabelas e relacionamentos.
-- Garantir acesso ao banco via ferramentas como pgAdmin.
-
-**Back-End**:
-- Implementar consultas SQL que combinam informações de múltiplas tabelas, utilizando junções como `INNER JOIN` e `LEFT JOIN`.
-- Testar as junções com diferentes conjuntos de dados.
-
-**Front-End**:
-- Não se aplica diretamente, mas o resultado pode ser consumido pelo front-end, se necessário.
-
-**Documentação**:
-- Documentar as consultas SQL criadas, detalhando os tipos de junções e os campos combinados.
-- Validar os resultados das consultas com a Professora Lucineide.
-
------
-
-## RF15 - Funções Agrupadoras
-
-**Configuração**:
-- Validar que os dados necessários estão disponíveis no banco e configurados para cálculos estatísticos.
-
-**Back-End**:
-- Criar consultas SQL utilizando funções como `SUM`, `AVG`, `COUNT`, e `GROUP BY` para agregar dados de forma eficiente.
-- Testar os resultados com diferentes cenários e volumes de dados.
-
-**Front-End**:
-- Não se aplica diretamente, mas o resultado agregado pode ser exibido no front-end, se necessário.
-
-**Documentação**:
-- Registrar as consultas SQL, incluindo exemplos de uso e explicações de cálculos.
-- Validar os resultados com a Professora Lucineide e garantir que as consultas estão otimizadas.
-
------
 
 ## RF16 - Stored Procedures
 
