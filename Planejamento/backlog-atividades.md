@@ -55,14 +55,15 @@
   - `GET /focos-calor/biomas`: Retorna focos de calor agrupados por bioma. **(5)**  
   - `GET /focos-calor/biomas/:bioma`: Retorna dados para um bioma específico. **(5)**  
 - Desenvolver consultas SQL otimizadas para agrupar e filtrar os focos de calor por bioma, utilizando funções do PostGIS quando necessário. **(8)**  
--
+
+-----
 
 ### **3. Front-End**
 - Criar grafico dinamico com base no protótipo aprovado no Figma, exibindo dados de focos por bioma. **(8)**  
 - Adicionar filtro para selecionar biomas específicos (como Amazônia ou Cerrado). **(5)**  
 - Implementar chamadas aos endpoints do back-end e renderizar os dados retornados. **(5)**  
  
-
+-----
 
 ## **RF03**
 
@@ -84,7 +85,7 @@
 - Documentar a estrutura de banco, consultas SQL e detalhes dos endpoints. **(3)**  
  
 
----
+-----
 
 ## **RF04**
 
@@ -97,6 +98,8 @@
 ### **Front-End**
 - Implementar interface com base no protótipo do Figma. **(5)**  
 - Exibir dados de riscos de fogo por bioma em grafico responsivo. **(8)**  
+
+-----
 
 
 ## **RF05 - Área queimada por estado**
@@ -114,6 +117,7 @@
 ### **Front-End**
 - Adicionar gráficos para representação visual da evolução das areas queimadas por estado em relação temporal. **(13)**  
 
+-----
 
 ## **RF06 - Área queimada por bioma**
 
@@ -129,6 +133,7 @@
 ### **Front-End**
 - Exibir os dados organizados de forma clara em gráficos dinâmicos. **(13)**  
 
+-----
 
 ## **RF07 - Gráficos de focos de calor por estado e bioma**
 
@@ -144,7 +149,7 @@
 ### **Front-End**
 - Utilizar a biblioteca definida (Chart.js ou D3.js) para criar gráficos de linha e barras. **(13)**  
  
-
+-----
 
 ## **RF08 - Gráficos de risco de fogo por estado e bioma**
 
@@ -161,6 +166,8 @@
 - Projetar gráficos de linha para tendências utilizando as bibliotecas selecionadas. **(13)**  
 
 
+-----
+
 ## **RF09 - Gráficos de área queimada por estado e bioma**
 
 ### **Configuração**
@@ -176,6 +183,8 @@
 - Implementar gráficos de linha para análise temporal. **(13)**  
 - Assegurar a responsividade e interação nos gráficos criados. **(8)**  
 
+-----
+
 
 ## **RF10 - Restringir as consultas por intervalo de tempo**
 
@@ -188,6 +197,7 @@
 - Desenvolver a interface de seleção de intervalos de tempo com base no protótipo do Figma. **(5)**  
 - Atualizar a exibição dos dados após aplicação do filtro, garantindo responsividade. **(8)**  
 
+-----
 
 ## **RF11 - Identificar os meses com maior risco de fogo**
 
@@ -226,7 +236,7 @@
   - **Sequência**: Representar o fluxo de filtragem por data. **(5)**  
  **garantindo sempre que o diagramas foram validados com o professor Andre
 
----
+-----
 
 ## **RF14 - Junção de Tabelas**
 
@@ -236,6 +246,7 @@
 ### **Back-End**
 - Confirmar se as consultas SQL combinam informações de multiplas tabelas , utiliando junções como 'inner join' e 'left join' **(2)**  
 
+-----
 
 
 ## **RF15 - Funções Agrupadoras**
@@ -244,63 +255,23 @@
 - Validar o uso de funções agrupadoras como 'sum', 'avg', 'count' e similares durante o desenvolvimento **(2)**  
 
 
-______________________________________________________
-# CONTINUAR DAQUI..... >>>>>
-
+-----
 
 ## RF16 - Stored Procedures
 
-**Configuração**:
-- Garantir que o modelo de dados no PostgreSQL está atualizado e adequado para as operações frequentes e complexas.
-- Preparar o ambiente para criação e execução de stored procedures no banco.
+- Garantir que o DataBase contenha stored procedures que encapsulem lógicas SQL reutilizáveis, como cálculos e operações complexas. **(3)**
 
-**Back-End**:
-- Implementar stored procedures que encapsulem lógicas SQL reutilizáveis, como cálculos e operações complexas.
-- Testar as stored procedures com diferentes cenários para verificar funcionalidade e desempenho.
-
-**Front-End**:
-- Não se aplica diretamente, a menos que o front-end consuma as stored procedures via API.
-
-**Documentação**:
-- Registrar a implementação das stored procedures, incluindo exemplos de chamadas e instruções de uso.
-- Validar o código SQL com a Professora Lucineide e garantir que a documentação esteja clara.
 
 -----
 
 ## RF17 - Triggers
 
-**Configuração**:
-- Validar que o modelo de dados inclui os eventos necessários para criação de triggers.
-- Preparar o ambiente para desenvolvimento e teste das triggers no PostgreSQL.
-
-**Back-End**:
-- Criar triggers que respondam a eventos críticos, como inserções, atualizações ou exclusões.
-- Garantir que as triggers mantêm a integridade dos dados e otimizar seu desempenho.
-
-**Front-End**:
-- Não se aplica diretamente, mas o resultado das triggers pode influenciar nos dados exibidos.
-
-**Documentação**:
-- Documentar as triggers criadas, detalhando os eventos associados e suas ações.
-- Validar o funcionamento das triggers com a Professora Lucineide e registrar os resultados.
+- Garantir que as Triggers para insersao de dados estejam configuradas corretamente e estejam presentes no sistema de gerencimando do DataBase. **(5)**
 
 -----
 
 ## RF18 - Setup do Banco de Dados
 
-**Configuração**:
-- Criar o banco de dados `queimadas_db` no PostgreSQL.
-- Criar as tabelas `focos_calor`, `risco_fogo` e `area_queimada` com seus campos e relacionamentos.
-
-**Back-End**:
-- Desenvolver um script SQL inicial (`/backend/sql/setup.sql`) para configuração automatizada do banco.
-- Verificar a conexão do sistema back-end com o banco configurado.
-
-**Front-End**:
-- Não se aplica diretamente, mas o setup do banco permitirá a integração de dados futuros.
-
-**Documentação**:
-- Detalhar o setup do banco, incluindo tabelas, relacionamentos e scripts SQL.
-- Validar o processo com o Scrum Master e garantir que o setup atenda às necessidades da equipe.
+- Confirmar o setup do DataBase, se atente as normalizacoes necessarias e se as tabelas estao bem configuradas e relacionadas entre si, se o modelo e o banco respeitam suas limitacoes e se representam mutuamente sem grandes divergencias. **(5)**
 
 -----
