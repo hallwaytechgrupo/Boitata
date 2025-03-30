@@ -11,12 +11,13 @@
 9. Criar método Curl para obter os dados do banco de queimadas do INPE. (8)
 10. Criar importador CSV para inserir os dados no banco de dados normalizado. (13)
 11. Pesquisar melhores práticas e técnicas para documentação de APIs e documentações técnicas relacionadas. (2)
-
+12. Pesquisar dependencias e bibliotecas para producao e exibicao de graficos compativeis com react e definir a utilizada (3)
+13. Criar os documentos de Classes de acordo com o diagrama de Classes UML (8)
+    - criar a pasta types e inciar a estruturacao de arquivos do back-end.
 -----
 
 ## RF01
 
-### **1. Configuração Inicial**
 - **Preparar o Ambiente de Desenvolvimento**: 
   - Configurar o ambiente com Node.js, React (TypeScript) e PostgreSQL. (1)
   - Instalar dependências necessárias, como `pg` para comunicação com o banco. (1)
@@ -33,12 +34,13 @@
   - Testar a conexão com o PostgreSQL e configurar queries SQL para obter os dados. (5)
 
 ### **3. Front-End**
-- **Criar Interface de Usuário**:
-  - Desenvolver o protótipo aprovado no Figma. (2)
+- **Criar Interface de Usuáo**
   - Gerar grafico dinamico, para o estado selecionado. (13) 
+
 - **Chamada à API**:
   - Implementar funções para consumir os endpoints do back-end. (5)
   - Adicionar funcionalidades de filtro por estado e tratamento de erros (como mensagens para dados inexistentes). (13)
+
 - **UX e Responsividade**:
   - Garantir que a tabela funcione bem em diferentes tamanhos de tela. (8)
 
@@ -96,7 +98,7 @@
 - Configurar consultas SQL para organizar os dados por bioma. **(8)**  
 
 ### **Front-End**
-- Implementar interface com base no protótipo do Figma. **(5)**  
+- Implementar interface com base no protótipo do Figma para exibicao dos risco de fogo por bioma no mapa. **(5)**  
 - Exibir dados de riscos de fogo por bioma em grafico responsivo. **(8)**  
 
 -----
@@ -214,7 +216,7 @@
 - Criar uma visualização clara e intuitiva dos meses identificados, utilizando gráficos. **(8)**  
 
 
-🚀## **RF12 - Associação entre risco de fogo e área queimada**
+## RF12 - Associação entre risco de fogo e área queimada
 
 ### **Back-End**
 - Criar endpoints:  **(8)**
