@@ -1,0 +1,32 @@
+ A documentação de API's é um conjunto de informações qeu explica como usar uma API, seus recursos e como
+interagir com ela, Ela é basicamente um guia para desenvolvedores que ajuda a construir interações com a API
+
+*DEVE INCLUIR:*
+- exemplos de codigo
+- tutoriais
+- detalhes sobre funções, classes e tipos de retorno
+- explicação dos endpoints
+- interpretação do proque de usar os endpoints
+- exemplo de como usar os endpoints
+
+Normalmente fica disponivel e hospedada no site principal da empresa ou portal voltado para a API, 
+sempre em area especialmente dedicada para este fim.
+
+Ferramenteas como Stoplight, Swagger, SwaggerHub, OpenAPI podem ser utilizadas para a documentação de API's
+
+As Boas Práticas discorrem sobre api da seguinte forma:
+- dar grande importancia ao design e formatação
+- destacar os principais caminhos terminais
+- apresentar informações de maneira concisa e legivel
+- maximixar o espaço na tela
+... entre outros.
+
+segue outros detalhes no seguinte link de referencia
+https://document360.com/pt-br/blog/documentacao-de-api/#:~:text=la%20na%20pr%C3%A1tica.-,O%20que%20%C3%A9%20documenta%C3%A7%C3%A3o%20de%20APIs?,APIs%2C%20incluindo%20Twitter%20e%20GitHub.
+
+ferramenta openSouce sugerida para utilizar durante a execução do projeto, para a documentação
+https://github.com/Redocly/redoc
+
+Ferramentas como o Redoc acima sujerido não apenas facilitam o processo de produção da documentação e organização
+dos dados e contextos da api, mas tambem ajuda a interpretar de forma clara e transmitir as funcionalidades
+e expecificações da api.
