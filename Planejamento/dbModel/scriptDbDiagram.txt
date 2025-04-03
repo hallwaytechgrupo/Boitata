@@ -1,0 +1,30 @@
+table tb_biomas {
+  id_bioma int pk
+  bioma varchar [not null]
+  geo_bioma geometry(multipolygon) [not null]
+}
+table tb_estados {
+  id_estado int pk
+  estado varchar [not null]
+  geo_estado geometry(multipolygon) [not null]
+}
+table tb_municipios {
+  id_municipio int pk
+  id_estado int 
+  municipio varchar [not null]
+  geo_municipio geometru(muntipolugon) [not null]
+}
+table tb_focos_calor {
+ id varchar pk
+ lat float 
+ lon float
+ data_hora_gmt timestamp
+ satelite varchar
+ estado_id int
+ id_municipio int
+ id_bioma int
+ risco_fogo float
+}
+table tb_area_queimada {
+  
+}
