@@ -1,0 +1,41 @@
+table tb_biomas {
+  id_bioma int pk
+  bioma varchar [not null]
+  geo_bioma geometry(multipolygon) [not null]
+}
+table tb_estados {
+  id_estado int pk
+  estado varchar [not null]
+  geo_estado geometry(multipolygon) [not null]
+}
+table tb_municipios {
+  id_municipio int pk
+  estado_id int [not null]
+  municipio varchar [not null]
+  geo_municipio geometry(muntipolugon) [not null]
+}
+table tb_focos_calor {
+ id_foco varchar pk
+ municipio_id int
+ bioma_id int
+ lat float [not null]
+ lon float [not null]
+ data_hora_gmt timestamp [not null]
+ satelite varchar [not null]
+ risco_fogo float
+}
+table tb_area_queimada {
+  id_area_queimada serial pk
+  mes_referencia date
+  geo_area_queimada geometry(multipolygon)
+  // contraint data no formado yyyy-mm-dd, com o dia padronizado
+  // em 01, uma vez que a referencia mensal é voltada para o mes anterior a publicacao do dado
+}
+
+
+
+Ref: "tb_biomas"."id_bioma" < "tb_focos_calor"."bioma_id"
+
+Ref: "tb_municipios"."id_municipio" < "tb_focos_calor"."municipio_id"
+
+Ref: "tb_estados"."id_estado" < "tb_municipios"."estado_id"
