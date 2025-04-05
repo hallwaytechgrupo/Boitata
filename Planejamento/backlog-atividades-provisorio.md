@@ -1,20 +1,43 @@
-## RF0
 
-1. Criar protótipo no Figma.  (5)
-2. Definir o CSS para o projeto. (3)
-3. Modelar o banco de dados. (13)
-4. Criar o banco de dados normalizado no PostgreSQL. (8)
+# Sprint 1
+
+| **ATIVIDADES** |
+| --- |
+| Pesquisar documentação (2) - pesquisar formato padrao para documentaçõa de api, boas praticas e ferramentas que podem auxiliar no processo |
+| Pesquisar e definier entre Chart.js ou D3.js (2) - pesquisar sobre as duas bibliotecas graficas mais utilizadas e se sao compativeis com as necessidades do projeto, bem como sua usabilidade. |
+| Pesquidar e definir bibliotecas para os graficos (3) - pesquisar outras bibliotecas graficas, se encontrar alguma com usabilidade simplificada ou com melhor compatibilidade para o projeto, definir como escocolhida e apresentar para a equipe|
+| Pesquisar e obter os shapefiles dos Biomas (2) - verificar se assim como os estados, se ha disponibilidade dos shapefiles dos biomas brasileiros e obter os arquivos para uso posterior |
+| Criar os diagramas de casos de uso (5) - criar o diagrama de classes com base no recomendado pelo professor Andre e seguindo o padrao internacional UML, e suas normativas |
+| Criar os diagramas de classe (5) - criar o diagrama de classes para o projeto, com previsibilidade de correções futuras, mesmo que o mais completo possivel |
+| Prototipagem Figma (5) - criar o prototipo no figma para o visual do projeto, de forma interativa e englobando todas as modalidades de visualização previstas para as entregas, respeitando os requisitos e as definicões escolhidas em reunião com o o restante da equipe |
+| Modelar dataBase (13) - Modelar o banco de dados, aplicando as normalizações, de forma a atender as necessidades do projeto e englobar todos os dados necessarios para seu funcionamento |
+| Definir CSS (3) - definir o CSS para o projeto, seguindo o prototipo figma e levando em consideração a usabilidade do react |
+| Documentar estrutura do Banco de dados (3) - documentar a estrutra de dados, de forma a indicar todas as tabelas, relacionamentos, procedures, triggers e demais funcionalidades do banco, para auxiliar a fase de desenvolvimento do back |
+| Criar os arquivos de tipos - seguindo o diagrama de classes (8) - criar os arquivos type, seguindo as necessidades do projeto e especificações do diagramas de classe - utilizando o conceito de blocos construtores com orientação a objeto |
+| Criar o DataBase - definindo seus scripts, procedures e afins (8) - criar o script para criação do dataBase e realizar os testes, seguindo o modelo DER realizado anteriormente na mesma sprint, testar implementações e pesquisas e definir procedures, triggers e afins. - utilizando a teoria dos conjuntos aplicada ao banco de dados, utilizando metodos join |
+| Estruturar o back-end do projeto (3) - criar as pastas e o json, com as dependencias iniciais para o projeto, de forma a iniciar a estruturação para a criação dos arquivos de classe e afins |
+| Estruturar o front-end do projeto (3) - criar as pastas e o json, com as dependencias iniciais para o projeto, de forma a iniciar a estruturação para a criação dos arquivos de classe e afins |
+
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+**| | | | | rascunho | | | | |**
+
 5. Implementar o PostGIS. (5)
 6. inserção dos shapefiles dos estados. (2)
-7. Pesquisar e obter os shapefiles dos biomas. (2)
 8. inserção dos shapefiles dos biomas. (2) 
 9. Criar método Curl para obter os dados do banco de queimadas do INPE. (8)
 10. Criar importador CSV para inserir os dados no banco de dados normalizado. (13)
-11. Pesquisar melhores práticas e técnicas para documentação de APIs e documentações técnicas relacionadas. (2)
-12. Pesquisar dependencias e bibliotecas para producao e exibicao de graficos compativeis com react e definir a utilizada (3)
-13. Criar os documentos de Classes de acordo com o diagrama de Classes UML (8)
-    - criar a pasta types e inciar a estruturacao de arquivos do back-end.
------
+
 
 ## RF01
 
