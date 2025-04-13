@@ -1,0 +1,62 @@
+-- Criação das Tabelas
+
+CREATE TABLE tb_estados (
+    id_estado SERIAL PRIMARY KEY,
+    estado VARCHAR(255),
+    cod_uf INT,
+    geometry GEOMETRY(MultiPolygon, 4326) -- SRID 4326 para latitude/longitude
+);
+
+CREATE TABLE tb_municipios (
+    id_municipio SERIAL PRIMARY KEY,
+    cod_ibge INT,
+    municipio VARCHAR(255),
+    id_estado INT REFERENCES tb_estados(id_estado),
+    geometry GEOMETRY(MultiPolygon, 4326)
+    -- A coluna id_bioma foi removida
+);
+
+CREATE TABLE tb_focos_calor (
+    id_foco SERIAL PRIMARY KEY,
+    data_hora TIMESTAMP,
+    latitude NUMERIC,
+    longitude NUMERIC,
+    temperatura NUMERIC,
+    id_municipio INT REFERENCES tb_municipios(id_municipio),
+    satelite VARCHAR(255),
+    risco_fogo VARCHAR(255)
+);
+
+CREATE TABLE tb_area_queimada (
+    id_area_queimada SERIAL PRIMARY KEY,
+    data_hora TIMESTAMP,
+    area_queimada NUMERIC,
+    geometry GEOMETRY(MultiPolygon, 4326)
+);
+
+CREATE TABLE tb_biomas (
+    id_bioma SERIAL PRIMARY KEY,
+    bioma VARCHAR(255),
+    geometry GEOMETRY(MultiPolygon, 4326)
+);
+
+-- Criação da tabela de relacionamento N:N entre tb_municipios e tb_biomas
+CREATE TABLE tb_biomas_municipios (
+    id SERIAL PRIMARY KEY,
+    id_bioma INT REFERENCES tb_biomas(id_bioma),
+    id_municipio INT REFERENCES tb_municipios(id_municipio),
+    -- Adicione aqui quaisquer outras colunas específicas para o relacionamento, se necessário
+    UNIQUE (id_bioma, id_municipio) -- Garante que não haja combinações duplicadas de bioma e município
+);
+
+-- Índices Espacial
+CREATE INDEX idx_tb_estados_geometry ON tb_estados USING GIST (geometry);
+CREATE INDEX idx_tb_municipios_geometry ON tb_municipios USING GIST (geometry);
+CREATE INDEX idx_tb_area_queimada_geometry ON tb_area_queimada USING GIST (geometry);
+
+-- Índices para a tabela de relacionamento (opcional, mas recomendado para otimizar consultas)
+CREATE INDEX idx_tb_biomas_municipios_id_bioma ON tb_biomas_municipios (id_bioma);
+CREATE INDEX idx_tb_biomas_municipios_id_municipio ON tb_biomas_municipios (id_municipio);
+
+-- PostGIS Extension (certifique-se de que a extensão já não foi criada)
+CREATE EXTENSION IF NOT EXISTS postgis;
