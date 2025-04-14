@@ -11,4 +11,11 @@ export class FocoCalorModel implements FocoCalor {
     public satelite: string,
     public risco_fogo: number
   ) {}
+  // Method to get coordinates as GeoJSON Point
+  getGeoPoint(): GeoJSON.Point {
+    return {
+      type: "Point",
+      coordinates: [this.lon, this.lat],
+    };
+  }
 }
