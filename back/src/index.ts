@@ -23,4 +23,8 @@ export * from "./repositories";
 │   ├── DataRepository.ts # Data access layer
 │   └── index.ts         # Barrel file for repositories
 └── index.ts             # Main barrel file
+
+
+
+npm install --save-dev @types/geojson
 */
