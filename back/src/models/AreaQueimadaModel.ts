@@ -4,10 +4,31 @@ import * as GeoJSON from "geojson";
 
 export class AreaQueimadaModel extends GeoEntity implements AreaQueimada {
   constructor(
-    public id_area_queimada: string,
-    public mes_referencia: Date,
-    public geo_area_queimada: GeoJSON.MultiPolygon
+    public id_areaQueimada: number,
+    public mesReferencia: Date,
+    public geo: GeoJSON.MultiPolygon
   ) {
-    super(geo_area_queimada);
+    super(geo);
+  }
+
+  static importarDados(): AreaQueimadaModel[] {
+    // Implementar importação real
+    return [];
+  }
+
+  static filtrarPorEstado(idEstado: number): AreaQueimadaModel[] {
+    return [];
+  }
+
+  static filtrarPorBioma(idBioma: number): AreaQueimadaModel[] {
+    return [];
+  }
+
+  static filtrarPorMes(mes: number): AreaQueimadaModel[] {
+    return [];
+  }
+
+  static gerarGraficoAreaQueimada(): void {
+    // Lógica de geração de gráfico
   }
 }
