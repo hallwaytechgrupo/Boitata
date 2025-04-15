@@ -36,7 +36,7 @@ CREATE TABLE tb_focos_calor (
     id_municipio INT REFERENCES tb_municipios(id_municipio),
     id_bioma int REFERENCES tb_biomas(id_bioma),
     frp numeric(3,2),
-    risco_fogo VARCHAR(255)
+    risco_fogo numeric(3,2)
 );
 
 CREATE TABLE tb_area_queimada (
