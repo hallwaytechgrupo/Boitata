@@ -1,33 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useRef, useEffect } from 'react'
+import mapboxgl from 'mapbox-gl'
+
+import 'mapbox-gl/dist/mapbox-gl.css';
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const mapRef = useRef();
+  const mapContainerRef = useRef();
+
+  useEffect(() => {
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYm9pdGF0YSIsImEiOiJjbTlrZGF3ejgwb2FxMnJvYWZ1Z3pudndpIn0.EiV7WmRDDZZBkY2A0PSJ1A'
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/dark-v11',
+    });
+
+    return () => {
+      mapRef.current.remove()
+    }
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Boitatá</h1>
-      <div className="card">
-        <button type='button' onClick={() => setCount((count) => count + 1)}>
-          Existem {count} focos de calor 🔥
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div id='map-container' ref={mapContainerRef}/>
     </>
   )
 }
