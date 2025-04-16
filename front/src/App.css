@@ -42,3 +42,7 @@
   border-radius: 10px;
   cursor: pointer;
 }
+
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
