@@ -18,285 +18,73 @@
 | Estruturar o back-end do projeto (3) - criar as pastas e o json, com as dependencias iniciais para o projeto, de forma a iniciar a estruturação para a criação dos arquivos de classe e afins |
 | Estruturar o front-end do projeto (3) - criar as pastas e o json, com as dependencias iniciais para o projeto, de forma a iniciar a estruturação para a criação dos arquivos de classe e afins |
 
-
-
-
-
-
-<br>
-<br>
-<br>
 <br>
 <br>
 <br>
 
-**| | | | | rascunho | | | | |**
+---
+
+<br>
+<br>
+<br>
+
+# Sprint 2
+
+| **ATIVIDADES** |
+| --- |
+| Conectar com o DB: instalar pacote pg, criar arquivo .env e configurar as credenciais de conexao do banco, criar a conexão utilizando a biblioteca PG no arquivo db.ts(./src) dentro da pasta back |
+| Criar API com o expresse: Criar o index.ts no back para iniciar a aplicação como servidor, configurando sua conexão com o DB, verifique as configuração do JSON para inicio, e comando para iniciar o serviço.<br> - criar o arquivo index.ts com o setup basico do express<br> - criar rota de teste para verificar conexão com o banco <br> - adicionar o script start no packege.json e testar o servidor com a rota teste |
+| Criar os endpoints no back-end: implementando os endpoints de cada finalidade, como focos de calor, areas queimadas, risco de fogo. <br> - Criar arquivo routes.ts e para definir as rotas <br> - implementar endpoint GET para focos de calor <br> - implementar endpoint GET para áras queimadas <br> -Implementar endpoint GET para risco de fogo. |
+| Criar os Serviços: para processamento de dados e consultas ao DB <br> - Criar o serviço e metodos para focos de calor (getAll e metodos de filtro) <br> - Criar o serviço e metodos para area queimada (getAll e metodos de filtro) <br - Criar o serviço e metodos para risco de fogo (getAll e metodos de filtro) <br|
+| Implementar os controladores: conetar os Serviços com os endpoints <br> - criar controlador para focos de calor <br> - criar o controlador para areas queimadas <br> - criar o controlador para risco de fogo <br> - atualizar as rotas em routes.ts para usar os controladores |
+| Criar modal de pesquisa(como componentes react): em versoes de desenvolvimento, com as opçoes de filtragem por bioma, estado, municipio, e botão para selecão manual de area de pesquisa <br> - Criar componente ShearchModal.tsx <br> - Adicionar select para o bioma <br> - adicionar inputs para estado e municipio <br> - Adicionar botao de submit <br> - adicionar botão para seleção manual de area |
+| Criar os componentes React para pagina de Graficos: seguindo mesmo modelo de modal de pesquisa, porem com visualização dos graficos, para as areas selecionadas, atenção ao uso do context para direcionar os dados selecionados na pesquisa e na exibição para a criação dos graficos de acordo com os filtros ativos <br> - Instalar e configurar biblioteca Recharts <br> - Criar o contexto para filtragem dos dados e exibição dos graficos e mapas de acordo com os filtros quando selecionados, e implementa-lo no app.tsx <br> - Adicionar os graficos de barra com o recharts <br> - usar contexto para exibir filtros ativos <br>|
+| Conectar front-back: Criar os serviços para consumir o end-points do back: <br> - Criar arquivo api.ts, com as funçoes Fecth, definindo URL base do backend (sugestoes: ``./src/services/api,`` rodando em ``http://localhost:<porta>/api``)  <br> - Criar serviçoas front para consumir os endpoints e focos de calor <br> - criar o serviço para consumir os endpoints area queimada <br> - Criar o serviço para consumir os endpoinst risco de fogo <br> - Integrar o serviçoes aos charts, fazendo com que use das funções fetch para carregar os dados com base nos filtros |
+| Testar a conexao e verificar a necessidade da criação de proxy no vite.config.ts, para redirecionar as requisições ao back-end ou o uso de biblioteca como cors |  
+
+| **ATIVIDADES** | **PONTUAÇÃO (Planning Poker)** |
+| --- | --- |
+| **Conectar com o DB** | 8 |
+| - Instalar pacote `pg` | 2 |
+| - Criar arquivo `.env` e configurar credenciais | 3 |
+| - Criar conexão utilizando `pg` no arquivo `db.ts` | 3 |
+| **Criar API com Express** | 13 |
+| - Criar `index.ts` para iniciar o servidor | 5 |
+| - Configurar conexão com o DB | 3 |
+| - Criar rota de teste para validar a conexão | 3 |
+| - Adicionar script `start` no `package.json` | 2 |
+| **Criar os endpoints no back-end** | 21 |
+| - Criar arquivo `routes.ts` para definir rotas | 5 |
+| - Implementar endpoint `GET` para focos de calor | 5 |
+| - Implementar endpoint `GET` para áreas queimadas | 5 |
+| - Implementar endpoint `GET` para risco de fogo | 6 |
+| **Criar os Serviços** | 21 |
+| - Criar serviço para focos de calor (`getAll` e filtros) | 7 |
+| - Criar serviço para áreas queimadas (`getAll` e filtros) | 7 |
+| - Criar serviço para risco de fogo (`getAll` e filtros) | 7 |
+| **Implementar os controladores** | 13 |
+| - Criar controlador para focos de calor | 4 |
+| - Criar controlador para áreas queimadas | 4 |
+| - Criar controlador para risco de fogo | 5 |
+| - Atualizar rotas no `routes.ts` para usar controladores | 3 |
+| **Criar modal de pesquisa (como componente React)** | 13 |
+| - Criar componente `SearchModal.tsx` | 5 |
+| - Adicionar select para bioma | 3 |
+| - Adicionar inputs para estado e município | 3 |
+| - Adicionar botão de submit | 2 |
+| - Adicionar botão de seleção manual de área | 3 |
+| **Criar componentes React para página de gráficos** | 21 |
+| - Instalar e configurar biblioteca `Recharts` | 5 |
+| - Criar contexto para filtragem e exibição dos gráficos | 7 |
+| - Adicionar gráficos de barra com `Recharts` | 5 |
+| - Exibir filtros ativos usando contexto | 4 |
+| **Conectar front-back** | 21 |
+| - Criar `api.ts` com funções `fetch` e definir URL base | 7 |
+| - Criar serviço para consumir endpoints de focos de calor | 5 |
+| - Criar serviço para consumir endpoints de áreas queimadas | 5 |
+| - Criar serviço para consumir endpoints de risco de fogo | 4 |
+| - Integrar serviços aos gráficos para carregar dados filtrados | 5 |
+| **Testar a conexão e verificar necessidade de proxy/cors** | 5 |
+| - Testar comunicação entre front e back | 3 |
+| - Configurar proxy no `vite.config.ts` caso necessário | 2 |
 
-5. Implementar o PostGIS. (5)
-6. inserção dos shapefiles dos estados. (2)
-8. inserção dos shapefiles dos biomas. (2) 
-9. Criar método Curl para obter os dados do banco de queimadas do INPE. (8)
-10. Criar importador CSV para inserir os dados no banco de dados normalizado. (13)
-
-
-## RF01
-
-- **Preparar o Ambiente de Desenvolvimento**: 
-  - Configurar o ambiente com Node.js, React (TypeScript) e PostgreSQL. (1)
-  - Instalar dependências necessárias, como `pg` para comunicação com o banco. (1)
-- **Configurar o Banco de Dados**:
-  - Criar a tabela `focos_calor` no PostgreSQL com os campos apropriados (estado, número de focos, coordenadas geográficas, etc.). (2)
-  - Configurar o PostGIS para suporte a dados geoespaciais. (1)
-
-### **2. Back-End**
-- **Implementar API REST**:
-  - Criar um servidor Node.js para gerenciar as requisições. (8)
-  - Criar endpoints como: (5)
-    - `GET /focos-calor`: Retorna os focos de calor organizados por estado.
-    - `GET /focos-calor/:estado`: Retorna os focos de calor filtrados por estado específico.
-  - Testar a conexão com o PostgreSQL e configurar queries SQL para obter os dados. (5)
-
-### **3. Front-End**
-- **Criar Interface de Usuáo**
-  - Gerar grafico dinamico, para o estado selecionado. (13) 
-
-- **Chamada à API**:
-  - Implementar funções para consumir os endpoints do back-end. (5)
-  - Adicionar funcionalidades de filtro por estado e tratamento de erros (como mensagens para dados inexistentes). (13)
-
-- **UX e Responsividade**:
-  - Garantir que a tabela funcione bem em diferentes tamanhos de tela. (8)
-
------
-
-## **RF02**
-
-### **1. Configuração Inicial** 
-- Ajustar a tabela `focos_calor` no PostgreSQL para incluir um campo de bioma (se já não existir). **(5)**  
-- Popular os dados do BDQueimadas, organizados por bioma e verificados quanto à integridade e qualidade. **(8)**  
-
-### **2. Back-End**
-- Criar endpoints para gerenciar e fornecer dados:  
-  - `GET /focos-calor/biomas`: Retorna focos de calor agrupados por bioma. **(5)**  
-  - `GET /focos-calor/biomas/:bioma`: Retorna dados para um bioma específico. **(5)**  
-- Desenvolver consultas SQL otimizadas para agrupar e filtrar os focos de calor por bioma, utilizando funções do PostGIS quando necessário. **(8)**  
-
------
-
-### **3. Front-End**
-- Criar grafico dinamico com base no protótipo aprovado no Figma, exibindo dados de focos por bioma. **(8)**  
-- Adicionar filtro para selecionar biomas específicos (como Amazônia ou Cerrado). **(5)**  
-- Implementar chamadas aos endpoints do back-end e renderizar os dados retornados. **(5)**  
- 
------
-
-## **RF03**
-
-### **1. Configuração Inicial**
-- Adicionar ao banco de dados um modelo de dados que suporte o risco de fogo por estado. **(5)**  
-- Popular os dados no BDQueimadas, categorizados por estado e nível de risco. **(8)**  
-
-### **2. Back-End**
-- Criar endpoints:  
-  - `GET /risco-fogo/estados`: Retorna risco de fogo categorizado por estado. **(5)**  
-  - `GET /risco-fogo/estados/:estado`: Retorna detalhes do risco de fogo de um estado específico. **(5)**  
-- Implementar consultas SQL otimizadas para filtrar e categorizar os dados de risco por estado. **(8)**  
-
-### **3. Front-End**
-- Criar grafico para exibir os dados do risco de fogo por estado. **(8)**  
-- Consumir os endpoints do back-end e renderizar os dados retornados. **(5)**  
-
-### **4. Documentação**
-- Documentar a estrutura de banco, consultas SQL e detalhes dos endpoints. **(3)**  
- 
-
------
-
-## **RF04**
-
-### **Back-End**
-- Criar endpoints:  **(5)**
-  - `GET /risco-fogo/biomas`: Retorna os riscos de fogo categorizados por bioma. 
-  - `GET /risco-fogo/biomas/:bioma`: Retorna detalhes de um bioma específico. 
-- Configurar consultas SQL para organizar os dados por bioma. **(8)**  
-
-### **Front-End**
-- Implementar interface com base no protótipo do Figma para exibicao dos risco de fogo por bioma no mapa. **(5)**  
-- Exibir dados de riscos de fogo por bioma em grafico responsivo. **(8)**  
-
------
-
-
-## **RF05 - Área queimada por estado**
-
-### **Configuração**
-- Configurar a tabela do PostgreSQL para armazenar a extensão da área queimada agrupada por estado. **(5)**  
-
-
-### **Back-End**
-- Criar endpoints:  **(5)**
-  - `GET /areas-queimadas/estados`: Retorna as áreas queimadas agrupadas por estado. 
-  - `GET /areas-queimadas/estados/:estado`: Detalha os dados de um estado específico.  
-- Implementar queries SQL para calcular e organizar as áreas queimadas. **(8)**  
-
-### **Front-End**
-- Adicionar gráficos para representação visual da evolução das areas queimadas por estado em relação temporal. **(13)**  
-
------
-
-## **RF06 - Área queimada por bioma**
-
-### **Configuração**
-- Garantir que a tabela `areas_queimadas` no PostgreSQL contemple o agrupamento por bioma. **(5)**  
-
-### **Back-End**
-- Criar endpoints:  **(5)**
-  - `GET /areas-queimadas/biomas`: Lista áreas queimadas agrupadas por bioma. 
-  - `GET /areas-queimadas/biomas/:bioma`: Exibe detalhes específicos de cada bioma. 
-- Utilizar consultas SQL adequadas para obter dados confiáveis e relevantes. **(8)**  
-
-### **Front-End**
-- Exibir os dados organizados de forma clara em gráficos dinâmicos. **(13)**  
-
------
-
-## **RF07 - Gráficos de focos de calor por estado e bioma**
-
-### **Configuração**
-- Decidir entre Chart.js e D3.js para implementação dos gráficos. **(2)**  
-
-### **Back-End**
-- Criar endpoints:  **(5)**
-  - `GET /graficos/focos-calor/estados`: Dados de focos de calor por estado. 
-  - `GET /graficos/focos-calor/biomas`: Dados de focos de calor por bioma. 
-- Implementar consultas SQL para filtrar e agrupar os dados necessários. **(8)**  
-
-### **Front-End**
-- Utilizar a biblioteca definida (Chart.js ou D3.js) para criar gráficos de linha e barras. **(13)**  
- 
------
-
-## **RF08 - Gráficos de risco de fogo por estado e bioma**
-
-### **Configuração**
-- Configurar dependências para a biblioteca de gráficos escolhida. **(3)**  
-
-### **Back-End**
-- Criar endpoints:  **(5)**
-  - `GET /graficos/risco-fogo/estados`: Dados de risco de fogo por estado.  
-  - `GET /graficos/risco-fogo/biomas`: Dados de risco de fogo por bioma. 
-- Desenvolver consultas SQL para organizar os dados em agrupamentos relevantes. **(8)**  
-
-### **Front-End**
-- Projetar gráficos de linha para tendências utilizando as bibliotecas selecionadas. **(13)**  
-
-
------
-
-## **RF09 - Gráficos de área queimada por estado e bioma**
-
-### **Configuração**
-- Validar que os dados históricos de área queimada estão categorizados no banco por estado e bioma. **(5)**   
-
-### **Back-End**
-- Criar endpoints:  **(5)**
-  - `GET /graficos/areas-queimadas/estados`: Dados de áreas queimadas por estado.   
-  - `GET /graficos/areas-queimadas/biomas`: Dados de áreas queimadas por bioma. 
-- Configurar consultas SQL para agrupar e filtrar os dados com base nos critérios. **(8)**  
-
-### **Front-End**
-- Implementar gráficos de linha para análise temporal. **(13)**  
-- Assegurar a responsividade e interação nos gráficos criados. **(8)**  
-
------
-
-
-## **RF10 - Restringir as consultas por intervalo de tempo**
-
-### **Back-End**
-- Criar o endpoint:  **(8)**
-  - `GET /focos-calor/filtrar`: Aceita parâmetros de `data_inicio` e `data_fim` no formato YYYY-MM-DD.  
-- Implementar validações de intervalo e tratamento de erros para datas inválidas.  
-
-### **Front-End**
-- Desenvolver a interface de seleção de intervalos de tempo com base no protótipo do Figma. **(5)**  
-- Atualizar a exibição dos dados após aplicação do filtro, garantindo responsividade. **(8)**  
-
------
-
-## **RF11 - Identificar os meses com maior risco de fogo**
-
-### **Configuração**
-- Validar que os dados de risco de fogo possuem informações de data formatadas corretamente no banco, ou corrigir se necessario. **(5)**  
-
-
-### **Back-End**
-- Criar o endpoint:  **(8)**
-  - `GET /risco-fogo/meses-maiores-riscos`: Retorna os meses com maior risco de fogo, agrupados por região ou bioma.   
-- Desenvolver lógica de análise para identificar os meses críticos com base nos dados históricos. **(13)**
-
-### **Front-End**
-- Criar uma visualização clara e intuitiva dos meses identificados, utilizando gráficos. **(8)**  
-
-
-## RF12 - Associação entre risco de fogo e área queimada
-
-### **Back-End**
-- Criar endpoints:  **(8)**
-  - `GET /associacao/risco-area`: Retorna dados sobre correlação entre risco de fogo e áreas queimadas.  
-  - `GET /associacao/risco-area/mapa`: Fornece dados geoespaciais para visualizações de mapas de calor.  
-- Implementar métodos estatísticos para calcular a correlação entre os dois conjuntos de dados. **(13)**  
-
-### **Front-End**
-- Sobrescrever o mapa de focos de calor e aresas queimadas para gerar esclarecimento visual ao usuario assim conseguindo determinar a realação entre elas. **(13)**  
-
-
-
-## **RF13 - Fazer diagramas UML**
-
-### **Documentação**
-- Criar diagramas:  
-  - **Casos de Uso**: Cobrir todos os RFs do backlog. **(5)**  
-  - **Classe**: Incluir entidades principais, como `FocoCalor` e `Bioma`. **(5)**  
-  - **Sequência**: Representar o fluxo de filtragem por data. **(5)**  
- **garantindo sempre que o diagramas foram validados com o professor Andre
-
------
-
-## **RF14 - Junção de Tabelas**
-
-### **Configuração**
-- Validar e documentar o modelo de dados existente, incluindo tabelas e relacionamentos. **(3)**    
-
-### **Back-End**
-- Confirmar se as consultas SQL combinam informações de multiplas tabelas , utiliando junções como 'inner join' e 'left join' **(2)**  
-
------
-
-
-## **RF15 - Funções Agrupadoras**
-
-### **Back-End**
-- Validar o uso de funções agrupadoras como 'sum', 'avg', 'count' e similares durante o desenvolvimento **(2)**  
-
-
------
-
-## RF16 - Stored Procedures
-
-- Garantir que o DataBase contenha stored procedures que encapsulem lógicas SQL reutilizáveis, como cálculos e operações complexas. **(3)**
-
-
------
-
-## RF17 - Triggers
-
-- Garantir que as Triggers para insersao de dados estejam configuradas corretamente e estejam presentes no sistema de gerencimando do DataBase. **(5)**
-
------
-
-## RF18 - Setup do Banco de Dados
-
-- Confirmar o setup do DataBase, se atente as normalizacoes necessarias e se as tabelas estao bem configuradas e relacionadas entre si, se o modelo e o banco respeitam suas limitacoes e se representam mutuamente sem grandes divergencias. **(5)**
-
------
