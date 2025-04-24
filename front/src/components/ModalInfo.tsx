@@ -1,37 +1,48 @@
-import type {  ModalProps } from "../types";
+import type { ModalProps } from "../types";
+import Modal from "./Modal";
 import "../styles/ModalEstado.css";
 import "../styles/ModalInfo.css";
-import Modal from "./Modal";
 
-const ModalInfo: React.FC<ModalProps> = ({ title, onClose, onConfirm }) => {
+const ModalInfo: React.FC<ModalProps & { stateInfo: any }> = ({ title, onClose, onConfirm, stateInfo }) => {
   return (
     <Modal title={title} onClose={onClose} onConfirm={onConfirm}>
       <div className="modal-estado-content">
-        <div>
-          <div className="card-info">
-          <p><strong>ID do Estado:</strong> 35</p>
-          <p><strong>Estado:</strong> São Paulo</p>
-          <p><strong>Total de Municípios:</strong> 645</p>
+        {stateInfo ? (
+          <div>
+            {/* Informações gerais */}
+            <div className="card-info">
+              <p><strong>ID do Estado:</strong> {stateInfo.id_estado}</p>
+              <p><strong>Estado:</strong> {stateInfo.estado}</p>
+              <p><strong>Total de Municípios:</strong> {stateInfo.top_cidades.length}</p>
+            </div>
+
+            {/* Top Cidades */}
+            <div className="card-info">
+              <h4>Top Cidades</h4>
+              <ul>
+                {stateInfo.top_cidades.map((cidade: any, index: number) => (
+                  <li key={index}>
+                    {cidade.municipio} - Total de Focos: {cidade.total_focos}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Maior FRP */}
+            <div className="card-info">
+              <h4>Maior FRP</h4>
+              <p><strong>Município:</strong> {stateInfo.maior_frp.municipio}</p>
+              <p><strong>FRP:</strong> {stateInfo.maior_frp.frp}</p>
+              <p><strong>Data:</strong> {new Date(stateInfo.maior_frp.data).toLocaleString()}</p>
+            </div>
+
+            {/* Última Atualização */}
+            <h4>Última Atualização</h4>
+            <p>{new Date(stateInfo.ultima_atualizacao).toLocaleString()}</p>
           </div>
-          <div className="card-info">
-          <h4>Top Cidades</h4>
-          <ul>
-            <li>São Paulo - Total de Focos: 125</li>
-            <li>Campinas - Total de Focos: 89</li>
-            <li>Ribeirão Preto - Total de Focos: 76</li>
-            <li>Sorocaba - Total de Focos: 65</li>
-            <li>Santos - Total de Focos: 54</li>
-          </ul>
-          </div>
-          <div className="card-info">
-          <h4>Maior FRP</h4>
-          <p><strong>Município:</strong> Presidente Prudente</p>
-          <p><strong>FRP:</strong> 98.7</p>
-          <p><strong>Data:</strong> 15/11/2023 14:30</p>
-          </div>
-          <h4>Última Atualização</h4>
-          <p>20/11/2023 09:45</p>
-        </div>
+        ) : (
+          <p>Carregando informações...</p>
+        )}
       </div>
     </Modal>
   );

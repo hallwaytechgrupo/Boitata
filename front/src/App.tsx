@@ -6,7 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./App.css";
 import ModalEstado from "./components/ModalEstado";
 import { useLocation } from "./contexts/LocationContext";
-import { getBiomasShp, getFocosCalorByEstadoId } from "./services/api";
+import { getBiomasShp, getFocosCalorByEstadoId, getStateInfo } from "./services/api";
 import { statesCoordinates } from "./utils/statesCoordinates";
 import ModalBioma from "./components/ModalBioma";
 import Toast from "./components/Toast";
@@ -41,6 +41,8 @@ function App() {
 		type: "FeatureCollection",
 		features: [],
 	});
+
+	const [stateInfo, setStateInfo] = useState<any>(null);
 
 	const toggleBiomasVisibility = () => {
 		const isVisible = !biomasVisible;
@@ -86,8 +88,12 @@ function App() {
 				const resultado = await getFocosCalorByEstadoId(estadoId);
 				console.log("resultado:", resultado);
 
+				const stateInfo = await getStateInfo(estadoId);
+				console.log("stateInfo:", stateInfo);
+				
 				// Atualizar o estado do GeoJSON
 				setFocosCalor(resultado);
+				setStateInfo(stateInfo);
 
 				// Ajustar o mapa para o estado selecionado
 				if (estado && statesCoordinates[estado.id]) {
@@ -100,11 +106,19 @@ function App() {
 				}
 
 				setFilterType(FilterType.Estado);
-			} else if (modalType === "bioma") {
+			} else if (modalType === ModalType.Bioma) {
 				// Lógica para buscar dados de biomas
 				console.log("Lógica para biomas ainda não implementada");
 				setFilterType(FilterType.Bioma);
 
+			} else if (modalType === ModalType.Info) {
+				const estadoId = estado?.id.toString();
+
+				if (!estadoId) {
+					showToast("Estado não encontrado");
+					console.error("Estado não encontrado");
+					return;
+				}
 			}
 
 			// Fechar o modal
@@ -528,7 +542,7 @@ function App() {
 						<ModalInfo
 							title="Informações"
 							onClose={() => setIsModalOpen(false)}
-							
+							stateInfo={stateInfo}
 						/>
 					)}
 
