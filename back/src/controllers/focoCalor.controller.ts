@@ -16,6 +16,21 @@ export class FocoCalorController {
 		}
 	}
 
+	async getFocosByBioma(req: Request, res: Response): Promise<void> {
+		const { biomaId } = req.params;
+
+		try {
+			const focos = await focoCalorService.getFocosByBioma(Number(biomaId));
+
+			console.log(focos);
+
+			res.json(focos);
+		} catch (error) {
+			console.error("Erro ao buscar focos de calor:", error);
+			res.status(500).send("Erro no servidor");
+		}
+	}
+
 	async getBasicInfoByEstado(req: Request, res: Response): Promise<void> {
 		const { estadoId } = req.params;
 

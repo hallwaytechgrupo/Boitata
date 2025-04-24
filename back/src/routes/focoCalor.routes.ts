@@ -5,7 +5,7 @@ const focoCalorRouter = Router();
 const focoCalorController = new FocoCalorController();
 
 focoCalorRouter.get("/estado/:estadoId", focoCalorController.getFocosByEstado);
-
+focoCalorRouter.get("/bioma/:biomaId", focoCalorController.getFocosByBioma);
 focoCalorRouter.get(
 	"/estado/info/:estadoId",
 	focoCalorController.getBasicInfoByEstado,

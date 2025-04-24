@@ -15,6 +15,19 @@ export class FocoCalorService {
 		return result.rows[0].get_focos_geojson as FeatureCollection;
 	}
 
+	async getFocosByBioma(biomaId: number): Promise<FeatureCollection> {
+		const result = await query("SELECT get_focos_geojson_bioma($1)", [biomaId]);
+
+		console.log("o bioma é", biomaId);
+		console.log(result);
+
+		if (result.rowCount === 0) {
+			return { type: "FeatureCollection", features: [] }; // Retorna um FeatureCollection vazio
+		}
+
+		return result.rows[0].get_focos_geojson_bioma as FeatureCollection;
+	}
+
 	async getBasicInfoByEstado(estadoId: number): Promise<EstatisticasEstado> {
 		const result = await query(
 			"SELECT * FROM estatisticas_estado_final WHERE id_estado = $1",
