@@ -6,7 +6,7 @@ const api = axios.create({
 
 export const getFocosCalorByEstadoId = async (estadoId: string) => {
 	try {
-		const response = await api.get(`estado/${estadoId}`);
+		const response = await api.get(`focos_calor/estado/${estadoId}`);
 
 		return response.data;
 	} catch (error) {
