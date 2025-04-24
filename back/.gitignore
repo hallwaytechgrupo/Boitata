@@ -1,1 +1,4 @@
 /node_modules
+.qodo
+.env
+json_mock.json
