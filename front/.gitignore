@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.qodo
+
+# Mock files
+data_mock.ts
+conteudo.geojson
