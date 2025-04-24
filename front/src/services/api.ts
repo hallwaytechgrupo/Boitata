@@ -15,6 +15,17 @@ export const getFocosCalorByEstadoId = async (estadoId: string) => {
 	}
 };
 
+export const getFocosByBioamId = async (biomaId: string) => {
+	try {
+		const response = await api.get(`focos_calor/bioma/${biomaId}`);
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching focosCalor:", error);
+		throw error;
+	}
+};
+
 export const getStateInfo = async (estadoId: string) => {
 	try {
 		const response = await api.get(`focos_calor/estado/info/${estadoId}`);

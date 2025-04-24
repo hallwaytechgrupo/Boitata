@@ -6,7 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./App.css";
 import ModalEstado from "./components/ModalEstado";
 import { useLocation } from "./contexts/LocationContext";
-import { getBiomasShp, getFocosCalorByEstadoId, getStateInfo } from "./services/api";
+import { getBiomasShp, getFocosByBioamId, getFocosCalorByEstadoId, getStateInfo } from "./services/api";
 import { statesCoordinates } from "./utils/statesCoordinates";
 import ModalBioma from "./components/ModalBioma";
 import Toast from "./components/Toast";
@@ -21,7 +21,7 @@ import type { Location } from "./types";
 import ModalInfo from "./components/ModalInfo";
 
 function App() {
-	const { estado, filterType, setFilterType } = useLocation();
+	const { estado, bioma, filterType, setFilterType } = useLocation();
 
 	const mapRef = useRef<mapboxgl.Map | null>(null);
 	const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -108,7 +108,20 @@ function App() {
 				setFilterType(FilterType.Estado);
 			} else if (modalType === ModalType.Bioma) {
 				// Lógica para buscar dados de biomas
-				console.log("Lógica para biomas ainda não implementada");
+				const biomaId = bioma?.id.toString();
+
+				if (!biomaId) {
+					showToast("Bioma não encontrado");
+					console.error("Bioma não encontrado");
+					return;
+				}
+
+				const resultado = await getFocosByBioamId(biomaId);
+				console.log("resultado:", resultado);
+				
+				// Atualizar o estado do GeoJSON
+				setFocosCalor(resultado);
+				
 				setFilterType(FilterType.Bioma);
 
 			} else if (modalType === ModalType.Info) {

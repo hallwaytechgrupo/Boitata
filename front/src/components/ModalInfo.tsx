@@ -41,7 +41,7 @@ const ModalInfo: React.FC<ModalProps & { stateInfo: any }> = ({ title, onClose, 
             <p>{new Date(stateInfo.ultima_atualizacao).toLocaleString()}</p>
           </div>
         ) : (
-          <p>Carregando informações...</p>
+          <p>As estatísticas são carregadas se e somente se um Estado estiver selecionado.</p>
         )}
       </div>
     </Modal>
