@@ -17,6 +17,7 @@ import { GrInfo } from "react-icons/gr";
 import { ModalType } from "./types/ModalEnum";
 import ModalGrafico from "./components/ModalGrafico";
 import { FilterType } from "./types/FilterEnum";
+import type { Location } from "./types";
 
 function App() {
 	const { estado, filterType, setFilterType } = useLocation();
@@ -28,6 +29,10 @@ function App() {
 	const [modalType, setModalType] = useState<ModalType | null>(null);
 
 	const [toastMessage, setToastMessage] = useState<string | null>(null);
+	const [biomasVisible, setBiomasVisible] = useState(() => {
+		const saved = localStorage.getItem('biomasVisible');
+		return saved !== null ? JSON.parse(saved) : true;
+	});
 
 	const [focosCalor, setFocosCalor] = useState<
 		GeoJSON.FeatureCollection<GeoJSON.Geometry>
@@ -35,6 +40,27 @@ function App() {
 		type: "FeatureCollection",
 		features: [],
 	});
+
+	const toggleBiomasVisibility = () => {
+		const isVisible = !biomasVisible;
+		setBiomasVisible(isVisible);
+		localStorage.setItem('biomasVisible', JSON.stringify(isVisible));
+
+		
+		if (mapRef.current?.getLayer('bioma-fill')) {
+			mapRef.current.setLayoutProperty(
+				'bioma-fill', 
+				'visibility', 
+				isVisible ? 'visible' : 'none'
+			);
+			
+			mapRef.current.setLayoutProperty(
+				'bioma-label', 
+				'visibility', 
+				isVisible ? 'visible' : 'none'
+			);
+		}
+	};
 
 	const showToast = (message: string) => {
 		setToastMessage(message);
@@ -98,18 +124,18 @@ function App() {
 	const carregarBioma = async () => {
 		try {
 			const geojson = await getBiomasShp();
-
-			console.log("geojson:", geojson);
-
 	
-			if (mapRef.current?.getSource("bioma-layer")) {
-				(mapRef.current.getSource("bioma-layer") as mapboxgl.GeoJSONSource).setData(geojson);
+			// Verifica se já existe a fonte
+			if (mapRef.current?.getSource('bioma-layer')) {
+				(mapRef.current.getSource('bioma-layer') as mapboxgl.GeoJSONSource).setData(geojson);
 			} else {
-				mapRef.current?.addSource("bioma-layer", {
-					type: "geojson",
+				// Adiciona a fonte com persistência
+				mapRef.current?.addSource('bioma-layer', {
+					type: 'geojson',
 					data: geojson,
+					promoteId: 'id' // Garante IDs únicos para cada bioma
 				});
-
+	
 				const biomaColors = {
 					1: '#1E8449', // Amazônia - Verde escuro
 					2: '#F39C12', // Caatinga - Laranja
@@ -119,10 +145,14 @@ function App() {
 					6: '#3498DB'  // Pantanal - Azul
 				};
 	
+				// Adiciona camada de preenchimento
 				mapRef.current?.addLayer({
 					id: "bioma-fill",
 					type: "fill",
 					source: "bioma-layer",
+					layout: {
+						visibility: biomasVisible ? 'visible' : 'none'
+					},
 					paint: {
 						'fill-color': [
 							'match',
@@ -133,13 +163,14 @@ function App() {
 							4, biomaColors[4],
 							5, biomaColors[5],
 							6, biomaColors[6],
-							'#CCC' // Cor padrão
+							'#CCC'
 						],
-						'fill-opacity': 0.6,
+						'fill-opacity': 0.2,
 						'fill-outline-color': '#000'
 					}
 				});
 	
+				// Adiciona camada de rótulos
 				mapRef.current?.addLayer({
 					id: "bioma-label",
 					type: "symbol",
@@ -148,6 +179,7 @@ function App() {
 						"text-field": ["get", "nome_bioma"],
 						"text-size": 12,
 						"text-allow-overlap": true,
+						visibility: biomasVisible ? 'visible' : 'none'
 					},
 					paint: {
 						"text-color": "#000",
@@ -156,7 +188,6 @@ function App() {
 					},
 				});
 			}
-	
 		} catch (error) {
 			console.error("Erro ao carregar os biomas:", error);
 		}
@@ -274,6 +305,50 @@ function App() {
 	}, []); // Executa apenas uma vez, ao montar o componente
 
 	useEffect(() => {
+		if (mapRef.current) {
+			// Evento de clique nos biomas
+			mapRef.current.on('click', 'bioma-fill', (e) => {
+				if (e.features && e.features.length > 0) {
+					const bioma = e.features[0].properties as Location | null;
+					if (!bioma) {
+						console.error("Bioma properties are null");
+						return;
+					}
+					new mapboxgl.Popup()
+						.setLngLat(e.lngLat)
+						.setHTML(`
+							<h3>${bioma.nome}</h3>
+							<p>ID: ${bioma.id}</p>
+						`)
+						// biome-ignore lint/style/noNonNullAssertion: <explanation>
+						.addTo(mapRef.current!);
+				}
+			});
+	
+			// Muda o cursor ao passar sobre biomas
+			mapRef.current.on('mouseenter', 'bioma-fill', () => {
+				if (mapRef.current) {
+					mapRef.current.getCanvas().style.cursor = 'pointer';
+				}
+			});
+	
+			mapRef.current.on('mouseleave', 'bioma-fill', () => {
+				if (mapRef.current) {
+					mapRef.current.getCanvas().style.cursor = '';
+				}
+			});
+		}
+	
+		return () => {
+			if (mapRef.current) {
+				mapRef.current.off('click', 'bioma-fill');
+				mapRef.current.off('mouseenter', 'bioma-fill');
+				mapRef.current.off('mouseleave', 'bioma-fill');
+			}
+		};
+	}, []);
+
+	useEffect(() => {
 		if (estado && statesCoordinates[estado.id]) {
 			const { latitude, longitude } = statesCoordinates[estado.id];
 
@@ -326,6 +401,39 @@ function App() {
 					>
 						<RiLeafLine /> Bioma
 					</button>
+				</div>
+			</div>
+
+			<div className="filter-container-right">
+				<div className="category">
+					{/* <p className="filter-container-title">Overlay</p>
+					<button
+						type="button"
+						className="search-button"
+						onClick={() => handleOpenModal(ModalType.Estado)}
+					>
+						<FaGlobeAmericas /> Estado
+					</button> */}
+
+					{/* <button
+						type="button"
+						className="search-button"
+						onClick={() => handleOpenModal(ModalType.Bioma)}
+					>
+						<RiLeafLine />
+					</button> */}
+
+<button
+    type="button"
+    className="search-button"
+    onClick={toggleBiomasVisibility}
+  >
+    {biomasVisible ? (
+      <RiLeafLine color="#27AE60" /> // Verde quando visível
+    ) : (
+      <RiLeafLine color="#888" />    // Cinza quando oculto
+    )}
+  </button>
 				</div>
 			</div>
 
