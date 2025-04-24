@@ -18,4 +18,3 @@ export class BiomaModel extends GeoEntity implements Bioma {
 		// Lógica real de consulta (placeholder por enquanto)
 		return [];
 	}
-}
