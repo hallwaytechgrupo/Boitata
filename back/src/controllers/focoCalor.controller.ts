@@ -15,4 +15,19 @@ export class FocoCalorController {
 			res.status(500).send("Erro no servidor");
 		}
 	}
+
+	async getBasicInfoByEstado(req: Request, res: Response): Promise<void> {
+		const { estadoId } = req.params;
+
+		try {
+			const info = await focoCalorService.getBasicInfoByEstado(
+				Number(estadoId),
+			);
+
+			res.json(info);
+		} catch (error) {
+			console.error("Erro ao buscar informações básicas:", error);
+			res.status(500).send("Erro no servidor");
+		}
+	}
 }

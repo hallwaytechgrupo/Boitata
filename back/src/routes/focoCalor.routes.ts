@@ -6,4 +6,9 @@ const focoCalorController = new FocoCalorController();
 
 focoCalorRouter.get("/estado/:estadoId", focoCalorController.getFocosByEstado);
 
+focoCalorRouter.get(
+	"/estado/info/:estadoId",
+	focoCalorController.getBasicInfoByEstado,
+);
+
 export default focoCalorRouter;

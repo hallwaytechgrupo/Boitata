@@ -18,6 +18,7 @@ import { ModalType } from "./types/ModalEnum";
 import ModalGrafico from "./components/ModalGrafico";
 import { FilterType } from "./types/FilterEnum";
 import type { Location } from "./types";
+import ModalInfo from "./components/ModalInfo";
 
 function App() {
 	const { estado, filterType, setFilterType } = useLocation();
@@ -524,7 +525,7 @@ function App() {
 					)}
 
 					{modalType === ModalType.Info && (
-						<ModalBioma
+						<ModalInfo
 							title="Informações"
 							onClose={() => setIsModalOpen(false)}
 							
