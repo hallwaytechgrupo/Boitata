@@ -28,3 +28,4 @@ dist-ssr
 # Mock files
 data_mock.ts
 conteudo.geojson
+.heatmap.txt
