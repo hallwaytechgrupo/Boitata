@@ -1,0 +1,6 @@
+Biomas/*
+Estados/*
+Municípios/*
+
+# Serve para ignorar as pastas de biomas, estados e municípios
+*/*
