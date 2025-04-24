@@ -1,0 +1,78 @@
+.search-modal {
+  display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#dataFilter {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+#inputStates {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  color: #000;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#inputStates:focus {
+  outline: none;
+  border-color: #0052B4;
+  box-shadow: 0 0 5px rgba(0, 136, 136, 0.5);
+}
+
+datalist {
+  font-size: 16px;
+  color: #000;
+}
+
+#btnFiltrar,
+#btnLimpar {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#btnFiltrar {
+  background-color: #0052B4;
+  color: #fff;
+}
+
+#btnFiltrar:hover {
+  background-color: #004aa5;
+}
+
+#btnLimpar {
+  background-color: #ccc;
+  color: #000;
+}
+
+#btnLimpar:hover {
+  background-color: #aaa;
+}
+
+.search-modal-buttons {
+  display: flex;
+  gap: 10px;
+
+}
+
+.search-modal > h3 {
+  margin-top: 5px !important;
+  margin-bottom: 3px !important;
+}

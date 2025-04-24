@@ -1,0 +1,58 @@
+.search-data-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-data-options div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-data-options input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0052B4;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-data-options input[type="checkbox"]:checked {
+  background-color: #0052B4;
+  border-color: #0052B4;
+  box-shadow: 0 0 5px rgba(0, 136, 136, 0.5);
+}
+
+.search-data-options input[type="checkbox"]:checked::after {
+  content: "✔";
+  display: block;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.search-data-options label {
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.search-data-options input[type="checkbox"]:checked + label {
+  font-weight: bold;
+  color: #0052B4;
+}
+
+.search-data-options div:hover label {
+  color: #0052B4;
+}

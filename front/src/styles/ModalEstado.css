@@ -1,0 +1,15 @@
+.modal-estado-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.estado-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  color: #000;
+}

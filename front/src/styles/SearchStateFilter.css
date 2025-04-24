@@ -1,0 +1,26 @@
+#stateFilter {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+#inputStates {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+#inputStates:focus {
+  outline: none;
+  border-color: #088;
+  box-shadow: 0 0 5px rgba(0, 136, 136, 0.5);
+}
+
+datalist {
+  font-size: 16px;
+  color: #000;
+}
