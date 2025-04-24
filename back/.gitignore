@@ -3,3 +3,4 @@
 .env
 json_mock.json
 .env
+package-lock.json
