@@ -44,47 +44,49 @@
 
 | **ATIVIDADES** | **PONTUAÇÃO (Planning Poker)** |
 | --- | --- |
-| **Conectar com o DB** | 8 |
+| **Conectar com o DB** | - |
 | - Instalar pacote `pg` | 2 |
 | - Criar arquivo `.env` e configurar credenciais | 3 |
 | - Criar conexão utilizando `pg` no arquivo `db.ts` | 3 |
-| **Criar API com Express** | 13 |
+| **Criar API com Express** | - |
 | - Criar `index.ts` para iniciar o servidor | 5 |
 | - Configurar conexão com o DB | 3 |
 | - Criar rota de teste para validar a conexão | 3 |
 | - Adicionar script `start` no `package.json` | 2 |
-| **Criar os endpoints no back-end** | 21 |
+| **Criar os endpoints no back-end** | - |
 | - Criar arquivo `routes.ts` para definir rotas | 5 |
 | - Implementar endpoint `GET` para focos de calor | 5 |
 | - Implementar endpoint `GET` para áreas queimadas | 5 |
 | - Implementar endpoint `GET` para risco de fogo | 6 |
-| **Criar os Serviços** | 21 |
+| **Criar os Serviços** | - |
 | - Criar serviço para focos de calor (`getAll` e filtros) | 7 |
 | - Criar serviço para áreas queimadas (`getAll` e filtros) | 7 |
 | - Criar serviço para risco de fogo (`getAll` e filtros) | 7 |
-| **Implementar os controladores** | 13 |
+| **Implementar os controladores** | - |
 | - Criar controlador para focos de calor | 4 |
 | - Criar controlador para áreas queimadas | 4 |
 | - Criar controlador para risco de fogo | 5 |
 | - Atualizar rotas no `routes.ts` para usar controladores | 3 |
-| **Criar modal de pesquisa (como componente React)** | 13 |
+| **Criar modal de pesquisa (como componente React)** | - |
 | - Criar componente `SearchModal.tsx` | 5 |
 | - Adicionar select para bioma | 3 |
 | - Adicionar inputs para estado e município | 3 |
+| - Adicionar o botão para permitir a seleção de área | 7 |
 | - Adicionar botão de submit | 2 |
-| - Adicionar botão de seleção manual de área | 3 |
-| **Criar componentes React para página de gráficos** | 21 |
+| - Adicionar botão de seleção manual de área e suas funções de front para funcionalidade | 5 |
+| **Criar componentes React para página de gráficos** | - |
 | - Instalar e configurar biblioteca `Recharts` | 5 |
 | - Criar contexto para filtragem e exibição dos gráficos | 7 |
 | - Adicionar gráficos de barra com `Recharts` | 5 |
 | - Exibir filtros ativos usando contexto | 4 |
-| **Conectar front-back** | 21 |
+| **Conectar front-back** | - |
 | - Criar `api.ts` com funções `fetch` e definir URL base | 7 |
 | - Criar serviço para consumir endpoints de focos de calor | 5 |
 | - Criar serviço para consumir endpoints de áreas queimadas | 5 |
 | - Criar serviço para consumir endpoints de risco de fogo | 4 |
 | - Integrar serviços aos gráficos para carregar dados filtrados | 5 |
-| **Testar a conexão e verificar necessidade de proxy/cors** | 5 |
+| - Implementar os servições para exibição dos graficos filtrados por area selecionada | 7 |
+| **Testar a conexão e verificar necessidade de proxy/cors** | - |
 | - Testar comunicação entre front e back | 3 |
 | - Configurar proxy no `vite.config.ts` caso necessário | 2 |
 
