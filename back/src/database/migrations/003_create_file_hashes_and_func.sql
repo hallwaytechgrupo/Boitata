@@ -26,3 +26,8 @@ CREATE TABLE IF NOT EXISTS tb_arquivos_processados (
     processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS migrations (
+    id SERIAL PRIMARY KEY,
+    migration_file VARCHAR(255) NOT NULL UNIQUE,
+    executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
