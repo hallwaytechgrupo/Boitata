@@ -7,7 +7,7 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" height="40">
   <img src="https://www.postgresql.org/media/img/about/press/elephant.png" alt="PostgreSQL" height="40">
   <img src="https://vitejs.dev/logo.svg" alt="Vite" height="40">
-  <img src="https://static.figma.com/app/icon/1/favicon.png" alt="Figma" height="40>
+  <img src="https://static.figma.com/app/icon/1/favicon.png" alt="Figma" height="40">
 </div>
 
 ---
