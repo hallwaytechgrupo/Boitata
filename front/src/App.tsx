@@ -88,8 +88,8 @@ function App() {
 				const resultado = await getFocosCalorByEstadoId(estadoId);
 				console.log("resultado:", resultado);
 
-				const stateInfo = await getStateInfo(estadoId);
-				console.log("stateInfo:", stateInfo);
+				// const stateInfo = await getStateInfo(estadoId);
+				// console.log("stateInfo:", stateInfo);
 				
 				// Atualizar o estado do GeoJSON
 				setFocosCalor(resultado);
