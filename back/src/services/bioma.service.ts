@@ -3,9 +3,13 @@ import { exec } from 'node:child_process';
 import { query } from '../config/database';
 import type { FeatureCollection } from 'geojson';
 import { Console } from 'node:console';
+import { Pool } from 'pg';
+import fs from 'node:fs'
 
 export class BiomaService {
   private shapefilePath = path.resolve(__dirname, '../utils/bioma/biomas.shp');
+  private geoJsonFilePath = path.resolve(__dirname, '../utils/bioma/biomas.shp');
+
   private tempTableName = 'bioma'; // Tabela intermediária
   private finalTableName = 'tb_biomas';
   private srid = 4326;
@@ -74,6 +78,66 @@ export class BiomaService {
       throw error;
     }
   }
+
+
+  async importarBiomasGeoJSON(): Promise<void> {
+    console.log('⬇ Iniciando importação de biomas a partir de GeoJSON...');
+    try {
+      // Verifica se a tabela de biomas já possui dados
+      const checkQuery = `SELECT COUNT(*) AS count FROM ${this.finalTableName};`;
+      const result = await query(checkQuery);
+
+      if (result.rows[0].count > 0) {
+        console.warn(' ⚠ Tabela já contém dados. Nenhuma ação necessária.');
+        return;
+      }
+
+
+      const absolutePath = path.resolve(this.geoJsonFilePath);
+      if (!fs.existsSync(absolutePath)) {
+        throw new Error(
+          ` ✗ Arquivo GeoJSON não encontrado no caminho: ${absolutePath}`,
+        );
+      }
+
+      const geojson = JSON.parse(fs.readFileSync(absolutePath, 'utf-8'));
+      // Verifica se o arquivo contém biomas
+      if (!geojson.features || geojson.features.length === 0) {
+        throw new Error(' ✗ O arquivo GeoJSON não contém biomas.');
+      }
+
+      let biomasInseridos = 0;
+
+      // Processa cada bioma no GeoJSON
+      for (const feature of geojson.features) {
+        const { id_bioma, bioma } = feature.properties;
+        const geometry = feature.geometry;
+
+        if (!geometry) {
+          console.warn(
+            ` ⚠ Geometria não encontrada para o bioma: ${bioma} (ID: ${id_bioma})`,
+          );
+          continue;
+        }
+
+        // Insere o bioma no banco de dados
+        const insertQuery = `
+          INSERT INTO ${this.finalTableName} (id_bioma, bioma, geometry)
+          VALUES ($1, $2, ST_SetSRID(ST_GeomFromGeoJSON($3), 4326));
+        `;
+        await query(insertQuery, [id_bioma, bioma, JSON.stringify(geometry)]);
+        biomasInseridos++;
+      }
+
+      console.log(
+        `✓ Importação concluída. ${biomasInseridos} biomas inseridos.`,
+      );
+    } catch (error) {
+      console.error('✗ Erro durante a importação de biomas:', error);
+      throw error;
+    }
+  }
+
 
   private async transferirDados(): Promise<void> {
     const transferQuery = `

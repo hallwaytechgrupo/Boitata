@@ -20,7 +20,7 @@ export const populateDatabase = async (pool: Pool) => {
 
   try {
     console.log('++[BIOMA]++');
-    await biomaService.importarBiomas();
+    await biomaService.importarBiomasGeoJSON();
     console.log('--[BIOMA]--');
     console.log();
     console.log('++[ESTADO]++');
