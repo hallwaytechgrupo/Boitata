@@ -138,8 +138,14 @@ do BDQueimadas
 
 <div align="center">
   <h3>🌟🌟🌟🌟🌟🌟 PROCESSO DE DESENVOLVIMENTO  🌟🌟🌟🌟🌟🌟</h3>
-</div>
+
   Utililzando da metodologia ágil, e seguindo o método SCRUM, a equipe se organizou para executar o processo de desenvolvimento do projeto solicitado. Nesta seção será demonstrado alguns dos passos deste processo, e documentos e arquivos que possam fazer referencia ao desenvolvimento do projeto, como diagramas, detalhamento dos requisitos, graficos do processo de desenvolvimento e demais arquivos necessarios para demonstrar o processo em si.
+
+ <a href="https://trello.com/b/3jPRel4e/boitata-heat-sentinel">
+  <img src="./Planejamento/utils/logo+trello.png" alt="Descrição da imagem" height="100">
+</a>
+
+</div>
 
 <div id="PlanejamentoGeral">
 
