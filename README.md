@@ -73,7 +73,7 @@ O projeto está organizado em tres diretórios principais:
 ## Banco de dados
   O banco de dados do projeto foi baseado, conforme os requisitos propostos pelo cliente, em um sistema de banco de dados relacional, utilizando o PostgreSql e sua extenção PostGIS para tratativas geoespaciais. Para seguir um modelo normalizado e funcional, o projeto segue o modelo desenhado abaixo:
 
-  ![Modelo Banco de dados](./planejamento/dbModel/dbModel.png)
+  [![Modelo Banco de dados](./planejamento/dbModel/dbModel.png)]
 
 
 
