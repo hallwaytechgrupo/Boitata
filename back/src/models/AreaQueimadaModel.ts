@@ -1,12 +1,12 @@
-import { AreaQueimada } from "../types/AreaQueimada";
-import { GeoEntity } from "./base/GeoEntity";
-import * as GeoJSON from "geojson";
+import { AreaQueimada } from '../types/AreaQueimada';
+import { GeoEntity } from './base/GeoEntity';
+import * as GeoJSON from 'geojson';
 
 export class AreaQueimadaModel extends GeoEntity implements AreaQueimada {
   constructor(
     public id_areaQueimada: number,
     public mesReferencia: Date,
-    public geo: GeoJSON.MultiPolygon
+    public geo: GeoJSON.MultiPolygon,
   ) {
     super(geo);
   }

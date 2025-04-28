@@ -1,45 +1,119 @@
-import type { Feature, FeatureCollection } from "geojson";
-import { query } from "../config/database";
-
-export interface BiomaGeoJSON {
-	type: string;
-	features: Array<{
-		type: string;
-		geometry: {
-			type: string;
-			coordinates: number[][][][];
-		};
-		properties: {
-			id: number;
-			nome: string;
-		};
-	}>;
-}
+import path from 'node:path';
+import { exec } from 'node:child_process';
+import { query } from '../config/database';
+import type { FeatureCollection } from 'geojson';
+import { Console } from 'node:console';
 
 export class BiomaService {
-	// Busca todos os biomas no formato GeoJSON
-	async getAllBiomasGeoJSON(): Promise<FeatureCollection> {
-		try {
-			console.log("buscando...");
-			const result = await query("SELECT get_all_biomas_geojson()");
-			console.log("olha q retornou");
-			if (result.rowCount === 0) {
-				return { type: "FeatureCollection", features: [] }; // Retorna um FeatureCollection vazio
-			}
-			console.log("imprimindo");
-			console.log(result.rows[0]);
-			return result.rows[0].get_all_biomas_geojson as FeatureCollection;
-		} catch (error) {
-			console.error("Erro ao buscar biomas:", error);
-			throw error;
-		}
-	}
+  private shapefilePath = path.resolve(__dirname, '../utils/bioma/biomas.shp');
+  private tempTableName = 'bioma'; // Tabela intermediária
+  private finalTableName = 'tb_biomas';
+  private srid = 4326;
 
-	// Versão alternativa se precisar dos dados brutos
-	async getAllBiomas(): Promise<any[]> {
-		const result = await query(
-			"SELECT id_bioma, bioma, ST_AsGeoJSON(geometry) as geometry FROM tb_biomas",
-		);
-		return result.rows;
-	}
+  async importarBiomas(): Promise<void> {
+    console.log('- Iniciando importação de biomas...');
+    try {
+      console.log(' - Verificando se a tabela de biomas já contém dados...');
+
+      const checkQuery = `SELECT COUNT(*) AS count FROM ${this.finalTableName};`;
+      const result = await query(checkQuery);
+
+      if (result.rows[0].count > 0) {
+        console.warn(' ⚠ Tabela já contém dados. Nenhuma ação necessária.');
+        return;
+      }
+
+      console.log(' - Tabela vazia. Iniciando importação...');
+
+      // Usando variáveis de ambiente do arquivo .env
+      const command = `shp2pgsql -I -s ${this.srid} -W "UTF-8" "${this.shapefilePath}" public.${this.tempTableName} | psql -U ${process.env.DB_USER || 'postgres'} -d ${process.env.DB_NAME} -h ${process.env.DB_HOST || 'localhost'} -p ${process.env.DB_PORT || '5432'}`;
+
+      // Exemplo do conteúdo necessário no arquivo .env:
+      // DB_USER=postgres
+      // DB_NAME=sua_database
+      // DB_HOST=localhost
+      // DB_PORT=5432
+
+      await new Promise<void>((resolve, reject) => {
+        exec(command, async (error, stdout, stderr) => {
+          if (error) {
+            console.error(' ✗ Erro ao executar o comando:', error);
+            reject(error);
+            return;
+          }
+
+          if (stderr) {
+            console.log(' ⚠ Informação:', stderr);
+          }
+
+          if (stdout) {
+            console.log(
+              ' ✓ Importação de biomas, para a tabela temporária, concluída com sucesso!',
+            );
+          }
+          try {
+            console.log(
+              ' [PROCESSANDO] Transferindo dados para a tabela de biomas final...',
+            );
+            await this.transferirDados();
+            console.log(' ✓ Dados transferidos com sucesso!');
+
+            console.log(' [PROCESSANDO] Excluindo tabela temporária...');
+            await this.excluirTabelaTemporaria();
+            console.log(' ✓ Tabela temporária excluída com sucesso!');
+
+            resolve();
+          } catch (transferError) {
+            console.log(' ✗ Erro ao transferir dados:', transferError);
+            reject(transferError);
+          }
+        });
+      });
+    } catch (error) {
+      console.error(' ✗ Erro durante o processo de importação:', error);
+      throw error;
+    }
+  }
+
+  private async transferirDados(): Promise<void> {
+    const transferQuery = `
+      INSERT INTO ${this.finalTableName} (id_bioma, bioma, geometry)
+      SELECT 
+          cd_bioma AS id_bioma,
+          bioma,
+          geom AS geometry
+      FROM ${this.tempTableName}
+      WHERE cd_bioma IS NOT NULL;
+    `;
+    await query(transferQuery);
+  }
+
+  // Exclui a tabela intermediária
+  private async excluirTabelaTemporaria(): Promise<void> {
+    const dropQuery = `DROP TABLE IF EXISTS ${this.tempTableName};`;
+    await query(dropQuery);
+  }
+
+  // Busca todos os biomas no formato GeoJSON
+  async getAllBiomasGeoJSON(): Promise<FeatureCollection> {
+    try {
+      const result = await query('SELECT get_all_biomas_geojson()');
+      if (result.rowCount === 0) {
+        return { type: 'FeatureCollection', features: [] }; // Retorna um FeatureCollection vazio
+      }
+      return result.rows[0].get_all_biomas_geojson as FeatureCollection;
+    } catch (error) {
+      console.error(' ✗ Erro ao buscar biomas:', error);
+      throw error;
+    }
+  }
+
+  // Versão alternativa se precisar dos dados brutos
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  async getAllBiomas(): Promise<any[]> {
+    const result = await query(
+      'SELECT id_bioma, bioma, ST_AsGeoJSON(geometry) as geometry FROM tb_biomas',
+    );
+    return result.rows;
+  }
 }

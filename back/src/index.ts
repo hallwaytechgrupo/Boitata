@@ -1,34 +1,36 @@
-import app from "./app";
-import pool from "./config/database";
+import app from './app';
+import pool from './config/database';
+import { verifyDatabaseConnection } from './database/verifyConnection';
+import { initializeDatabase } from './database/setupDatabase';
 
 const PORT = process.env.PORT || 3000;
 
-const testConnection = async () => {
-	try {
-		const result = await pool.query("SELECT NOW()");
-		console.log(
-			"Conexão bem-sucedida! Hora atual no banco de dados:",
-			result.rows[0].now,
-		);
-		return true;
-	} catch (error) {
-		console.error("Erro ao conectar ao banco de dados:", error);
-		return false;
-	}
+const startServer = () => {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
 };
 
-const startServer = async () => {
-	const isDbConnected = await testConnection();
-	if (!isDbConnected) {
-		console.error(
-			"A aplicação será encerrada devido à falha na conexão com o banco de dados.",
-		);
-		process.exit(1);
-	}
+const initializeApplication = async () => {
+  try {
+    console.log('+++[INICIANDO APLICAÇÃO]+++\n');
+    console.log(' - Verificando conexão com o banco de dados...');
+    const isDbConnected = await verifyDatabaseConnection(pool);
 
-	app.listen(PORT, () => {
-		console.log(`Servidor rodando na porta ${PORT}`);
-	});
+    if (!isDbConnected) {
+      console.error(
+        '- A aplicação será encerrada devido à falha na conexão com o banco de dados.',
+      );
+      process.exit(1);
+    }
+    await initializeDatabase(pool);
+    console.log('- Aplicação pronta para ser executada!\n');
+
+    startServer();
+  } catch (error) {
+    console.error('Erro ao configurar o banco de dados:', error);
+    process.exit(1);
+  }
 };
 
-startServer();
+initializeApplication();

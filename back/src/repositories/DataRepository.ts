@@ -1,8 +1,8 @@
 // Importações dos modelos necessários para o repositório
-import { EstadoModel } from "../models/EstadoModel";
-import { MunicipioModel } from "../models/MunicipioModel";
-import { FocoCalorModel } from "../models/FocoCalorModel";
-import { AreaQueimadaModel } from "../models/AreaQueimadaModel";
+import type { EstadoModel } from '../models/EstadoModel';
+import type { MunicipioModel } from '../models/MunicipioModel';
+import type { FocoCalorModel } from '../models/FocoCalorModel';
+import type { AreaQueimadaModel } from '../models/AreaQueimadaModel';
 
 // Classe responsável pelo acesso aos dados no banco de dados
 export class DataRepository {
@@ -39,7 +39,7 @@ export class DataRepository {
   // Retorna uma promessa de array de AreaQueimadaModel
   async getAreaQueimadaByPeriod(
     startDate: Date,
-    endDate: Date
+    endDate: Date,
   ): Promise<AreaQueimadaModel[]> {
     // Aqui seria implementada a consulta SQL filtrando pelo período
     // Exemplo de SQL: SELECT * FROM tb_area_queimada

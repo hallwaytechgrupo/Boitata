@@ -1,21 +1,17 @@
-import type { Bioma } from "../types/Bioma";
-import { GeoEntity } from "./base/GeoEntity";
-import type * as GeoJSON from "geojson";
+import type { MultiPolygon } from 'geojson';
 
-export class BiomaModel extends GeoEntity implements Bioma {
-	public geo: GeoJSON.MultiPolygon;
+export class BiomaModel {
+  id_bioma: number;
+  bioma: string;
+  geo: MultiPolygon;
 
-	constructor(
-		public id_bioma: number,
-		public bioma: string,
-		geo: GeoJSON.MultiPolygon,
-	) {
-		super(geo);
-		this.geo = geo;
-	}
+  constructor(id_bioma: number, bioma: string, geo: MultiPolygon) {
+    this.id_bioma = id_bioma;
+    this.bioma = bioma;
+    this.geo = geo;
+  }
 
-	static consultarBioma(): BiomaModel[] {
-		// Lógica real de consulta (placeholder por enquanto)
-		return [];
-	}
+  toSQLParams(): [number, string, string] {
+    return [this.id_bioma, this.bioma, JSON.stringify(this.geo)];
+  }
 }

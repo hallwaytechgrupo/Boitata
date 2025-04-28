@@ -1,1 +1,1 @@
-export * from "./DataRepository";
+export * from './DataRepository';
