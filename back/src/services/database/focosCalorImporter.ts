@@ -1,10 +1,10 @@
 import type { Pool } from 'pg';
-import { CSVImporter } from '../../utils/import_focos_calor';
+import fs from 'node:fs';
 import path from 'node:path';
 import { CSVDownloader } from '../../utils/csvDownloader';
-import fs from 'node:fs';
+import { CSVImporter } from '../../utils/import_focos_calor';
 
-const importFromURL = async (pool: Pool, url: string): Promise<void> => {
+export const importFromURL = async (pool: Pool, url: string): Promise<void> => {
   console.log(' - Importando focos de calor de uma URL...');
   const csvFileName = path.basename(url);
   const downloadPath = path.resolve('focos_de_calor', csvFileName);
@@ -13,11 +13,23 @@ const importFromURL = async (pool: Pool, url: string): Promise<void> => {
   await downloader.downloadCSV();
 
   const importer = new CSVImporter();
-  await importer.importarCSV(pool, downloadPath);
-  console.log(' ✓ Importação de URL concluída com sucesso!');
+
+  // Obter client do pool e gerenciar seu ciclo de vida
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await importer.importarCSV(client, downloadPath, false); // não gerenciar transação internamente
+    await client.query('COMMIT');
+    console.log(' ✓ Importação de URL concluída com sucesso!');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 };
 
-const importFromLocalFile = async (
+export const importFromLocalFile = async (
   pool: Pool,
   filePath: string,
 ): Promise<void> => {
@@ -27,24 +39,12 @@ const importFromLocalFile = async (
   }
 
   const importer = new CSVImporter();
-  await importer.importarCSV(pool, filePath);
-  console.log(' ✓ Importação de arquivo local concluída com sucesso!');
-};
 
-export const importFocosCalor = async (
-  pool: Pool,
-  source: string,
-): Promise<void> => {
+  // Obter client do pool e gerenciar seu ciclo de vida
+  const client = await pool.connect();
   try {
-    console.log('++[FOCOS DE CALOR]++');
-    if (source.startsWith('http')) {
-      await importFromURL(pool, source);
-    } else {
-      await importFromLocalFile(pool, source);
-    }
-    console.log('--[FOCOS DE CALOR]--');
-  } catch (error) {
-    console.error('- Erro ao importar focos de calor:', error);
-    throw error;
+    await importer.importarCSV(client, filePath);
+  } finally {
+    client.release();
   }
 };

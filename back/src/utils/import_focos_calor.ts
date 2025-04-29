@@ -2,12 +2,17 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Pool, ClientBase } from 'pg';
+import { from as copyFrom } from 'pg-copy-streams';
 
 export class CSVImporter {
   private tempTableName = process.env.TEMP_TABLE_NAME || 'temp_focos_calor';
   private processedFilesTable = 'tb_arquivos_processados';
 
-  async importarCSV(pool: Pool, filePath: string): Promise<void> {
+  async importarCSV(
+    client: ClientBase,
+    filePath: string,
+    shouldManageTransaction = true,
+  ): Promise<void> {
     const absolutePath = path.resolve(filePath);
 
     if (!fs.existsSync(absolutePath)) {
@@ -17,7 +22,6 @@ export class CSVImporter {
 
     const fileHash = this.calcularHashDoArquivo(absolutePath);
 
-    const client = await pool.connect();
     try {
       console.log('⚠ Verificando se o arquivo já foi processado...');
 
@@ -32,20 +36,28 @@ export class CSVImporter {
       }
 
       console.log('- Arquivo não processado. Continuando...');
-      await client.query('BEGIN');
+
+      // Gerencia transação apenas se solicitado
+      if (shouldManageTransaction) {
+        await client.query('BEGIN');
+      }
+
       await this.criarOuLimparTabela(client);
       await this.executarCopy(client, absolutePath);
       await this.processarDados(client);
       await this.registrarArquivoProcessado(client, fileHash);
-      await client.query('COMMIT');
+
+      if (shouldManageTransaction) {
+        await client.query('COMMIT');
+      }
 
       console.log('✓ Importação concluída com sucesso!');
     } catch (error) {
-      await client.query('ROLLBACK');
+      if (shouldManageTransaction) {
+        await client.query('ROLLBACK');
+      }
       console.error('✗ Erro durante a importação:', error);
       throw error;
-    } finally {
-      client.release();
     }
   }
 
@@ -133,54 +145,7 @@ export class CSVImporter {
     console.log(' ✓ Tabela temporária criada com sucesso.');
   }
 
-  // private async criarOuLimparTabelaTemporaria(
-  // 	client: ClientBase,
-  // ): Promise<void> {
-  // 	// Verifica se a tabela temporária já existe
-  // 	const checkTableQuery = `
-  // 	  SELECT EXISTS (
-  // 		  SELECT 1
-  // 		  FROM information_schema.tables
-  // 		  WHERE table_name = '${this.tempTableName}'
-  // 	  );
-  // 	`;
-  // 	const result = await client.query(checkTableQuery);
-
-  // 	if (result.rows[0].exists) {
-  // 		// Se a tabela já existe, apenas limpa os dados
-  // 		console.log("Tabela temporária já existe. Limpando os dados...");
-  // 		const truncateQuery = `TRUNCATE TABLE ${this.tempTableName};`;
-  // 		await client.query(truncateQuery);
-  // 		console.log("Tabela temporária truncada com sucesso.");
-  // 	} else {
-  // 		// Se a tabela não existe, cria a tabela
-  // 		console.log("Criando tabela temporária...");
-  // 		const createTableQuery = `
-  // 		  CREATE TABLE ${this.tempTableName} (
-  // 			  id TEXT UNIQUE,
-  // 			  lat NUMERIC,
-  // 			  lon NUMERIC,
-  // 			  data_hora_gmt TIMESTAMP,
-  // 			  satelite TEXT,
-  // 			  municipio TEXT,
-  // 			  estado TEXT,
-  // 			  pais TEXT,
-  // 			  municipio_id INTEGER,
-  // 			  estado_id INTEGER,
-  // 			  pais_id INTEGER,
-  // 			  numero_dias_sem_chuva NUMERIC,
-  // 			  precipitacao NUMERIC,
-  // 			  risco_fogo NUMERIC,
-  // 			  bioma TEXT,
-  // 			  frp NUMERIC
-  // 		  );
-  // 		`;
-  // 		await client.query(createTableQuery);
-  // 		console.log("Tabela temporária criada com sucesso.");
-  // 	}
-  // }
-
-  private async executarCopy(
+  private async executarCopyOld(
     client: ClientBase,
     filePath: string,
   ): Promise<void> {
@@ -198,6 +163,46 @@ export class CSVImporter {
       console.error('✗ Erro ao executar o comando COPY:', error);
       throw error;
     }
+  }
+
+  private async executarCopy(
+    client: ClientBase,
+    filePath: string,
+  ): Promise<void> {
+    console.log('⬇ Enviando dados do CSV para a tabela temporária...');
+
+    return new Promise<void>((resolve, reject) => {
+      // Cria um stream de COPY usando pg-copy-streams
+      const stream = client.query(
+        copyFrom(
+          `COPY ${this.tempTableName} FROM STDIN WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8')`,
+        ),
+      );
+
+      // Cria um stream para ler o arquivo
+      const fileStream = fs.createReadStream(filePath);
+
+      // Tratamento de erros no stream de leitura
+      fileStream.on('error', (error) => {
+        console.error('✗ Erro ao ler o arquivo CSV:', error);
+        reject(error);
+      });
+
+      // Tratamento de erros no stream de COPY
+      stream.on('error', (error) => {
+        console.error('✗ Erro ao copiar dados para o PostgreSQL:', error);
+        reject(error);
+      });
+
+      // Quando o COPY terminar com sucesso
+      stream.on('finish', () => {
+        console.log(' ✓ Dados copiados com sucesso para a tabela temporária.');
+        resolve();
+      });
+
+      // Conecta o stream do arquivo ao stream de COPY
+      fileStream.pipe(stream);
+    });
   }
 
   private async processarDados(client: ClientBase): Promise<void> {

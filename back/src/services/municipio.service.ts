@@ -18,6 +18,7 @@ export class MunicipioService {
 	async importarMunicipios(pool: Pool): Promise<void> {
 		try {
 			console.log("⬇ Iniciando importação dos municípios...");
+			console.log("---ESSA OPERAÇÃO PODE DEMORAR---");
 
 			const hasMunicipios = await this.municipioRepository.hasMunicipios();
 			if (hasMunicipios) {

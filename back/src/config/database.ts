@@ -9,9 +9,13 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: Number(process.env.DB_PORT),
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 console.log('Conectando ao banco de dados...');
+console.log('teste');
 console.log(
   `Usuário: ${process.env.DB_USER}, Host: ${process.env.DB_HOST}, Banco de dados: ${process.env.DB_NAME}, Porta: ${process.env.DB_PORT}`,
 );

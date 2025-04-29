@@ -4,11 +4,14 @@ import { query } from '../config/database';
 import type { FeatureCollection } from 'geojson';
 import { Console } from 'node:console';
 import { Pool } from 'pg';
-import fs from 'node:fs'
+import fs from 'node:fs';
 
 export class BiomaService {
   private shapefilePath = path.resolve(__dirname, '../utils/bioma/biomas.shp');
-  private geoJsonFilePath = path.resolve(__dirname, '../utils/bioma/biomas.shp');
+  private geoJsonFilePath = path.resolve(
+    __dirname,
+    '../utils/bioma/bioma.geojson',
+  );
 
   private tempTableName = 'bioma'; // Tabela intermediária
   private finalTableName = 'tb_biomas';
@@ -79,7 +82,6 @@ export class BiomaService {
     }
   }
 
-
   async importarBiomasGeoJSON(): Promise<void> {
     console.log('⬇ Iniciando importação de biomas a partir de GeoJSON...');
     try {
@@ -91,7 +93,6 @@ export class BiomaService {
         console.warn(' ⚠ Tabela já contém dados. Nenhuma ação necessária.');
         return;
       }
-
 
       const absolutePath = path.resolve(this.geoJsonFilePath);
       if (!fs.existsSync(absolutePath)) {
@@ -137,7 +138,6 @@ export class BiomaService {
       throw error;
     }
   }
-
 
   private async transferirDados(): Promise<void> {
     const transferQuery = `
