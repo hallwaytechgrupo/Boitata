@@ -22,8 +22,6 @@ export class FocoCalorController {
     try {
       const focos = await focoCalorService.getFocosByBioma(Number(biomaId));
 
-      console.log(focos);
-
       res.json(focos);
     } catch (error) {
       console.error('Erro ao buscar focos de calor:', error);
