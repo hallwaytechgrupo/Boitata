@@ -18,8 +18,11 @@ import { ModalType } from "./types/ModalEnum";
 import ModalGrafico from "./components/ModalGrafico";
 import { FilterType } from "./types/FilterEnum";
 import type { Location } from "./types";
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import * as turf from '@turf/turf';
 
 function App() {
+	const [roundedArea, setRoundedArea] = useState();
 	const { estado, filterType, setFilterType } = useLocation();
 
 	const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -46,17 +49,17 @@ function App() {
 		setBiomasVisible(isVisible);
 		localStorage.setItem('biomasVisible', JSON.stringify(isVisible));
 
-		
+
 		if (mapRef.current?.getLayer('bioma-fill')) {
 			mapRef.current.setLayoutProperty(
-				'bioma-fill', 
-				'visibility', 
+				'bioma-fill',
+				'visibility',
 				isVisible ? 'visible' : 'none'
 			);
-			
+
 			mapRef.current.setLayoutProperty(
-				'bioma-label', 
-				'visibility', 
+				'bioma-label',
+				'visibility',
 				isVisible ? 'visible' : 'none'
 			);
 		}
@@ -124,7 +127,7 @@ function App() {
 	const carregarBioma = async () => {
 		try {
 			const geojson = await getBiomasShp();
-	
+
 			// Verifica se já existe a fonte
 			if (mapRef.current?.getSource('bioma-layer')) {
 				(mapRef.current.getSource('bioma-layer') as mapboxgl.GeoJSONSource).setData(geojson);
@@ -135,7 +138,7 @@ function App() {
 					data: geojson,
 					promoteId: 'id' // Garante IDs únicos para cada bioma
 				});
-	
+
 				const biomaColors = {
 					1: '#1E8449', // Amazônia - Verde escuro
 					2: '#F39C12', // Caatinga - Laranja
@@ -144,7 +147,7 @@ function App() {
 					5: '#F1C40F', // Pampa - Amarelo
 					6: '#3498DB'  // Pantanal - Azul
 				};
-	
+
 				// Adiciona camada de preenchimento
 				mapRef.current?.addLayer({
 					id: "bioma-fill",
@@ -169,7 +172,7 @@ function App() {
 						'fill-outline-color': '#000'
 					}
 				});
-	
+
 				// Adiciona camada de rótulos
 				mapRef.current?.addLayer({
 					id: "bioma-label",
@@ -216,6 +219,31 @@ function App() {
 				data: focosCalor, // Inicialmente vazio
 			});
 
+			const draw = new MapboxDraw({
+				displayControlsDefault: false,
+				controls: {
+					polygon: true,
+					trash: true
+				},
+				defaultMode: 'draw_polygon'
+			});
+			mapRef.current?.addControl(draw);
+
+			mapRef.current?.on('draw.create', updateArea);
+			mapRef.current?.on('draw.delete', updateArea);
+			mapRef.current?.on('draw.update', updateArea);
+
+			function updateArea(e) {
+				const data = draw.getAll();
+				if (data.features.length > 0) {
+					const area = turf.area(data);
+					const [roundedArea, setRoundedArea] = useState<number | undefined>(undefined);
+					setRoundedArea(Math.round(area * 100) / 100);
+				} else {
+					setRoundedArea(undefined);
+					if (e.type !== 'draw.delete') alert('Click the map to draw a polygon.');
+				}
+			}
 			// mapRef.current?.on("click", handleMapClick);
 
 			mapRef.current?.addLayer({
@@ -274,7 +302,7 @@ function App() {
 				},
 			});
 
-			// Adicionar o evento de clique no heatmap
+			// Adicionar o evento de clique no componente do heatmap
 			mapRef.current?.on("click", "frp-heatmap", (e) => {
 				if (e.features && e.features.length > 0) {
 					const properties = e.features[0].properties;
@@ -324,21 +352,21 @@ function App() {
 						.addTo(mapRef.current!);
 				}
 			});
-	
+
 			// Muda o cursor ao passar sobre biomas
 			mapRef.current.on('mouseenter', 'bioma-fill', () => {
 				if (mapRef.current) {
 					mapRef.current.getCanvas().style.cursor = 'pointer';
 				}
 			});
-	
+
 			mapRef.current.on('mouseleave', 'bioma-fill', () => {
 				if (mapRef.current) {
 					mapRef.current.getCanvas().style.cursor = '';
 				}
 			});
 		}
-	
+
 		return () => {
 			if (mapRef.current) {
 				mapRef.current.off('click', 'bioma-fill');
@@ -373,7 +401,31 @@ function App() {
 	return (
 		<>
 			<div id="map-container" ref={mapContainerRef} />
-
+			<div
+				className="calculation-box"
+				style={{
+					height: 75,
+					width: 150,
+					position: 'absolute',
+					bottom: 40,
+					left: 10,
+					backgroundColor: 'rgba(255, 255, 255, 0.9)',
+					padding: 15,
+					textAlign: 'center'
+				}}
+			>
+				<p>Click the map to draw a polygon.</p>
+				<div id="calculated-area">
+					{roundedArea && (
+						<>
+							<p>
+								<strong>{roundedArea}</strong>
+							</p>
+							<p>square meters</p>
+						</>
+					)}
+				</div>
+			</div>
 			{toastMessage && (
 				<Toast message={toastMessage} onClose={() => setToastMessage(null)} />
 			)}
@@ -423,17 +475,17 @@ function App() {
 						<RiLeafLine />
 					</button> */}
 
-<button
-    type="button"
-    className="search-button"
-    onClick={toggleBiomasVisibility}
-  >
-    {biomasVisible ? (
-      <RiLeafLine color="#27AE60" /> // Verde quando visível
-    ) : (
-      <RiLeafLine color="#888" />    // Cinza quando oculto
-    )}
-  </button>
+					<button
+						type="button"
+						className="search-button"
+						onClick={toggleBiomasVisibility}
+					>
+						{biomasVisible ? (
+							<RiLeafLine color="#27AE60" /> // Verde quando visível
+						) : (
+							<RiLeafLine color="#888" />    // Cinza quando oculto
+						)}
+					</button>
 				</div>
 			</div>
 
@@ -527,7 +579,7 @@ function App() {
 						<ModalBioma
 							title="Informações"
 							onClose={() => setIsModalOpen(false)}
-							
+
 						/>
 					)}
 
