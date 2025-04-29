@@ -1,6 +1,5 @@
 /node_modules
 .qodo
-.env
 json_mock.json
-.env
 package-lock.json
+focos_de_calor/*

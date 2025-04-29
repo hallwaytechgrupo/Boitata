@@ -1,13 +1,16 @@
 import app from './app';
 import pool from './config/database';
 import { verifyDatabaseConnection } from './database/verifyConnection';
-import { initializeDatabase } from './database/setupDatabase';
+import { initializeDatabase } from './database/initializeDatabase';
 
 const PORT = process.env.PORT || 3000;
+const isCloud = process.env.NODE_ENV === 'cloud';
 
 const startServer = () => {
   app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(
+      `Servidor rodando na porta ${PORT} no ambiente ${isCloud ? 'PRODUÇÃO' : 'LOCAL'}`,
+    );
   });
 };
 
@@ -23,7 +26,19 @@ const initializeApplication = async () => {
       );
       process.exit(1);
     }
-    await initializeDatabase(pool);
+
+    if (!isCloud) {
+      console.log(
+        ' - Ambiente de desenvolvimento detectado. Inicializando banco de dados...',
+      );
+      await initializeDatabase(pool);
+      console.log('- Inicialização do banco de dados concluída!\n');
+    } else {
+      console.log(
+        ' - Ambiente de produção detectado. Pulando inicialização do banco de dados.',
+      );
+    }
+
     console.log('- Aplicação pronta para ser executada!\n');
 
     startServer();

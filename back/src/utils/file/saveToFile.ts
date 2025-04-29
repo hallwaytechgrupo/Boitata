@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const saveToTypescriptFile = (fileName: string, data: any): void => {
   try {
     const filePath = path.resolve(__dirname, fileName);
@@ -15,7 +14,6 @@ export const saveToTypescriptFile = (fileName: string, data: any): void => {
 };
 
 export const saveToCSVFile = async (
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   stream: any,
   downloadPath: string,
 ): Promise<void> => {

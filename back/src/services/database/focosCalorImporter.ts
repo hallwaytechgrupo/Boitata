@@ -1,11 +1,12 @@
 import type { Pool } from 'pg';
 import fs from 'node:fs';
 import path from 'node:path';
+import { CSVImporter } from '../../utils/CSVImporter';
 import { CSVDownloader } from '../../utils/csvDownloader';
-import { CSVImporter } from '../../utils/import_focos_calor';
 
 export const importFromURL = async (pool: Pool, url: string): Promise<void> => {
   console.log(' - Importando focos de calor de uma URL...');
+
   const csvFileName = path.basename(url);
   const downloadPath = path.resolve('focos_de_calor', csvFileName);
 
@@ -14,11 +15,10 @@ export const importFromURL = async (pool: Pool, url: string): Promise<void> => {
 
   const importer = new CSVImporter();
 
-  // Obter client do pool e gerenciar seu ciclo de vida
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    await importer.importarCSV(client, downloadPath, false); // não gerenciar transação internamente
+    await importer.importarCSV(client, downloadPath, false);
     await client.query('COMMIT');
     console.log(' ✓ Importação de URL concluída com sucesso!');
   } catch (error) {
@@ -40,7 +40,6 @@ export const importFromLocalFile = async (
 
   const importer = new CSVImporter();
 
-  // Obter client do pool e gerenciar seu ciclo de vida
   const client = await pool.connect();
   try {
     await importer.importarCSV(client, filePath);

@@ -1,10 +1,7 @@
 import { saveToCSVFile } from './file/saveToFile';
 import axios from 'axios';
 import fs from 'node:fs';
-import path from 'node:path';
 import cron from 'node-cron';
-import type { CSVImporter } from './import_focos_calor';
-import pool from '../config/database';
 
 export class CSVDownloader {
   private downloadUrl: string;
@@ -17,7 +14,6 @@ export class CSVDownloader {
 
   async downloadCSV(forceDownload = false): Promise<boolean> {
     try {
-      // Verifica se o arquivo já existe
       if (!forceDownload && fs.existsSync(this.downloadPath)) {
         console.log('✓ Arquivo já existe. Pulando download.');
         return false; // Indica que o download não foi necessário
