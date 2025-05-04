@@ -2,7 +2,7 @@ import type { Pool } from 'pg';
 import fs from 'node:fs';
 import path from 'node:path';
 import { CSVImporter } from '../../utils/CSVImporter';
-import { CSVDownloader } from '../../utils/CSVDownloader';
+import { CSVDownloader } from '../../utils/csvDownloader';
 
 export const importFromURL = async (pool: Pool, url: string): Promise<void> => {
   console.log(' - Importando focos de calor de uma URL...');

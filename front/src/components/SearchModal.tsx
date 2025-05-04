@@ -1,5 +1,5 @@
 import "../styles/SearchModal.css";
-import type { Location } from "../types";
+import type { Location } from "../types/types";
 import SearchDataOptions from "./SearchDataOptions";
 
 interface SearchModalProps {

@@ -5,6 +5,7 @@ import type { FeatureCollection } from 'geojson';
 import { Console } from 'node:console';
 import { Pool } from 'pg';
 import fs from 'node:fs';
+import { formatSQL } from '../repositories/BiomaRepository';
 
 export class BiomaService {
   private shapefilePath = path.resolve(__dirname, '../utils/bioma/biomas.shp');
@@ -127,6 +128,13 @@ export class BiomaService {
           VALUES ($1, $2, ST_SetSRID(ST_GeomFromGeoJSON($3), 4326));
         `;
         await query(insertQuery, [id_bioma, bioma, JSON.stringify(geometry)]);
+
+        console.log('-----------BIOMA QUERY-----------');
+        console.log(
+          formatSQL(insertQuery, [id_bioma, bioma, JSON.stringify(geometry)]),
+        );
+        console.log('-----------BIOMA QUERY-----------');
+
         biomasInseridos++;
       }
 

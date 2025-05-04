@@ -1,7 +1,7 @@
 import { estados } from "../utils/states";
 import SearchDataOptions from "./SearchDataOptions";
 import "../styles/SearchModal.css";
-import type { State } from "../types";
+import type { State } from "../types/types";
 
 interface SearchModalProps {
   onSelectEstado: (estado: State) => void;

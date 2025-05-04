@@ -1,4 +1,4 @@
-import type { ModalProps } from "../types";
+import type { ModalProps } from "../types/types";
 import Modal from "./Modal";
 import "../styles/ModalEstado.css";
 import "../styles/ModalInfo.css";

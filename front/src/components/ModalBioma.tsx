@@ -1,14 +1,14 @@
 import { useLocation } from "../contexts/LocationContext";
-import type { Location, ModalProps } from "../types";
 import { biomas } from "../utils/biomes";
 import SearchModal from "./SearchModal";
 import "../styles/ModalEstado.css";
 import Modal from "./Modal";
+import type { LocationType, ModalProps } from "../types";
 
 const ModalBioma: React.FC<ModalProps> = ({ title, onClose, onConfirm }) => {
   const { setBioma } = useLocation();
 
-  const handleSelectBioma = (selectedBioma: Location) => {
+  const handleSelectBioma = (selectedBioma: LocationType) => {
     console.log("Bioma selecionado:", selectedBioma);
     setBioma(selectedBioma);
   };

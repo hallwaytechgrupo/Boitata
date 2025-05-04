@@ -4,24 +4,37 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import "./App.css";
-import ModalEstado from "./components/ModalEstado";
 import { useLocation } from "./contexts/LocationContext";
-import { getBiomasShp, getFocosByBioamId, getFocosCalorByEstadoId, getStateInfo } from "./services/api";
+import { getBiomasShp, getFocosByBioamId, getFocosCalorByEstadoId } from "./services/api";
 import { statesCoordinates } from "./utils/statesCoordinates";
-import ModalBioma from "./components/ModalBioma";
 import Toast from "./components/Toast";
-import { FaGlobeAmericas } from "react-icons/fa";
-import { RiLeafLine } from "react-icons/ri";
-import { VscGraph } from "react-icons/vsc";
-import { GrInfo } from "react-icons/gr";
-import { ModalType } from "./types/ModalEnum";
-import ModalGrafico from "./components/ModalGrafico";
-import { FilterType } from "./types/FilterEnum";
-import type { Location } from "./types";
-import ModalInfo from "./components/ModalInfo";
+import { ModalType, type ModalTypee } from "./types/ModalEnum";
+import SideNavigation from "./components/menu/SideNavigation";
+import LayersNavigation from "./components/menu/LayerSelection";
+import BoitataLogo from "./components/menu/BoitataLogo";
+import ModalFiltro from "./components/modal/ModalFiltro";
+import { FilterType, type LocationType } from "./types";
+import FilterBadge from "./components/badge/FilterBadge";
 
 function App() {
 	const { estado, bioma, filterType, setFilterType } = useLocation();
+
+	const [activeModal, setActiveModal] = useState<ModalTypee | null>(null)
+  const [activeLayer, setActiveLayer] = useState<string | null>(null)
+
+
+  const openModal = (modal: ModalTypee) => {
+    setActiveModal(modal)
+  }
+
+  const closeModal = () => {
+    setActiveModal(null)
+  }
+
+  const handleLayerChange = (layer: string) => {
+    setActiveLayer(layer)
+  }
+
 
 	const mapRef = useRef<mapboxgl.Map | null>(null);
 	const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -337,7 +350,7 @@ function App() {
 			// Evento de clique nos biomas
 			mapRef.current.on('click', 'bioma-fill', (e) => {
 				if (e.features && e.features.length > 0) {
-					const bioma = e.features[0].properties as Location | null;
+					const bioma = e.features[0].properties as LocationType | null;
 					if (!bioma) {
 						console.error("Bioma properties are null");
 						return;
@@ -406,126 +419,17 @@ function App() {
 				<Toast message={toastMessage} onClose={() => setToastMessage(null)} />
 			)}
 
-			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-			<div className="top-container" onClick={resetMapToBrazil}>
-				<p>Boitata Sentinel</p>
-			</div>
+			<BoitataLogo />
+			<SideNavigation openModal={openModal} />
+			<FilterBadge />
+			<LayersNavigation onLayerChange={handleLayerChange} />
 
-			<div className="filter-container">
-				<div className="category">
-					<p className="filter-container-title">Filtrar por</p>
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => handleOpenModal(ModalType.Estado)}
-					>
-						<FaGlobeAmericas /> Estado
-					</button>
+			{/* Modais */}
 
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => handleOpenModal(ModalType.Bioma)}
-					>
-						<RiLeafLine /> Bioma
-					</button>
-				</div>
-			</div>
+			{/* Filtros */}
+        {activeModal === "filtros" &&  <ModalFiltro onClose={closeModal} />}
 
-			<div className="filter-container-right">
-				<div className="category">
-					{/* <p className="filter-container-title">Overlay</p>
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => handleOpenModal(ModalType.Estado)}
-					>
-						<FaGlobeAmericas /> Estado
-					</button> */}
-
-					{/* <button
-						type="button"
-						className="search-button"
-						onClick={() => handleOpenModal(ModalType.Bioma)}
-					>
-						<RiLeafLine />
-					</button> */}
-
-<button
-    type="button"
-    className="search-button"
-    onClick={toggleBiomasVisibility}
-  >
-    {biomasVisible ? (
-      <RiLeafLine color="#27AE60" /> // Verde quando visível
-    ) : (
-      <RiLeafLine color="#888" />    // Cinza quando oculto
-    )}
-  </button>
-				</div>
-			</div>
-
-			<div className="other-filter-container">
-				<div className="category">
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => handleOpenModal(ModalType.Info)}
-					>
-						<GrInfo />
-					</button>
-
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => handleOpenModal(ModalType.Grafico)}
-					>
-						<VscGraph />
-					</button>
-				</div>
-				{/* <div className="category">
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => console.log("Another action")}
-					>
-						<FaFire size={24} color="#ff4500" />
-						<FaMapMarkerAlt
-							size={12}
-							color="#ff4500"
-							className="absolute -bottom-1 -right-1"
-						/>
-					</button>
-
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => console.log("Another action 2")}
-					>
-						<FaBurn size={24} color="#8b0000" />
-						<FaTree
-							size={12}
-							color="#8b0000"
-							className="absolute -bottom-1 -right-1"
-						/>
-					</button>
-
-					<button
-						type="button"
-						className="search-button"
-						onClick={() => console.log("Another action 2")}
-					>
-						<FaExclamationTriangle size={24} color="#ffa500" />
-						<FaFire
-							size={12}
-							color="#ffa500"
-							className="absolute -bottom-1 -right-1"
-						/>
-					</button>
-				</div> */}
-			</div>
-
-			{isModalOpen && (
+			{/* {isModalOpen && (
 				<>
 					{modalType === ModalType.Estado && (
 						<ModalEstado
@@ -566,7 +470,7 @@ function App() {
 						/>
 					)}
 				</>
-			)}
+			)} */}
 		</>
 	);
 }

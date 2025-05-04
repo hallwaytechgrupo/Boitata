@@ -1,4 +1,4 @@
-import type { ModalProps } from "../types";
+import type { ModalProps } from "../types/types";
 import "../styles/ModalEstado.css";
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import '../styles/ModalGrafico.css'

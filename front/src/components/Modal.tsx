@@ -1,6 +1,6 @@
 import "../styles/Modal.css";
 import "../styles/Toast.css"
-import type { ModalProps } from "../types";
+import type { ModalProps } from "../types/types";
 
 const Modal: React.FC<ModalProps> = ({
 	title,

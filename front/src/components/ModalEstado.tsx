@@ -4,7 +4,7 @@ import { useLocation } from '../contexts/LocationContext';
 import SearchModal from './SearchModal';
 import { estados } from '../utils/states';
 import "../styles/ModalEstado.css"
-import type { ModalProps } from '../types';
+import type { ModalProps } from '../types/types';
 
 const ModalEstado: React.FC<ModalProps> = ({ onClose, onConfirm }) => {
   const { setEstado } = useLocation();
