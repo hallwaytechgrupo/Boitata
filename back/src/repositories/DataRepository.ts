@@ -4,6 +4,8 @@ import { MunicipioModel } from "../models/MunicipioModel";
 import { FocoCalorModel } from "../models/FocoCalorModel";
 import { AreaQueimadaModel } from "../models/AreaQueimadaModel";
 
+import { query } from "../config/database"
+
 // Classe responsável pelo acesso aos dados no banco de dados
 export class DataRepository {
   // Método assíncrono que retorna todos os estados
@@ -45,5 +47,10 @@ export class DataRepository {
     // Exemplo de SQL: SELECT * FROM tb_area_queimada
     // WHERE mes_referencia BETWEEN $1 AND $2
     return [];
+  }
+
+  // Método para buscar todos os focos de calor
+  async getAllAreaQueimada(): Promise<any> {
+    return await query("SELECT * FROM tb_area_queimada")
   }
 }

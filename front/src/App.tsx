@@ -237,7 +237,7 @@ function App() {
 				const data = draw.getAll();
 				if (data.features.length > 0) {
 					const area = turf.area(data);
-					const [roundedArea, setRoundedArea] = useState<number | undefined>(undefined);
+					const [roundedArea, setRoundedArea] = useState<number | undefined>(undefined); // 👈 AQUI ESTÁ O PROBLEMA!
 					setRoundedArea(Math.round(area * 100) / 100);
 				} else {
 					setRoundedArea(undefined);
