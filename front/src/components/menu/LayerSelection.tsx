@@ -101,11 +101,11 @@ const LayersNavigation: React.FC<LayersNavigationProps> = ({
       case PatternType.ESTADO:
         return <Map size={18} />;
       case PatternType.HEAT_MAP:
-        return <Flame size={18} color="#EF4444" />;
+        return <Flame size={18} color="#E5E7EB" />;
       case PatternType.QUEIMADA:
-        return <MapIcon size={18} color="#15803D" />;
+        return <MapIcon size={18} color="#E5E7EB" />;
       case PatternType.RISCO_FOGO:
-        return <AlertTriangle size={18} color="#FACC15" />;
+        return <AlertTriangle size={18} color="#E5E7EB" />;
       default:
         return <Layers size={18} />;
     }

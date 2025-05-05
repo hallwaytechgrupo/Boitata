@@ -43,7 +43,7 @@ export default function SideNavigation({ openModal, activeLayer }: SideNavigatio
         title="Focos de Calor"
       >
         <ButtonIcon>
-          <Flame size={24} color="#EF4444" />
+          <Flame size={24} color="#E5E7EB" />
         </ButtonIcon>
         <ButtonLabel>Focos de Calor</ButtonLabel>
       </NavButton>
@@ -54,7 +54,7 @@ export default function SideNavigation({ openModal, activeLayer }: SideNavigatio
         title="Risco de Fogo"
       >
         <ButtonIcon>
-          <AlertTriangle size={24} color="#FACC15" />
+          <AlertTriangle size={24} color="#E5E7EB" />
         </ButtonIcon>
         <ButtonLabel>Risco de Fogo</ButtonLabel>
       </NavButton>
@@ -65,14 +65,14 @@ export default function SideNavigation({ openModal, activeLayer }: SideNavigatio
         title="Área Queimada"
       >
         <ButtonIcon>
-          <MapIcon size={24} color="#15803D" />
+          <MapIcon size={24} color="#E5E7EB" />
         </ButtonIcon>
         <ButtonLabel>Área Queimada</ButtonLabel>
       </NavButton>
 
       <NavButton onClick={() => openModal(ModalType.GRAFICOS)} title="Gráficos">
         <ButtonIcon>
-          <BarChart2 size={24} color="#FACC15" />
+          <BarChart2 size={24} color="#E5E7EB" />
         </ButtonIcon>
         <ButtonLabel>Gráficos</ButtonLabel>
       </NavButton>
