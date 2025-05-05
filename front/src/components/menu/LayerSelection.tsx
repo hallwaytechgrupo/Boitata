@@ -1,101 +1,179 @@
-import { useState } from "react"
-import styled from "styled-components"
-import { Layers, MapIcon, Flame } from "lucide-react"
-
-const LayersContainer = styled.div`
-  position: fixed;
-  right: 4rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-`
-
-const LayerButton = styled.button<{ $isActive: boolean }>`
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  color: white;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid ${(props) => (props.$isActive ? "rgb(255, 115, 0)" : "rgb(255, 115, 0, 0.3)")};
-  
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-    transform: scale(1.05);
-    border-color: rgb(255, 115, 0);
-  }
-  
-  &:focus {
-    outline: none;
-  }
-`
-
-const LayerLabel = styled.span`
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-  display: none;
-  
-  @media (min-width: 768px) {
-    display: block;
-  }
-`
-
-const LayerIcon = styled.div`
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-bottom: 0.25rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+import type React from 'react';
+import { useState, useEffect } from 'react';
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import { Layers, Flame, AlertTriangle, MapIcon, Loader, Map } from 'lucide-react';
+import { useMap } from '../../hooks/useMap';
+import { 
+  mockFocosCalor, 
+  mockBiomas, 
+  mockAreasQueimadas, 
+  mockRiscoFogo 
+} from '../../utils/mockData';
+import { patterns, PatternType } from '../../types';
+import { LayerContainer, LayerHeader, LayerButton, ButtonIcon, ButtonLabel, GroupDivider, LoadingContainer, LoadingText } from '../../styles/styles';
 
 interface LayersNavigationProps {
-  onLayerChange: (layer: string) => void
+  activePatterns: PatternType[];
+  onTogglePattern: (pattern: PatternType) => void;
 }
 
-export default function LayersNavigation({ onLayerChange }: LayersNavigationProps) {
-  const [activeLayer, setActiveLayer] = useState<string | null>(null)
-
-  const toggleLayer = (layer: string) => {
-    // Se a camada já está ativa, desative-a
-    if (activeLayer === layer) {
-      setActiveLayer(null)
-      onLayerChange("none")
-    } else {
-      // Caso contrário, ative a nova camada
-      setActiveLayer(layer)
-      onLayerChange(layer)
+const LayersNavigation: React.FC<LayersNavigationProps> = ({ 
+  activePatterns,
+  onTogglePattern
+}) => {
+  const { updateLayerData, isMapLoaded, mapRef, allPatternsInitialized } = useMap();
+  const [canShowControls, setCanShowControls] = useState(false);
+  
+  // Verificação mais robusta para o carregamento do mapa
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+      useEffect(() => {
+    console.log("Verificando se o mapa está carregado...", allPatternsInitialized);
+    // Verificar se o mapa está carregado usando isMapLoaded
+    if (isMapLoaded) {
+      setCanShowControls(true);
+      return;
     }
-  }
+    
+    // Verificação alternativa - mapRef.current existe?
+    if (mapRef?.current) {
+      setCanShowControls(true);
+      return;
+    }
+    
+    // Se nenhuma das verificações passar, definir um timeout como fallback
+    const timeoutId = setTimeout(() => {
+      console.log("Timeout de segurança ativado para mostrar controles de camada.");
+      setCanShowControls(true);
+    }, 5000); // 5 segundos de timeout
+    
+    // Verificar periodicamente se o mapa existe
+    const intervalId = setInterval(() => {
+      if (mapRef?.current) {
+        console.log("Mapa detectado em verificação periódica");
+        setCanShowControls(true);
+        clearInterval(intervalId);
+        clearTimeout(timeoutId);
+      }
+    }, 500);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
+  }, [isMapLoaded, mapRef]);
+  
+  const handleToggleLayer = (patternType: PatternType) => {
+    onTogglePattern(patternType);
+    
+    // Verificar se mapRef.current existe antes de atualizar os dados
+    if (!mapRef?.current) {
+      console.warn("Mapa ainda não está disponível. A atualização de dados será ignorada.");
+      return;
+    }
+    
+    if (!activePatterns.includes(patternType)) {
+      console.log(`Carregando dados mock para ${patternType}...`);
+      switch(patternType) {
+        // case PatternType.ESTADO:
+        // // Add estado data when available
+        // break;
+        // case PatternType.BIOMA:
+        //   updateLayerData(PatternType.BIOMA, mockBiomas);
+        //   break;
+        
+        // case PatternType.HEAT_MAP:
+        //   updateLayerData(PatternType.HEAT_MAP, mockFocosCalor);
+        //   break;
+        // case PatternType.QUEIMADA:
+        //   updateLayerData(PatternType.QUEIMADA, mockAreasQueimadas);
+        //   break;
+        // case PatternType.RISCO_FOGO:
+        //   updateLayerData(PatternType.RISCO_FOGO, mockRiscoFogo);
+        //   break;
+        
+      }
+    }
+  };
 
+  const getButtonIcon = (patternType: PatternType) => {
+    switch (patternType) {
+      case PatternType.BIOMA:
+      case PatternType.ESTADO:
+        return <Map size={18} />;
+      case PatternType.HEAT_MAP:
+        return <Flame size={18} color="#EF4444" />;
+      case PatternType.QUEIMADA:
+        return <MapIcon size={18} color="#15803D" />;
+      case PatternType.RISCO_FOGO:
+        return <AlertTriangle size={18} color="#FACC15" />;
+      default:
+        return <Layers size={18} />;
+    }
+  };
+  
+  // Define layer groups for better organization
+  const baseLayers = [PatternType.BIOMA, PatternType.ESTADO];
+  const dataLayers = [PatternType.HEAT_MAP, PatternType.QUEIMADA, PatternType.RISCO_FOGO];
+  
   return (
-    <LayersContainer>
-      <LayerButton onClick={() => toggleLayer("focos")} $isActive={activeLayer === "focos"} title="Focos de Calor">
-        <LayerIcon>
-          <Flame size={24} />
-        </LayerIcon>
-        <LayerLabel>Focos</LayerLabel>
-      </LayerButton>
+    <LayerContainer>
+      <LayerHeader>
+        <Layers size={14} />
+        Camadas
+      </LayerHeader>
+      
+      {!canShowControls && !allPatternsInitialized ? (
+        <LoadingContainer>
+          <Loader size={18} className="animate-spin" />
+          <LoadingText>Carregando mapa...</LoadingText>
+        </LoadingContainer>
+      ) : (
+        <>
+          {/* Base Layers */}
+          {baseLayers.map((patternType) => {
+            const pattern = patterns[patternType];
+            const isActive = activePatterns.includes(patternType);
+            
+            return (
+              <LayerButton 
+                key={pattern.id}
+                $isActive={isActive}
+                onClick={() => handleToggleLayer(patternType)}
+                title={pattern.description}
+              >
+                <ButtonIcon>
+                  {getButtonIcon(patternType)}
+                </ButtonIcon>
+                <ButtonLabel>{pattern.name}</ButtonLabel>
+              </LayerButton>
+            );
+          })}
+          
+          <GroupDivider />
+          
+          {/* Data Layers */}
+          {dataLayers.map((patternType) => {
+            const pattern = patterns[patternType];
+            const isActive = activePatterns.includes(patternType);
+            
+            return (
+              <LayerButton 
+                key={pattern.id}
+                $isActive={isActive}
+                onClick={() => handleToggleLayer(patternType)}
+                title={pattern.description}
+              >
+                <ButtonIcon>
+                  {getButtonIcon(patternType)}
+                </ButtonIcon>
+                <ButtonLabel>{pattern.name}</ButtonLabel>
+              </LayerButton>
+            );
+          })}
+        </>
+      )}
+    </LayerContainer>
+  );
+};
 
-      <LayerButton onClick={() => toggleLayer("risco")} $isActive={activeLayer === "risco"} title="Risco de Fogo">
-        <LayerIcon>
-          <Layers size={24} />
-        </LayerIcon>
-        <LayerLabel>Risco</LayerLabel>
-      </LayerButton>
-
-      <LayerButton onClick={() => toggleLayer("area")} $isActive={activeLayer === "area"} title="Área Queimada">
-        <LayerIcon>
-          <MapIcon size={24} />
-        </LayerIcon>
-        <LayerLabel>Área</LayerLabel>
-      </LayerButton>
-    </LayersContainer>
-  )
-}
+export default LayersNavigation;

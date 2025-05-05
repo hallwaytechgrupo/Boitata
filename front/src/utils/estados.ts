@@ -1,6 +1,6 @@
-import type { Location } from '../types/types';
+import type { LocationType } from '../types';
 
-export const estados: Location[] = [
+export const estados: LocationType[] = [
   { id: 11, nome: 'Rondônia' },
   { id: 12, nome: 'Acre' },
   { id: 13, nome: 'Amazonas' },

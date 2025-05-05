@@ -1,5 +1,5 @@
 import { useState } from "react";
-import '../styles/SearchDataOptions.css'
+import '../../styles/SearchDataOptions.css'
 
 const SearchDataOptions = () => {
   const [selecionado, setSelecionado] = useState<string | null>(null);

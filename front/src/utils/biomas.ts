@@ -1,6 +1,6 @@
-import type { Location } from '../types/types';
+import type { LocationType } from '../types';
 
-export const biomas: Location[] = [
+export const biomas: LocationType[] = [
   { id: 1, nome: 'Amazônia' },
   { id: 2, nome: 'Caatinga' },
   { id: 3, nome: 'Cerrado' },

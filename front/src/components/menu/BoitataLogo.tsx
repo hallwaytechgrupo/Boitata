@@ -1,53 +1,5 @@
-"use client"
-
-import styled from "styled-components"
-import { Flame } from "lucide-react"
 import { motion } from "framer-motion"
-
-const LogoContainer = styled(motion.div)`
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  display: flex;
-  align-items: center;
-  z-index: 20;
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 8px 12px;
-  border-radius: 8px;
-`
-
-const LogoIcon = styled(motion.div)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 8px;
-  
-  svg {
-    filter: drop-shadow(0 0 8px rgba(255, 115, 0, 0.6));
-  }
-`
-
-const LogoText = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-`
-
-const MainTitle = styled(motion.h1)`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #FF7300;
-  line-height: 1.2;
-  margin: 0;
-`
-
-const Subtitle = styled(motion.span)`
-  font-size: 0.75rem;
-  color: #E5E7EB;
-  line-height: 1;
-`
+import { LogoContainer, LogoIcon, LogoText, MainTitle, Subtitle } from '../../styles/styles'
 
 const BoitataLogo = () => {
   return (

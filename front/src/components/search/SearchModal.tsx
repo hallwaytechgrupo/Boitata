@@ -1,10 +1,10 @@
-import "../styles/SearchModal.css";
-import type { Location } from "../types/types";
+import "../../styles/SearchModal.css";
+import type { LocationType } from '../../types';
 import SearchDataOptions from "./SearchDataOptions";
 
 interface SearchModalProps {
-  options: Location[]; // (estados ou biomas)
-  onSelect: (item: Location) => void; // Callback para o item selecionado
+  options: LocationType[]; // (estados ou biomas)
+  onSelect: (item: LocationType) => void; // Callback para o item selecionado
 }
 
 export default function SearchModal({ options, onSelect }: SearchModalProps) {

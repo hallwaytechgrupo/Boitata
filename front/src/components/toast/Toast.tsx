@@ -7,14 +7,16 @@ import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from "lucide-react"
 
 const ToastContainer = styled(motion.div)`
   position: fixed;
-  top: 20px;
-  right: 20px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* Show newest toast at the bottom */
   gap: 10px;
   max-width: 350px;
   width: 100%;
+  align-items: center;
 `
 
 const ToastItem = styled(motion.div)<{ $type: string }>`
@@ -26,6 +28,7 @@ const ToastItem = styled(motion.div)<{ $type: string }>`
   backdrop-filter: blur(8px);
   color: #E5E7EB;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
   border-left: 4px solid ${({ $type }) => {
     switch ($type) {
       case "success":
