@@ -3,6 +3,7 @@ import { EstadoModel } from "../models/EstadoModel";
 import { MunicipioModel } from "../models/MunicipioModel";
 import { FocoCalorModel } from "../models/FocoCalorModel";
 import { AreaQueimadaModel } from "../models/AreaQueimadaModel";
+import { RiscoModel } from "../models/RiscoModel";
 
 import { query } from "../config/database"
 
@@ -52,5 +53,10 @@ export class DataRepository {
   // Método para buscar todos os focos de calor
   async getAllAreaQueimada(): Promise<any> {
     return await query("SELECT * FROM tb_area_queimada")
+  }
+
+  // Método para buscar todos os focos de calor
+  async getAllRisco(): Promise<any> {
+    return await query("SELECT * FROM tb_focos_calor")
   }
 }

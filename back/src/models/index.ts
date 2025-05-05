@@ -4,3 +4,4 @@ export * from "./MunicipioModel";
 export * from "./BiomaModel";
 export * from "./FocoCalorModel";
 export * from "./AreaQueimadaModel";
+export * from "./RiscoModel";
