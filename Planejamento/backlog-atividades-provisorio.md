@@ -71,7 +71,6 @@
 | - Criar componente `SearchModal.tsx` | 5 |
 | - Adicionar select para bioma | 3 |
 | - Adicionar inputs para estado e município | 3 |
-| - Adicionar o botão para permitir a seleção de área | 7 |
 | - Adicionar botão de submit | 2 |
 | - Adicionar botão de seleção manual de área e suas funções de front para funcionalidade | 5 |
 | **Criar componentes React para página de gráficos** | - |
