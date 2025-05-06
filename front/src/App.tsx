@@ -86,12 +86,12 @@ const AppContent = () => {
       )}
 
       <BoitataLogo />
+      <FilterBadge />
       <SideNavigation 
         openModal={openModal} 
         activeLayer={activeLayer} 
         // onLayerChange={handleLayerChange}
       />
-      <FilterBadge />
       <LayersNavigation 
         activePatterns={activeLayers}
         onTogglePattern={toggleLayerVisibility}

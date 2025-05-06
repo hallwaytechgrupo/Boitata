@@ -11,10 +11,13 @@ export const LogoContainer = styled(motion.div)`
   z-index: 20;
   background: rgba(17, 24, 39, 0.7);
   backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* border: 1px solid rgba(255, 255, 255, 0.1); */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 8px 12px;
   border-radius: 8px;
+
+  border: 1px solid rgba(255, 115, 0, .3);
+
 `;
 
 export const LogoIcon = styled(motion.div)`
