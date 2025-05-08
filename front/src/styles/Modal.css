@@ -12,7 +12,7 @@
 
 .confirm-button {
   padding: 10px 20px;
-  background-color: #0052B4;
+  background-color: #0052b4;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -57,5 +57,5 @@
   border-radius: 8px;
   /* width: 50%; */
   text-align: center;
-  border: 2px solid #0052B4;
+  border: 2px solid #0052b4;
 }
