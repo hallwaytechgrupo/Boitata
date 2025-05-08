@@ -25,3 +25,27 @@ export interface LocationContextProps {
 	setBioma: (bioma: Location) => void;
 	setFilterType: (type: FilterType) => void;
 }
+
+
+//tipo para o filtro
+export enum FilterType {
+	NONE = 'none',
+	ESTADO = 'estado',
+	MUNICIPIO = 'municipio',
+	BIOMA = 'bioma',
+}
+
+//tipo para localidades
+export interface LocationType {
+	id: number;
+	nome: string;
+}
+
+//tipo para exibição de dados
+export enum PatternType {
+	HEAT_MAP = 'heatmap',
+	BIOMA = 'bioma',
+	QUEIMADA = 'queimada',
+	RISCO_FOGO = 'risco-fogo',
+	ESTADO = 'estado',
+  }
