@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import {
   Bar,
@@ -61,11 +61,20 @@ export const estadosSiglas: Record<number, string> = {
 };
 
 export default function GraficosModal({ onClose }: GraficosModalProps) {
-  const [month, setMonth] = useState("5"); // Default to January
+  const [month, setMonth] = useState(() =>
+    (new Date().getMonth() + 1).toString()
+  ); // Default to current month
   const [year, setYear] = useState("2025"); // Default to 2023
-  const [chartData, setChartData] = useState(firesByStateData); // Use mock data initially
+  const [chartData, setChartData] = useState<FormattedFireData[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Fetch initial data when the component mounts
+    const initialMonth = month;
+    const initialYear = year;
+    fetchData(initialMonth, initialYear);
+  }, []); // Empty dependency array to run only once
 
   // Tipo para os dados recebidos da API
   interface ApiFireData {
@@ -167,7 +176,12 @@ export default function GraficosModal({ onClose }: GraficosModalProps) {
   );
 
   return (
-    <ModalBase title="Gráficos" onClose={onClose} customWidth="60rem">
+    <ModalBase
+      title="Gráficos"
+      onClose={onClose}
+      customWidth="100vw"
+      customHeight="40vh"
+    >
       <Container>
         <FilterGrid>
           <FilterGroup>
@@ -202,7 +216,8 @@ export default function GraficosModal({ onClose }: GraficosModalProps) {
                 angle={-45}
                 stroke="#999"
                 textAnchor="end"
-                interval={0}
+                interval={undefined}
+                fontSize={12}
               />
               <YAxis stroke="#999" />
               <Tooltip

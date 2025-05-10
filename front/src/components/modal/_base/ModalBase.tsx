@@ -17,6 +17,7 @@ interface ModalProps {
   children: ReactNode;
   className?: string;
   customWidth?: string;
+  customHeight?: string;
 }
 
 export default function ModalBase({
