@@ -1,5 +1,5 @@
 
-<div align="center"> <img src="./Planejamento//utils/boitataLogoT.png" alt="logoBoitataT" height="150"> <h1> Boitatá <br> HeatSentinel </h1></div>
+<div align="center"> <img src="./Planejamento/utils/boitataLogoT.png" alt="logoBoitataT" height="150"> <h1> Boitatá <br> HeatSentinel </h1></div>
 
 <div align="center">
   <img src="https://postgis.net/docs/manual-2.4/images/PostGIS_logo.png" alt="PostGIS" height="50">
@@ -166,7 +166,7 @@ do BDQueimadas
   Utililzando da metodologia ágil, e seguindo o método SCRUM, a equipe se organizou para executar o processo de desenvolvimento do projeto solicitado. Nesta seção será demonstrado alguns dos passos deste processo, e documentos e arquivos que possam fazer referencia ao desenvolvimento do projeto, como diagramas, detalhamento dos requisitos, graficos do processo de desenvolvimento e demais arquivos necessarios para demonstrar o processo em si.
 
  <a href="https://trello.com/b/3jPRel4e/boitata-heat-sentinel">
-  <img src="./Planejamento/utils/logo+trello.png" alt="Descrição da imagem" height="100">
+  <img src="./Planejamento/utils/logo+trello.png" alt="logo_trelo" height="100">
 </a>
 
 </div>
@@ -176,7 +176,7 @@ do BDQueimadas
 ## Casos de Uso:
   Clicar na imagem abaixo o levera ao documento detalhado dos casos de uso, no formato de tabela em MarckDown.
 
-  [![Casos de Uso](./Planejamento/userCases.png)](./Planejamento//backlog.md)
+  [![Casos de Uso](./Planejamento/userCases.png)](./Planejamento/backlog.md)
 
 </div>
 
