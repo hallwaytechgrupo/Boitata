@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: 'http://localhost:3000',
 });
 
 /**
@@ -12,7 +12,7 @@ const api = axios.create({
  */
 export const getGraficoFocosCalor = async (mes: number, ano: number) => {
   try {
-    const response = await api.get("focos_calor/grafico", {
+    const response = await api.get('focos_calor/grafico', {
       params: {
         mes,
         ano,
@@ -21,29 +21,67 @@ export const getGraficoFocosCalor = async (mes: number, ano: number) => {
 
     return response.data;
   } catch (error) {
-    console.error("Erro ao buscar dados para gráfico:", error);
+    console.error('Erro ao buscar dados para gráfico:', error);
     throw error;
   }
 };
 
-export const getFocosCalorByEstadoId = async (estadoId: string) => {
+export const getFocosCalorByEstadoId = async (
+  estadoId: string,
+  dataInicio?: string,
+  dataFim?: string,
+) => {
   try {
-    const response = await api.get(`focos_calor/estado/${estadoId}`);
+    const response = await api.get(`focos_calor/estado/${estadoId}`, {
+      params: {
+        ...(dataInicio && { dataInicio }),
+        ...(dataFim && { dataFim }),
+      },
+    });
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching focosCalor:", error);
+    console.error('Error fetching focosCalor:', error);
     throw error;
   }
 };
 
-export const getFocosByBioamId = async (biomaId: string) => {
+export const getFocosCalorByMunicipioId = async (
+  municipioId: string,
+  dataInicio?: string,
+  dataFim?: string,
+) => {
   try {
-    const response = await api.get(`focos_calor/bioma/${biomaId}`);
+    const response = await api.get(`focos_calor/municipio/${municipioId}`, {
+      params: {
+        ...(dataInicio && { dataInicio }),
+        ...(dataFim && { dataFim }),
+      },
+    });
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching focosCalor:", error);
+    console.error('Error fetching focosCalor:', error);
+    throw error;
+  }
+};
+
+export const getFocosByBiomaId = async (
+  biomaId: string,
+  dataInicio?: string,
+  dataFim?: string,
+) => {
+  try {
+    const response = await api.get(`focos_calor/bioma/${biomaId}`, {
+      params: {
+        ...(dataInicio && { dataInicio }),
+        ...(dataFim && { dataFim }),
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching focosCalor:', error);
     throw error;
   }
 };
@@ -54,18 +92,60 @@ export const getStateInfo = async (estadoId: string) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching stateInfo:", error);
+    console.error('Error fetching stateInfo:', error);
     throw error;
   }
 };
 
-export const getBiomasShp = async () => {
+// Estatísticas por Estado
+export async function getEstatisticasEstado(estadoId?: string) {
   try {
-    const response = await api.get("biomas");
+    const url = `focos_calor/estado/info/${estadoId}`;
+
+    const response = await api.get(url);
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching focosCalor:", error);
+    console.error('Erro na requisição de estatísticas do estado:', error);
+    throw error;
+  }
+}
+
+// Estatísticas por Município
+export async function getEstatisticasMunicipio(municipioId?: string) {
+  try {
+    const url = `focos_calor/municipio/info/${municipioId}`;
+
+    const response = await api.get(url);
+
+    return response.data;
+  } catch (error) {
+    console.error('Erro na requisição de estatísticas do município:', error);
+    throw error;
+  }
+}
+
+// Estatísticas por Bioma
+export async function getEstatisticasBioma(biomaId?: string) {
+  try {
+    const url = `focos_calor/bioma/info/${biomaId}`;
+
+    const response = await api.get(url);
+
+    return response.data;
+  } catch (error) {
+    console.error('Erro na requisição de estatísticas do bioma:', error);
+    throw error;
+  }
+}
+
+export const getBiomasShp = async () => {
+  try {
+    const response = await api.get('biomas');
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching focosCalor:', error);
     throw error;
   }
 };
