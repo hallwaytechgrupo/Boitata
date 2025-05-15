@@ -22,8 +22,8 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import * as turf from '@turf/turf';
 
 function App() {
-	const [roundedArea, setRoundedArea] = useState();
 	const { estado, filterType, setFilterType } = useLocation();
+	const [roundedArea, setRoundedArea] = useState<number | undefined>(undefined);
 
 	const mapRef = useRef<mapboxgl.Map | null>(null);
 	const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -233,11 +233,14 @@ function App() {
 			mapRef.current?.on('draw.delete', updateArea);
 			mapRef.current?.on('draw.update', updateArea);
 
-			function updateArea(e) {
+			// No topo do componente App
+
+			// ...
+
+			function updateArea(e: any) {
 				const data = draw.getAll();
 				if (data.features.length > 0) {
 					const area = turf.area(data);
-					const [roundedArea, setRoundedArea] = useState<number | undefined>(undefined); // 👈 AQUI ESTÁ O PROBLEMA!
 					setRoundedArea(Math.round(area * 100) / 100);
 				} else {
 					setRoundedArea(undefined);

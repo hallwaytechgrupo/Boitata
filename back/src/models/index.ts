@@ -5,3 +5,5 @@ export * from "./BiomaModel";
 export * from "./FocoCalorModel";
 export * from "./AreaQueimadaModel";
 export * from "./RiscoModel";
+export * from "./AreaModel";
+export * from "./AreaQueimadaModel";  
