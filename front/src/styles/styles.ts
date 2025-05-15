@@ -87,7 +87,7 @@ export const LayerContainer = styled.div`
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 1000;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;

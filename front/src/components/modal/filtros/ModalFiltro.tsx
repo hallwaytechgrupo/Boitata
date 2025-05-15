@@ -60,6 +60,10 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
   const [activeTab, setActiveTab] = useState<'estado' | 'bioma'>(
     filterType === FilterType.BIOMA ? 'bioma' : 'estado',
   );
+
+  const MIN_DATE = "2024-08-01";
+  const MAX_DATE = new Date().toISOString().split("T")[0];
+
   const [tempStartDate, setTempStartDate] = useState(dateRange.startDate);
   const [tempEndDate, setTempEndDate] = useState(dateRange.endDate);
   const [isLoading, setIsLoading] = useState(false);
@@ -344,7 +348,16 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
           <FilterInput
             type="date"
             value={tempStartDate}
-            onChange={(e) => setTempStartDate(e.target.value)}
+            onChange={(e) => {
+              const newStartDate = e.target.value;
+              setTempStartDate(newStartDate);
+              
+              if (tempEndDate && newStartDate > tempEndDate) {
+                setTempEndDate(newStartDate);
+              }
+            }}
+            min={MIN_DATE}
+            max={MAX_DATE}
             disabled={!estado && !bioma && !cidade}
           />
         </FilterContainer>
@@ -354,7 +367,9 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
             type="date"
             value={tempEndDate}
             onChange={(e) => setTempEndDate(e.target.value)}
-            disabled={!estado && !bioma && !cidade}
+            min={tempStartDate || MIN_DATE} // A data mínima é a data inicial selecionada
+            max={MAX_DATE}
+            disabled={(!estado && !bioma && !cidade) || !tempStartDate} // Desabilita se não tiver data inicial
           />
         </FilterContainer>
       </FilterGrid>

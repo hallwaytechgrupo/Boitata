@@ -76,7 +76,6 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
     return data.toLocaleDateString('pt-BR');
   };
 
-  // O restante do componente permanece igual...
   if (isLoading) {
     return (
       <Modal title="Análises" onClose={onClose}>
@@ -105,41 +104,35 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
       case FilterType.ESTADO:
         return (
           <>
-            <Section>
-              <SectionTitle>Estatísticas do Estado: {estado?.nome}</SectionTitle>
-              
-              <InfoCard>
-                <InfoLabel>Total de focos nos últimos 30 dias:</InfoLabel>
-                <InfoValue>{formatNumero(estatisticasData.total_focos_30dias || 0)} focos</InfoValue>
-              </InfoCard>
-              
-              <InfoCard>
-                <InfoLabel>Risco médio de fogo:</InfoLabel>
-                <InfoValue>{(estatisticasData.risco_fogo_medio || 0).toFixed(2)}%</InfoValue>
-              </InfoCard>
-              
-              <InfoCard>
-                <InfoLabel>Poder radiativo médio (FRP):</InfoLabel>
-                <InfoValue>{(estatisticasData.frp_medio || 0).toFixed(2)} MW</InfoValue>
-              </InfoCard>
-              
-              <InfoCard>
-                <InfoLabel>Última atualização:</InfoLabel>
-                <InfoValue>{formatarData(estatisticasData.ultima_atualizacao)}</InfoValue>
-              </InfoCard>
-              
-              {estatisticasData.top_cidades && (
-                <>
-                  <SectionTitle>Top Municípios Afetados</SectionTitle>
-                  {estatisticasData.top_cidades.map((cidade: any, index: number) => (
-                    <InfoCard key={index}>
-                      <InfoLabel>{index + 1}. {cidade.municipio}</InfoLabel>
-                      <InfoValue>{formatNumero(cidade.total_focos)} focos</InfoValue>
-                    </InfoCard>
-                  ))}
-                </>
-              )}
-            </Section>
+        <Section>
+          <SectionTitle>Estatísticas do Estado: {estatisticasData.estado}</SectionTitle>
+          
+          <InfoCard>
+            <InfoLabel>Última atualização:</InfoLabel>
+            <InfoValue>{formatarData(estatisticasData.ultima_atualizacao)}</InfoValue>
+          </InfoCard>
+
+          {estatisticasData.maior_frp && (
+            <InfoCard>
+          <InfoLabel>Maior poder radiativo (FRP):</InfoLabel>
+          <InfoValue>
+            {estatisticasData.maior_frp.frp.toFixed(2)} MW em {estatisticasData.maior_frp.municipio} ({formatarData(estatisticasData.maior_frp.data)})
+          </InfoValue>
+            </InfoCard>
+          )}
+
+          {estatisticasData.top_cidades && estatisticasData.top_cidades.length > 0 && (
+            <>
+          <SectionTitle>Top Municípios Afetados</SectionTitle>
+          {estatisticasData.top_cidades.map((cidade: any, index: number) => (
+            <InfoCard key={index}>
+              <InfoLabel>{index + 1}. {cidade.municipio}</InfoLabel>
+              <InfoValue>{formatNumero(cidade.total_focos)} focos</InfoValue>
+            </InfoCard>
+          ))}
+            </>
+          )}
+        </Section>
           </>
         );
 
