@@ -2,10 +2,7 @@ import path from 'node:path';
 import { exec } from 'node:child_process';
 import { query } from '../config/database';
 import type { FeatureCollection } from 'geojson';
-import { Console } from 'node:console';
-import { Pool } from 'pg';
 import fs from 'node:fs';
-import { formatSQL } from '../repositories/BiomaRepository';
 
 export class BiomaService {
   private shapefilePath = path.resolve(__dirname, '../utils/bioma/biomas.shp');
@@ -129,12 +126,6 @@ export class BiomaService {
         `;
         await query(insertQuery, [id_bioma, bioma, JSON.stringify(geometry)]);
 
-        console.log('-----------BIOMA QUERY-----------');
-        console.log(
-          formatSQL(insertQuery, [id_bioma, bioma, JSON.stringify(geometry)]),
-        );
-        console.log('-----------BIOMA QUERY-----------');
-
         biomasInseridos++;
       }
 
@@ -181,7 +172,6 @@ export class BiomaService {
   }
 
   // Versão alternativa se precisar dos dados brutos
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   async getAllBiomas(): Promise<any[]> {
     const result = await query(
       'SELECT id_bioma, bioma, ST_AsGeoJSON(geometry) as geometry FROM tb_biomas',
