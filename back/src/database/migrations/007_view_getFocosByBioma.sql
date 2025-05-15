@@ -1,13 +1,22 @@
-CREATE OR REPLACE FUNCTION public.get_focos_geojson_bioma(p_bioma_id integer, p_horas_intervalo integer DEFAULT 168)
- RETURNS jsonb
- LANGUAGE plpgsql
+CREATE OR REPLACE FUNCTION public.get_focos_geojson_bioma(
+    p_bioma_id integer,
+    p_data_inicio timestamp DEFAULT NULL,
+    p_data_fim timestamp DEFAULT NULL
+)
+RETURNS jsonb
+LANGUAGE plpgsql
 AS $function$
 DECLARE
     resultado jsonb;
+    v_data_inicio timestamp;
+    v_data_fim timestamp;
 BEGIN
+    v_data_fim := COALESCE(p_data_fim, now());
+    v_data_inicio := COALESCE(p_data_inicio, v_data_fim - INTERVAL '14 days');
+
     SELECT jsonb_build_object(
         'type', 'FeatureCollection',
-        'features', jsonb_agg(
+        'features', COALESCE(jsonb_agg(
             jsonb_build_object(
                 'type', 'Feature',
                 'geometry', ST_AsGeoJSON(fc.localizacao)::jsonb,
@@ -21,7 +30,7 @@ BEGIN
                     'bioma', b.bioma
                 )
             )
-        )
+        ), '[]'::jsonb)
     ) INTO resultado
     FROM 
         tb_focos_calor fc
@@ -31,8 +40,9 @@ BEGIN
         tb_biomas b ON fc.id_bioma = b.id_bioma
     WHERE 
         b.id_bioma = p_bioma_id
-        AND fc.data_hora >= (CURRENT_TIMESTAMP - (p_horas_intervalo || ' hours')::interval);
+        AND fc.data_hora >= v_data_inicio
+        AND fc.data_hora <= v_data_fim;
     
     RETURN resultado;
 END;
-$function$
+$function$;

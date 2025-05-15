@@ -1,5 +1,5 @@
-CREATE OR REPLACE FUNCTION public.get_focos_geojson(
-    p_estado_id integer,
+CREATE OR REPLACE FUNCTION public.get_focos_geojson_municipio(
+    p_municipio_id integer,
     p_data_inicio timestamp DEFAULT NULL,
     p_data_fim timestamp DEFAULT NULL
 )
@@ -16,7 +16,7 @@ BEGIN
 
     SELECT jsonb_build_object(
         'type', 'FeatureCollection',
-        'features', jsonb_agg(
+        'features', COALESCE(jsonb_agg(
             jsonb_build_object(
                 'type', 'Feature',
                 'geometry', ST_AsGeoJSON(fc.localizacao)::jsonb,
@@ -30,7 +30,7 @@ BEGIN
                     'estado', e.estado
                 )
             )
-        )
+        ), '[]'::jsonb)
     ) INTO resultado
     FROM 
         tb_focos_calor fc
@@ -39,7 +39,7 @@ BEGIN
     JOIN
         tb_estados e ON m.id_estado = e.id_estado
     WHERE 
-        m.id_estado = p_estado_id
+        m.id_municipio = p_municipio_id
         AND fc.data_hora >= v_data_inicio
         AND fc.data_hora <= v_data_fim;
     
