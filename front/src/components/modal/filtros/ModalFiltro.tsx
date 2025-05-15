@@ -35,6 +35,7 @@ const findEstadoById = (
   let fim = estados.length - 1;
 
   while (inicio <= fim) {
+    // MATEMÁTICA PARA COMPUTAÇÃO 4. Funções Matemáticas Algébricas e Suas Aplicações
     const meio = Math.floor((inicio + fim) / 2);
     
     if (estados[meio].id === id) {
@@ -127,6 +128,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
 
       let currentFilterType = FilterType.NONE;
 
+      // MATEMÁTICA PARA COMPUTAÇÃO - LÓGICA PROPOSICIONLA
       if (activeTab === 'estado') {
         currentFilterType = cidade ? FilterType.MUNICIPIO : FilterType.ESTADO;
       } else if (activeTab === 'bioma' && bioma) {
