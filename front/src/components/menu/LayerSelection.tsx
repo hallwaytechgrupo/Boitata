@@ -3,12 +3,6 @@ import { useState, useEffect } from 'react';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import { Layers, Flame, AlertTriangle, MapIcon, Loader, Map } from 'lucide-react';
 import { useMap } from '../../hooks/useMap';
-import { 
-  mockFocosCalor, 
-  mockBiomas, 
-  mockAreasQueimadas, 
-  mockRiscoFogo 
-} from '../../utils/mockData';
 import { patterns, PatternType } from '../../types';
 import { LayerContainer, LayerHeader, LayerButton, ButtonIcon, ButtonLabel, GroupDivider, LoadingContainer, LoadingText } from '../../styles/styles';
 
