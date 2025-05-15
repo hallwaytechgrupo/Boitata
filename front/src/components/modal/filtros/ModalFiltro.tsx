@@ -4,8 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ModalBase from '../_base/ModalBase';
 import { useFilter } from '../../../contexts/FilterContext';
 import { FilterType, PatternType, type LocationType } from '../../../types';
-import { getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../../../services/api';
-import { useMap } from '../../../hooks/useMap';
 import { estados } from '../../../utils/estados';
 import { biomas } from '../../../utils/biomas';
 import {
@@ -28,16 +26,48 @@ import {
 import cidadesPorEstado from '../../../utils/cidades';
 import { useModal } from '../../../contexts/ModalContext';
 
+// ED.04 Algoritmos de busca em vetores
+const findEstadoById = (
+  id: number,
+  estados: LocationType[],
+): LocationType | undefined => {
+  let inicio = 0;                     
+  let fim = estados.length - 1;
+
+  while (inicio <= fim) {
+    const meio = Math.floor((inicio + fim) / 2);
+    
+    if (estados[meio].id === id) {
+      return estados[meio];
+    }
+    
+    if (estados[meio].id < id) {
+      inicio = meio + 1;
+    } else {
+      fim = meio - 1;
+    }
+  }
+
+  return undefined;
+};
+
+// ED.03 Algoritmos de ordenação (vetores numéricos, cadeias, etc.)
 const quickSortEstados = (arr: LocationType[]): LocationType[] => {
   if (arr.length <= 1) {
     return arr;
   }
-  
+
   const pivot = arr[Math.floor(arr.length / 2)];
-  const left = arr.filter(estado => estado.nome.localeCompare(pivot.nome) < 0);
-  const middle = arr.filter(estado => estado.nome.localeCompare(pivot.nome) === 0);
-  const right = arr.filter(estado => estado.nome.localeCompare(pivot.nome) > 0);
-  
+  const left = arr.filter(
+    (estado) => estado.nome.localeCompare(pivot.nome) < 0,
+  );
+  const middle = arr.filter(
+    (estado) => estado.nome.localeCompare(pivot.nome) === 0,
+  );
+  const right = arr.filter(
+    (estado) => estado.nome.localeCompare(pivot.nome) > 0,
+  );
+
   return [...quickSortEstados(left), ...middle, ...quickSortEstados(right)];
 };
 
@@ -65,23 +95,25 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
   // Acesso direto ao useMap para atualizar os dados
   const { handleFiltrosConfirm } = useModal();
 
+  // ED.03 Algoritmos de ordenação (vetores numéricos, cadeias, etc.)
   const estadosOrdenados = quickSortEstados([...estados]);
-
-
 
   const [activeTab, setActiveTab] = useState<'estado' | 'bioma'>(
     filterType === FilterType.BIOMA ? 'bioma' : 'estado',
   );
 
-  const MIN_DATE = "2024-08-01";
-  const MAX_DATE = new Date().toISOString().split("T")[0];
+  const MIN_DATE = '2024-08-01';
+  const MAX_DATE = new Date().toISOString().split('T')[0];
 
   const [tempStartDate, setTempStartDate] = useState(dateRange.startDate);
   const [tempEndDate, setTempEndDate] = useState(dateRange.endDate);
   const [isLoading, setIsLoading] = useState(false);
 
   const getMunicipios = (estadoId: number): LocationType[] => {
-    return cidadesPorEstado[estadoId.toString() as keyof typeof cidadesPorEstado] || [];
+    return (
+      cidadesPorEstado[estadoId.toString() as keyof typeof cidadesPorEstado] ||
+      []
+    );
   };
 
   const handleApplyFilter = async () => {
@@ -94,7 +126,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
       });
 
       let currentFilterType = FilterType.NONE;
-      
+
       if (activeTab === 'estado') {
         currentFilterType = cidade ? FilterType.MUNICIPIO : FilterType.ESTADO;
       } else if (activeTab === 'bioma' && bioma) {
@@ -107,7 +139,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
         cidade,
         bioma,
         tempStartDate,
-        tempEndDate
+        tempEndDate,
       );
 
       // Se houver um callback onConfirm, chame-o
@@ -126,7 +158,10 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
   const handleEstadoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = Number.parseInt(e.target.value);
     if (selectedId) {
-      const selectedEstado = estados.find((e) => e.id === selectedId);
+
+      // ED.04 Algoritmos de busca em vetores
+      const selectedEstado = findEstadoById(selectedId, estadosOrdenados);
+
       if (selectedEstado) {
         setEstado(selectedEstado);
         setFilterType(FilterType.ESTADO);
@@ -139,17 +174,17 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
   };
 
   const handleCidadeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const selectedId = Number.parseInt(e.target.value);
-  if (selectedId && estado) {
-    const selectedCidade = getMunicipios(estado.id).find(
-      (c) => c.id === selectedId,
-    );
-    if (selectedCidade) {
-      setFilterType(FilterType.MUNICIPIO);
-      setCidade(selectedCidade);
+    const selectedId = Number.parseInt(e.target.value);
+    if (selectedId && estado) {
+      const selectedCidade = getMunicipios(estado.id).find(
+        (c) => c.id === selectedId,
+      );
+      if (selectedCidade) {
+        setFilterType(FilterType.MUNICIPIO);
+        setCidade(selectedCidade);
+      }
     }
-  }
-};
+  };
 
   const handleBiomaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = Number.parseInt(e.target.value);
@@ -297,11 +332,15 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                 onChange={handleEstadoChange}
               >
                 <option value="">Selecione um estado</option>
-                 {estadosOrdenados.map((e) => (  // Use estadosOrdenados em vez de estados
-                  <option key={e.id} value={e.id}>
-                    {e.nome}
-                  </option>
-                ))}
+                {estadosOrdenados.map(
+                  (
+                    e, // Use estadosOrdenados em vez de estados
+                  ) => (
+                    <option key={e.id} value={e.id}>
+                      {e.nome}
+                    </option>
+                  ),
+                )}
               </FilterSelect>
             </FilterContainer>
 
@@ -363,7 +402,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
             onChange={(e) => {
               const newStartDate = e.target.value;
               setTempStartDate(newStartDate);
-              
+
               if (tempEndDate && newStartDate > tempEndDate) {
                 setTempEndDate(newStartDate);
               }
