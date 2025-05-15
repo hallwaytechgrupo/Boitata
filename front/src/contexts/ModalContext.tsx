@@ -1,7 +1,7 @@
 import type React from 'react';
 import { createContext, useContext, useState, useCallback } from 'react';
-import { getFocosByBioamId, getFocosCalorByEstadoId } from '../services/api';
-import { FilterType, ModalType, PatternType } from '../types';
+import { getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../services/api';
+import { FilterType, type LocationType, ModalType, PatternType } from '../types';
 import { useFilter } from './FilterContext';
 import { useMap } from '../hooks/useMap';
 
@@ -10,6 +10,14 @@ interface ModalContextType {
   openModal: (modal: ModalType) => void;
   closeModal: () => void;
   handleConfirm: () => Promise<void>;
+  handleFiltrosConfirm: (
+    filterType: FilterType,
+    estado?: LocationType | null,
+    cidade?: LocationType | null, 
+    bioma?: LocationType | null,
+    dataInicio?: string,
+    dataFim?: string
+  ) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -55,19 +63,9 @@ export function ModalProvider({
 
       // Lógica específica para cada tipo de modal
       switch (activeModal) {
-        case ModalType.ESTADO:
-          await handleEstadoConfirm();
+        case ModalType.ANALISES:
+          console.log('Processando confirmação do modal de análises');
           break;
-        case ModalType.BIOMA:
-          await handleBiomaConfirm();
-          break;
-        case ModalType.FILTROS:
-          // Aqui você pode adicionar lógica específica para o modal de filtros
-          break;
-        case ModalType.FOCOS:
-          // Lógica específica para o modal de focos
-          break;
-        // Adicione outros casos conforme necessário
       }
 
       closeModal();
@@ -79,60 +77,101 @@ export function ModalProvider({
     }
   }, [activeModal, estado, bioma, activeLayers]);
 
-  // Lógica específica para cada modal
-  const handleEstadoConfirm = async () => {
-    const estadoId = estado?.id.toString();
 
-    if (!estadoId) {
-      showToast('Estado não encontrado');
-      console.error('Estado não encontrado');
-      return;
+  const handleFiltrosConfirm = async (
+    filterType: FilterType,
+    estado?: LocationType | null,
+    cidade?: LocationType | null, 
+    bioma?: LocationType | null,
+    dataInicio?: string,
+    dataFim?: string
+  ) => {
+    try {
+      setIsLoading(true);
+      
+      // Caso: Filtro por município
+      if (filterType === FilterType.MUNICIPIO && estado && cidade) {
+        const estadoId = estado.id.toString();
+        const municipioId = cidade.id.toString();
+        
+        console.log(
+          `Buscando dados para o município: ${cidade.nome} (ID: ${municipioId}) no estado ${estado.nome} (ID: ${estadoId})`
+        );
+        console.log('Datas de filtro:', dataInicio, dataFim);
+        
+        const resultado = await getFocosCalorByMunicipioId(
+          municipioId,
+          dataInicio,
+          dataFim
+        );
+        
+        updateLayerData(PatternType.HEAT_MAP, resultado);
+        if (!activeLayers.includes(PatternType.HEAT_MAP)) {
+          toggleLayerVisibility(PatternType.HEAT_MAP);
+        }
+
+        flyToState(estado.id);
+        
+        setFilterType(FilterType.MUNICIPIO);
+      }
+      // Caso: Filtro por estado
+      else if (filterType === FilterType.ESTADO && estado) {
+        const estadoId = estado.id.toString();
+        
+        console.log(`Buscando dados para o estado: ${estado.nome} (ID: ${estadoId})`);
+        console.log('Datas de filtro:', dataInicio, dataFim);
+        
+        const resultado = await getFocosCalorByEstadoId(
+          estadoId,
+          dataInicio,
+          dataFim
+        );
+        
+        updateLayerData(PatternType.HEAT_MAP, resultado);
+        if (!activeLayers.includes(PatternType.HEAT_MAP)) {
+          toggleLayerVisibility(PatternType.HEAT_MAP);
+        }
+        
+        if (estado) {
+          flyToState(estado.id);
+        }
+        
+        setFilterType(FilterType.ESTADO);
+      }
+      // Caso: Filtro por bioma
+      else if (filterType === FilterType.BIOMA && bioma) {
+        const biomaId = bioma.id.toString();
+        
+        console.log(`Buscando dados para o bioma: ${bioma.nome} (ID: ${biomaId})`);
+        console.log('Datas de filtro:', dataInicio, dataFim);
+        
+        const resultado = await getFocosByBiomaId(
+          biomaId,
+          dataInicio,
+          dataFim
+        );
+
+        console.log('Resultado do filtro por bioma:', resultado);
+        console.log("Tamanho do features:", resultado.features.length);
+
+        if (!resultado.features || resultado.features.length === 0) {
+          console.log('Nenhum dado encontrado para o bioma selecionado.');
+          showToast('Nenhum dado encontrado para o bioma selecionado.');
+        }
+        
+        updateLayerData(PatternType.HEAT_MAP, resultado);
+        if (!activeLayers.includes(PatternType.HEAT_MAP)) {
+          toggleLayerVisibility(PatternType.HEAT_MAP);
+        }
+        
+        setFilterType(FilterType.BIOMA);
+      }
+    } catch (error) {
+      console.error('Erro ao processar filtros:', error);
+      showToast('Erro ao aplicar filtros. Tente novamente.');
+    } finally {
+      setIsLoading(false);
     }
-
-    const resultado = await getFocosCalorByEstadoId(estadoId);
-    
-    updateLayerData(PatternType.HEAT_MAP, resultado);
-    if (!activeLayers.includes(PatternType.HEAT_MAP)) {
-      toggleLayerVisibility(PatternType.HEAT_MAP);
-    }
-    
-    if (estado) {
-      flyToState(estado.id);
-    }
-
-    setFilterType(FilterType.ESTADO);
-    showToast(`Exibindo dados para ${estado?.nome}`);
-  };
-
-  const handleBiomaConfirm = async () => {
-    const biomaId = bioma?.id.toString();
-
-    if (!biomaId) {
-      showToast('Bioma não encontrado');
-      console.error('Bioma não encontrado');
-      return;
-    }
-
-    const resultado = await getFocosByBioamId(biomaId);
-    
-    updateLayerData(PatternType.HEAT_MAP, resultado);
-    if (!activeLayers.includes(PatternType.HEAT_MAP)) {
-      toggleLayerVisibility(PatternType.HEAT_MAP);
-    }
-    
-    setFilterType(FilterType.BIOMA);
-    showToast(`Exibindo dados para o bioma ${bioma?.nome}`);
-  };
-
-  const handleFocosConfirm = async () => {
-    // Implemente a lógica específica para o modal de focos
-    console.log('Processando confirmação do modal de focos');
-    // Exemplo: ativar camada de focos de calor
-    if (!activeLayers.includes(PatternType.HEAT_MAP)) {
-      toggleLayerVisibility(PatternType.HEAT_MAP);
-    }
-    
-    showToast('Visualização de focos de calor atualizada');
   };
 
   return (
@@ -142,6 +181,7 @@ export function ModalProvider({
         openModal,
         closeModal,
         handleConfirm,
+        handleFiltrosConfirm,
         isLoading,
       }}
     >

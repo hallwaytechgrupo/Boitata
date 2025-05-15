@@ -37,7 +37,7 @@ export default function SideNavigation({ openModal, activeLayer }: SideNavigatio
         <ButtonLabel>Filtros</ButtonLabel>
       </NavButton>
 
-      <NavButton
+      {/* <NavButton
         onClick={() => handleLayerButtonClick("focos", ModalType.FOCOS)}
         $isActive={activeLayer === "focos"}
         title="Focos de Calor"
@@ -68,7 +68,7 @@ export default function SideNavigation({ openModal, activeLayer }: SideNavigatio
           <MapIcon size={24} color="#E5E7EB" />
         </ButtonIcon>
         <ButtonLabel>Área Queimada</ButtonLabel>
-      </NavButton>
+      </NavButton> */}
 
       <NavButton onClick={() => openModal(ModalType.GRAFICOS)} title="Gráficos">
         <ButtonIcon>

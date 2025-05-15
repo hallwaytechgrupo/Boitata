@@ -35,7 +35,7 @@ const AppContent = () => {
   const [activeLayer, setActiveLayer] = useState<string | null>("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   
-  const { activeModal, closeModal, handleConfirm, openModal, isLoading } = useModal();
+  const { activeModal, closeModal, openModal } = useModal();
 
   const handleLayerChange = (layer: string) => {
     console.log("Alterando camada para:", layer);
@@ -86,7 +86,7 @@ const AppContent = () => {
       )}
 
       <BoitataLogo />
-      <FilterBadge />
+      {/* <FilterBadge /> */}
       <SideNavigation 
         openModal={openModal} 
         activeLayer={activeLayer} 
@@ -149,6 +149,7 @@ function App() {
   
   const showToast = (message: string) => {
     setToastMessage(message);
+    setTimeout(() => setToastMessage(null), 5000);
   };
 
   return (
@@ -160,6 +161,12 @@ function App() {
       showToast={showToast}
     >
       <AppContent />
+      {toastMessage && (
+        <Toast 
+          message={toastMessage} 
+          onClose={() => setToastMessage(null)} 
+        />
+      )}
     </ModalProvider>
   );
 }

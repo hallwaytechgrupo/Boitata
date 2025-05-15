@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ModalBase from '../_base/ModalBase';
 import { useFilter } from '../../../contexts/FilterContext';
 import { FilterType, PatternType, type LocationType } from '../../../types';
-import { getFocosCalorByEstadoId } from '../../../services/api';
+import { getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../../../services/api';
 import { useMap } from '../../../hooks/useMap';
 import { estados } from '../../../utils/estados';
 import { biomas } from '../../../utils/biomas';
@@ -25,11 +25,16 @@ import {
   ResetButton,
   ApplyButton,
 } from './filtros-styled';
-import SearchModal from '../../search/SearchModal';
+import cidadesPorEstado from '../../../utils/cidades';
+import { useModal } from '../../../contexts/ModalContext';
+
+interface CidadesPorEstadoType {
+  [estadoId: string]: LocationType[];
+}
 
 interface FiltrosModalProps {
   onClose: () => void;
-  onConfirm?: () => void; // Opcional, pois já temos o handleApplyFilter
+  onConfirm?: () => void;
 }
 
 const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
@@ -49,7 +54,8 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
   } = useFilter();
 
   // Acesso direto ao useMap para atualizar os dados
-  const { updateLayerData, toggleLayerVisibility, activeLayers } = useMap();
+  const { handleFiltrosConfirm } = useModal();
+
 
   const [activeTab, setActiveTab] = useState<'estado' | 'bioma'>(
     filterType === FilterType.BIOMA ? 'bioma' : 'estado',
@@ -58,83 +64,44 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
   const [tempEndDate, setTempEndDate] = useState(dateRange.endDate);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Lista de municípios (mock - depende do estado selecionado)
   const getMunicipios = (estadoId: number): LocationType[] => {
-    // Simulação - na prática, isso viria de uma API
-    if (estadoId === 25) {
-      // São Paulo
-      return [
-        { id: 1, nome: 'São Paulo' },
-        { id: 2, nome: 'Campinas' },
-        { id: 3, nome: 'Santos' },
-        { id: 4, nome: 'Ribeirão Preto' },
-        { id: 5, nome: 'São José dos Campos' },
-      ];
-    }
-    if (estadoId === 19) {
-      // Rio de Janeiro
-      return [
-        { id: 1, nome: 'Rio de Janeiro' },
-        { id: 2, nome: 'Niterói' },
-        { id: 3, nome: 'Petrópolis' },
-        { id: 4, nome: 'Angra dos Reis' },
-        { id: 5, nome: 'Cabo Frio' },
-      ];
-    }
-    return [
-      { id: 1, nome: 'Município 1' },
-      { id: 2, nome: 'Município 2' },
-      { id: 3, nome: 'Município 3' },
-    ];
+    return cidadesPorEstado[estadoId.toString() as keyof typeof cidadesPorEstado] || [];
   };
 
   const handleApplyFilter = async () => {
     try {
       setIsLoading(true);
 
-      // Aplicar filtro de data
       setDateRange({
         startDate: tempStartDate,
         endDate: tempEndDate,
       });
 
-      // Se um estado foi selecionado, busque dados da API
-      if (estado && activeTab === 'estado') {
-        setFilterType(FilterType.ESTADO);
-
-        // Buscar dados de focos de calor para o estado
-        const estadoId = estado.id.toString();
-        console.log(
-          `Buscando dados para o estado: ${estado.nome} (ID: ${estadoId})`,
-        );
-
-        const resultado = await getFocosCalorByEstadoId(estadoId);
-        console.log('Dados recebidos da API:', resultado);
-
-        // Atualizar os dados na camada do mapa
-        updateLayerData(PatternType.HEAT_MAP, resultado);
-
-        // Garantir que a camada esteja visível
-        if (!activeLayers.includes(PatternType.HEAT_MAP)) {
-          toggleLayerVisibility(PatternType.HEAT_MAP);
-        }
-      }
-      // Se um bioma foi selecionado
-      else if (bioma && activeTab === 'bioma') {
-        setFilterType(FilterType.BIOMA);
-
-        // Implementação similar para biomas...
+      let currentFilterType = FilterType.NONE;
+      
+      if (activeTab === 'estado') {
+        currentFilterType = cidade ? FilterType.MUNICIPIO : FilterType.ESTADO;
+      } else if (activeTab === 'bioma' && bioma) {
+        currentFilterType = FilterType.BIOMA;
       }
 
-      // Se tiver um onConfirm externo, chame-o também
+      await handleFiltrosConfirm(
+        currentFilterType,
+        estado,
+        cidade,
+        bioma,
+        tempStartDate,
+        tempEndDate
+      );
+
+      // Se houver um callback onConfirm, chame-o
       if (onConfirm) {
         onConfirm();
       }
 
       onClose();
     } catch (error) {
-      console.error('Erro ao buscar dados:', error);
-      // Aqui você poderia adicionar uma notificação de erro para o usuário
+      console.error('Erro ao aplicar filtros:', error);
     } finally {
       setIsLoading(false);
     }
@@ -146,29 +113,34 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
       const selectedEstado = estados.find((e) => e.id === selectedId);
       if (selectedEstado) {
         setEstado(selectedEstado);
+        setFilterType(FilterType.ESTADO);
+        setCidade(null);
       }
     } else {
       setFilterType(FilterType.NONE);
+      setCidade(null);
     }
   };
 
   const handleCidadeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = Number.parseInt(e.target.value);
-    if (selectedId && estado) {
-      const selectedCidade = getMunicipios(estado.id).find(
-        (c) => c.id === selectedId,
-      );
-      if (selectedCidade) {
-        setCidade(selectedCidade);
-      }
+  const selectedId = Number.parseInt(e.target.value);
+  if (selectedId && estado) {
+    const selectedCidade = getMunicipios(estado.id).find(
+      (c) => c.id === selectedId,
+    );
+    if (selectedCidade) {
+      setFilterType(FilterType.MUNICIPIO);
+      setCidade(selectedCidade);
     }
-  };
+  }
+};
 
   const handleBiomaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = Number.parseInt(e.target.value);
     if (selectedId) {
       const selectedBioma = biomas.find((b) => b.id === selectedId);
       if (selectedBioma) {
+        setFilterType(FilterType.BIOMA);
         setBioma(selectedBioma);
       }
     } else {
@@ -191,7 +163,8 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
               Filtros Ativos
             </ActiveFiltersTitle>
             <ActiveFiltersList>
-              {estado && filterType === FilterType.ESTADO && (
+              {/* Estado é sempre mostrado quando selecionado */}
+              {estado && (
                 <ActiveFilterTag
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -200,7 +173,11 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                 >
                   Estado: {estado.nome}
                   <RemoveFilterButton
-                    onClick={() => setFilterType(FilterType.NONE)}
+                    onClick={() => {
+                      setEstado(null);
+                      setCidade(null);
+                      setFilterType(FilterType.NONE);
+                    }}
                     whileHover={{ scale: 1.2, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                   >
@@ -208,7 +185,9 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                   </RemoveFilterButton>
                 </ActiveFilterTag>
               )}
-              {cidade && filterType === FilterType.MUNICIPIO && (
+
+              {/* Município só é mostrado quando selecionado */}
+              {cidade && (
                 <ActiveFilterTag
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -217,7 +196,10 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                 >
                   Município: {cidade.nome}
                   <RemoveFilterButton
-                    onClick={() => setFilterType(FilterType.NONE)}
+                    onClick={() => {
+                      setCidade(null);
+                      setFilterType(FilterType.ESTADO); // Volta para filtro por estado
+                    }}
                     whileHover={{ scale: 1.2, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                   >
@@ -307,22 +289,22 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
               </FilterSelect>
             </FilterContainer>
 
-            <FilterContainer>
-              <FilterLabel>Município</FilterLabel>
-              <FilterSelect
-                value={cidade?.id || ''}
-                onChange={handleCidadeChange}
-                disabled={!estado}
-              >
-                <option value="">Selecione um município</option>
-                {estado &&
-                  getMunicipios(estado.id).map((m) => (
+            {estado && (
+              <FilterContainer>
+                <FilterLabel>Município</FilterLabel>
+                <FilterSelect
+                  value={cidade?.id || ''}
+                  onChange={handleCidadeChange}
+                >
+                  <option value="">Selecione um município</option>
+                  {getMunicipios(estado.id).map((m) => (
                     <option key={m.id} value={m.id}>
                       {m.nome}
                     </option>
                   ))}
-              </FilterSelect>
-            </FilterContainer>
+                </FilterSelect>
+              </FilterContainer>
+            )}
           </motion.div>
         )}
 
@@ -363,6 +345,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
             type="date"
             value={tempStartDate}
             onChange={(e) => setTempStartDate(e.target.value)}
+            disabled={!estado && !bioma && !cidade}
           />
         </FilterContainer>
         <FilterContainer>
@@ -371,10 +354,10 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
             type="date"
             value={tempEndDate}
             onChange={(e) => setTempEndDate(e.target.value)}
+            disabled={!estado && !bioma && !cidade}
           />
         </FilterContainer>
       </FilterGrid>
-
       <ButtonsContainer
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -392,7 +375,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
           onClick={handleApplyFilter}
           // whileHover={{ scale: 1.05, backgroundColor: "#EF4444" }}
           // whileTap={{ scale: 0.95 }}
-          disabled={isLoading}
+          disabled={isLoading || (!estado && !bioma && !cidade)}
         >
           {isLoading ? 'Carregando...' : 'Aplicar Filtro'}
         </ApplyButton>

@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface ModalContainerProps {
   customWidth?: string;
+  $customHeight?: string;
 }
 
 export const ModalOverlay = styled.div`
@@ -72,5 +73,33 @@ export const CloseButton = styled.button`
 
 export const ModalContent = styled.div`
   padding: 1.5rem;
+  overflow-y: auto; /* Enable vertical scrolling */
   color: rgb(209, 213, 219);
+  max-height: calc(90vh - 4rem); /* Altura máxima ajustada para o conteúdo (subtraindo o header) */
+  
+  /* Estilização da barra de rolagem */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(55, 65, 81, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 115, 0, 0.5); /* Cor laranja do tema */
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 115, 0, 0.7);
+  }
+  
+  /* Espaçamento para dispositivos móveis */
+  @media (max-width: 640px) {
+    padding: 1rem;
+    max-height: calc(95vh - 3.5rem);
+  }
 `;

@@ -30,6 +30,7 @@ export const Tab = styled(motion.button)<{ $isActive: boolean }>`
   border-top: none;
   cursor: pointer;
   transition: all 0.2s;
+  width: 100%;
   
   &:hover {
     color: white;
@@ -71,7 +72,8 @@ export const FilterSelect = styled(motion.select)`
   }
 `;
 
-export const FilterInput = styled(motion.input)`
+export const FilterInput = styled.input<{ disabled?: boolean }>`
+  box-sizing: border-box;
   width: 100%;
   background: rgba(31, 41, 55, 0.7);
   backdrop-filter: blur(15px);
@@ -79,7 +81,9 @@ export const FilterInput = styled(motion.input)`
   border-radius: 0.375rem;
   padding: 0.5rem 0.75rem;
   color: white;
-  
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
+
   &:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(255, 115, 0, 0.5);
@@ -170,6 +174,13 @@ export const ApplyButton = styled(Button)`
   color: white;
   
   &:hover {
-    background: #EF4444;
+    background:rgb(207, 93, 0);
+  }
+
+  &:disabled {
+    background: #FFA366;
+    color: #F3F4F6;
+    cursor: not-allowed;
+    opacity: 0.7;
   }
 `;

@@ -57,3 +57,64 @@ export const ExportButton = styled.button`
     margin-right: 0.25rem;
   }
 `;
+
+export const InfoText = styled.p`
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 16px;
+`;
+
+export const InfoCard = styled.div`
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+  }
+`;
+
+export const InfoLabel = styled.span`
+  color: #fff;
+  font-size: 14px;
+`;
+
+export const InfoValue = styled.span`
+  color: #ff7300;
+  font-size: 16px;
+  font-weight: 600;
+`;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  gap: 16px;
+  color: #999;
+`;
+
+export const NoDataContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 16px;
+  color: #888;
+  text-align: center;
+`;
+
+export const DataSourceNote = styled.div`
+  font-size: 11px;
+  color: #777;
+  margin-top: 8px;
+  font-style: italic;
+`;
