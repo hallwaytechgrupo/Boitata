@@ -1,6 +1,9 @@
 import type { ClientBase } from 'pg';
 import fs from 'node:fs';
 import { from as copyFrom } from 'pg-copy-streams';
+import { query } from '../config/database';
+import console from 'node:console';
+import type { FeatureCollection } from '../types/FocoCalorEstado';
 
 export class FocosCalorRepository {
   private tempTableName = 'temp_focos_calor';
@@ -122,6 +125,188 @@ export class FocosCalorRepository {
       console.log('✓ Dados processados com sucesso.');
     } catch (error) {
       console.error('✗ Erro ao processar dados:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retorna os focos de calor em formato GeoJSON para um município específico
+   */
+  async getFocosByMunicipioId(
+    municipioId: string,
+    dataInicio?: string,
+    dataFim?: string,
+  ): Promise<FeatureCollection> {
+    const result = await query(
+      'SELECT * FROM get_focos_geojson_municipio($1, $2, $3)',
+      [municipioId, dataInicio ?? null, dataFim ?? null],
+    );
+
+    if (result.rowCount === 0 || !result.rows[0]?.get_focos_geojson_municipio) {
+      return { type: 'FeatureCollection', features: [] };
+    }
+
+    return result.rows[0].get_focos_geojson_municipio as FeatureCollection;
+  }
+
+  /**
+   * Retorna os focos de calor em formato GeoJSON para um estado específico
+   */
+  async getFocosByEstado(
+    estadoId: number,
+    dataInicio?: string,
+    dataFim?: string,
+  ): Promise<FeatureCollection> {
+    const result = await query('SELECT * FROM get_focos_geojson($1, $2, $3)', [
+      estadoId,
+      dataInicio ?? null,
+      dataFim ?? null,
+    ]);
+
+    if (result.rowCount === 0 || !result.rows[0]?.get_focos_geojson) {
+      return { type: 'FeatureCollection', features: [] };
+    }
+
+    return result.rows[0].get_focos_geojson as FeatureCollection;
+  }
+
+  /**
+   * Retorna os focos de calor em formato GeoJSON para um bioma específico
+   */
+  async getFocosByBioma(
+    biomaId: number,
+    dataInicio?: string,
+    dataFim?: string,
+  ): Promise<FeatureCollection> {
+    const result = await query(
+      'SELECT * FROM get_focos_geojson_bioma($1, $2, $3)',
+      [biomaId, dataInicio ?? null, dataFim ?? null],
+    );
+
+    if (result.rowCount === 0 || !result.rows[0]?.get_focos_geojson_bioma) {
+      return { type: 'FeatureCollection', features: [] };
+    }
+
+    return result.rows[0].get_focos_geojson_bioma as FeatureCollection;
+  }
+
+  /**
+   * Retorna os dados do gráfico de focos de calor por ano e mês
+   */
+  async getGraficoDataPorAnoMes(
+    ano?: number,
+    mes?: number,
+  ): Promise<
+    {
+      ano: number;
+      mes: number;
+      id_estado: number;
+      numero_focos_calor: number;
+    }[]
+  > {
+    const conditions: string[] = [];
+    const params: (number | string)[] = [];
+
+    if (ano !== undefined) {
+      params.push(ano);
+      conditions.push(`EXTRACT(YEAR FROM f.data_hora) = $${params.length}`);
+    }
+    if (mes !== undefined) {
+      params.push(mes);
+      conditions.push(`EXTRACT(MONTH FROM f.data_hora) = $${params.length}`);
+    }
+
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    const queryText = `
+      SELECT 
+        EXTRACT(YEAR FROM f.data_hora)::integer AS ano,
+        EXTRACT(MONTH FROM f.data_hora)::integer AS mes,
+        e.id_estado,
+        COUNT(f.id_foco)::integer AS numero_focos_calor
+      FROM 
+        tb_focos_calor f
+      JOIN 
+        tb_municipios m ON f.id_municipio = m.id_municipio
+      JOIN 
+        tb_estados e ON m.id_estado = e.id_estado
+      ${whereClause}
+      GROUP BY 
+        ano, mes, e.id_estado
+      ORDER BY 
+        ano, mes
+    `;
+
+    const result = await query(queryText, params);
+
+    return result.rows.map((row) => ({
+      ano: Number.parseInt(row.ano),
+      mes: Number.parseInt(row.mes),
+      id_estado: Number.parseInt(row.id_estado),
+      numero_focos_calor: Number.parseInt(row.numero_focos_calor),
+    }));
+  }
+
+  /**
+   * Retorna as estatísticas de focos de calor por município
+   */
+  async getEstatisticasMunicipio(municipioId?: number): Promise<any> {
+    try {
+      let queryText = 'SELECT * FROM v_estatisticas_municipio';
+      const params: any[] = [];
+
+      if (municipioId !== undefined) {
+        queryText += ' WHERE id_municipio = $1';
+        params.push(municipioId);
+      }
+
+      const result = await query(queryText, params);
+      return municipioId !== undefined ? result.rows[0] || null : result.rows;
+    } catch (error) {
+      console.error('✗ Erro ao buscar estatísticas do município:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retorna as estatísticas de focos de calor por estado
+   */
+  async getEstatisticasEstado(estadoId?: number): Promise<any> {
+    try {
+      let queryText = 'SELECT * FROM v_estatisticas_estado_final';
+      const params: any[] = [];
+
+      if (estadoId !== undefined) {
+        queryText += ' WHERE id_estado = $1';
+        params.push(estadoId);
+      }
+
+      const result = await query(queryText, params);
+      return estadoId !== undefined ? result.rows[0] || null : result.rows;
+    } catch (error) {
+      console.error('✗ Erro ao buscar estatísticas do estado:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retorna as estatísticas de focos de calor por bioma
+   */
+  async getEstatisticasBioma(biomaId?: number): Promise<any> {
+    try {
+      let queryText = 'SELECT * FROM v_estatisticas_bioma';
+      const params: any[] = [];
+
+      if (biomaId !== undefined) {
+        queryText += ' WHERE id_bioma = $1';
+        params.push(biomaId);
+      }
+
+      const result = await query(queryText, params);
+      return biomaId !== undefined ? result.rows[0] || null : result.rows;
+    } catch (error) {
+      console.error('✗ Erro ao buscar estatísticas do bioma:', error);
       throw error;
     }
   }
