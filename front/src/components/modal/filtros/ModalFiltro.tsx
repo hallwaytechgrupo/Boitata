@@ -28,9 +28,18 @@ import {
 import cidadesPorEstado from '../../../utils/cidades';
 import { useModal } from '../../../contexts/ModalContext';
 
-interface CidadesPorEstadoType {
-  [estadoId: string]: LocationType[];
-}
+const quickSortEstados = (arr: LocationType[]): LocationType[] => {
+  if (arr.length <= 1) {
+    return arr;
+  }
+  
+  const pivot = arr[Math.floor(arr.length / 2)];
+  const left = arr.filter(estado => estado.nome.localeCompare(pivot.nome) < 0);
+  const middle = arr.filter(estado => estado.nome.localeCompare(pivot.nome) === 0);
+  const right = arr.filter(estado => estado.nome.localeCompare(pivot.nome) > 0);
+  
+  return [...quickSortEstados(left), ...middle, ...quickSortEstados(right)];
+};
 
 interface FiltrosModalProps {
   onClose: () => void;
@@ -55,6 +64,9 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
 
   // Acesso direto ao useMap para atualizar os dados
   const { handleFiltrosConfirm } = useModal();
+
+  const estadosOrdenados = quickSortEstados([...estados]);
+
 
 
   const [activeTab, setActiveTab] = useState<'estado' | 'bioma'>(
@@ -285,7 +297,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                 onChange={handleEstadoChange}
               >
                 <option value="">Selecione um estado</option>
-                {estados.map((e) => (
+                 {estadosOrdenados.map((e) => (  // Use estadosOrdenados em vez de estados
                   <option key={e.id} value={e.id}>
                     {e.nome}
                   </option>
