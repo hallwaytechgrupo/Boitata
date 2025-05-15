@@ -131,6 +131,30 @@ do BDQueimadas
 ### Professor Cliente: Fabricio Galende
 
 
+| **Requisitos Funcionais:** |
+| --- |
+| RF01 – Focos de calor por estado; |
+| RF02 – Focos de calor por bioma; | 
+| RF03 – Risco de fogo por estado; | 
+| RF04 – Risco de fogo por bioma; | 
+| RF05 – Área queimada por estado; | 
+| RF06 – Área queimada por bioma; | 
+| RF07 – Gráficos de focos de calor por estado e bioma;  |
+| RF08 – Gráficos de risco de fogo por estado e bioma; | 
+| RF09 – Gráficos de área queimada por estado e bioma; | 
+| RF10 – Restringir as consultas por intervalo de tempo; | 
+| RF11 – Permitir ao usuário responder a seguinte pergunta: quais meses o risco de fogo é maior; | 
+| RF12 – Permitir ao usuário responder a seguinte pergunta: o risco de fogo está associado a uma maior área queimada. |
+| *Requisitos adicionais, solciitados por professores* |
+| RF13 - Fazer os diagramas UML (casos de uso, classes e sequência) |
+| RF14 - Junção de tabelas no banco de dados |
+| RF15 - Utilizar funções agupadoras - banco de dados |
+| RF16 - Utilizar stored procedures - banco de dados |
+| RF17 - Utilizar Triggers - banco de dados |
+| RF18 - Configuração funcional do banco de dados relacional (setup DB) |
+| RF19 - Planejar, executar e registrar casos de teste |
+
+
 <br>
 <br>
 
@@ -242,6 +266,6 @@ do BDQueimadas
 | - Configurar proxy no `vite.config.ts` caso necessário | 2 |
 <br>
 
-[![Burndown Chart Sprint 2](./Planejamento/utils/BurndownChartSP2)](https://docs.google.com/spreadsheets/d/1AflsqaCjT2F8mnn_LbZ8cKLsORnlchtok22mQRteOAs/edit?gid=825113142#gid=825113142)
+[![Burndown Chart Sprint 2](./Planejamento/utils/BurndownChartSP2.png)](https://docs.google.com/spreadsheets/d/1AflsqaCjT2F8mnn_LbZ8cKLsORnlchtok22mQRteOAs/edit?gid=825113142#gid=825113142)
 
 </div>
