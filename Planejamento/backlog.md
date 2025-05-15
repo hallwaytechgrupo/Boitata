@@ -105,3 +105,9 @@
 | **User Story** | Como: A equipe de desenvolvimento<br>Quero: Configurar o banco de dados PostgreSQL com as tabelas e relacionamentos necessários<br>Para que: Possamos ter um ambiente de dados pronto para o desenvolvimento das funcionalidades da aplicação. |
 | **DoR** | O PostgreSQL está instalado no ambiente de desenvolvimento.<br>O modelo do banco (entidades, relacionamentos) foi definido em um documento compartilhado. |
 | **DoD** | O banco de dados queimadas_db foi criado no PostgreSQL.<br>As tabelas focos_calor, risco_fogo, e area_queimada foram criadas com seus campos e tipos.<br>Um script SQL inicial (/backend/sql/setup.sql) foi commitado no GitHub.<br>A conexão do back-end com o PostgreSQL foi testada e funciona sem erros.<br>O Scrum Master validou o setup em uma reunião de equipe. |
+
+| RF19 | Planejar, executar e registrar casos de teste |
+|------|-------------------------|
+| **User Story** | Como:Professor André Olimpio (engenharia de software)<br>Quero: Tabela de registro de casos de teste, contendo a descrição dos resultados esperados e obtidos, bem como demais dados persistentes a testagem. Utilizando testes unitários(ou testes de unidade). |
+| **DoR** | Cada funcionalidade a ser testada deve estar funcional e em fase de encerramento ou entrega, apresentando-se completa. |
+| **DoD** | Todos os casos de teste, um para cada diagrama de sequência estarem concluidos e apresentarem resultados positivos (teste retornar com resultado esperado). Estarem devidamente registrados com as informações minimas pertinentes como data e testador. |
