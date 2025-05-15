@@ -28,6 +28,10 @@ export const ActiveFilter = () => {
     filterText += filterText
       ? `, Período: ${dateRange.startDate} a ${dateRange.endDate}`
       : `Período: ${dateRange.startDate} a ${dateRange.endDate}`
+  } else {
+    filterText += filterText
+      ? ", Período: últimos 14 dias"
+      : "Período: últimos 14 dias"
   }
 
   return (
