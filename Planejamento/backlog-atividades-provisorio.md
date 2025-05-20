@@ -89,3 +89,26 @@
 | - Testar comunicação entre front e back | 3 |
 | - Configurar proxy no `vite.config.ts` caso necessário | 2 |
 
+
+# Sprint 3
+
+| **ATIVIDADES** | **PlanningPoker** |
+| --- | --- |
+| **Back-end** | |
+| Configurar funções e/ou métodos para consultar os dados do banco de dados e alimentar os gráficos e retornar dos dados para plotar no mapa as áreas queimadas | 8 |
+| Configurar funções e/ou métodos para consultar os dados do banco de dados e alimentar os gráficos e retornar os dados para plotar no mapa as risco de fogo | 8 |
+| Ajustar os importadores para os dados de área queimada e risco de fogo | 8 |
+| Verificar a possibilidade de ampliação dos períodos de importação | 5 |
+| **Front-end** | |
+| Configurar o context do filtro, para trabalhar com a variável de acordo com a seleção do front, fazendo com que a seleção entre Focos de calor, área queimada e risco de fogo interajam com a interface de usuário | 8 |
+| Configurar recebimento dos dados e plotagem dos mesmos no mapa para área queimada | 5 |
+| Configurar recebimento dos dados e plotagem dos mesmos no mapa para risco de fogo | 5 |
+| Ajustar os gráficos de estatística para gráfico de linhas onde for exibido evolução temporal | 3 |
+| Configurar a opção de sobreposição para plotar as bordas dos estados | 2 |
+| **Testes** | |
+| Realizar e documentar testes unitários referentes à área queimada, para cada diagrama de sequência relacionado à área queimada | 8 |
+| Realizar e documentar testes unitários referentes a focos de calor, para cada diagrama de sequência relacionado a focos de calor | 8 |
+| Realizar e documentar testes unitários referentes a risco de fogo, para cada diagrama de sequência relacionado a risco de fogo | 8 |
+| **Planejamento e documentação** | |
+| Criar os diagramas de sequência, para cada funcionalidade apresentada no sistema, organizando agrupando com relação às áreas de retorno (área queimada, risco de fogo, focos de calor) | 13 |
+| Gerar documentação de uso e configuração do sistema, para instalação e configurações iniciais | 8 |
