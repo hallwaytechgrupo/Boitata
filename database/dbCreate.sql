@@ -42,11 +42,10 @@ CREATE TABLE tb_focos_calor (
 );
 
 CREATE TABLE tb_area_queimada (
-    id_area_queimada SERIAL PRIMARY KEY,
+    id_area_queimada int PRIMARY KEY,
     date varchar(6),
     geometry GEOMETRY(MultiPolygon, 4326)
 );
-
 
 
 -- Índices Espacial
