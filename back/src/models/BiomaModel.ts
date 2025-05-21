@@ -1,6 +1,7 @@
 import type { MultiPolygon } from 'geojson';
+import type { Bioma } from '../types';
 
-export class BiomaModel {
+export class BiomaModel implements Bioma {
   id_bioma: number;
   bioma: string;
   geo: MultiPolygon;

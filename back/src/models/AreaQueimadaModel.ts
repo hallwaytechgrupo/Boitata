@@ -1,34 +1,18 @@
-import { AreaQueimada } from '../types/AreaQueimada';
-import { GeoEntity } from './base/GeoEntity';
-import * as GeoJSON from 'geojson';
+import type { AreaQueimada } from '../types/AreaQueimada';
+import type * as GeoJSON from 'geojson';
 
-export class AreaQueimadaModel extends GeoEntity implements AreaQueimada {
+export class AreaQueimadaModel implements AreaQueimada {
+  id_area_queimada: number;
+  date: string;
+  geometry: GeoJSON.MultiPolygon;
+
   constructor(
-    public id_areaQueimada: number,
-    public mesReferencia: Date,
-    public geo: GeoJSON.MultiPolygon,
+    id_area_queimada: number,
+    date: string,
+    geometry: GeoJSON.MultiPolygon,
   ) {
-    super(geo);
-  }
-
-  static importarDados(): AreaQueimadaModel[] {
-    // Implementar importação real
-    return [];
-  }
-
-  static filtrarPorEstado(idEstado: number): AreaQueimadaModel[] {
-    return [];
-  }
-
-  static filtrarPorBioma(idBioma: number): AreaQueimadaModel[] {
-    return [];
-  }
-
-  static filtrarPorMes(mes: number): AreaQueimadaModel[] {
-    return [];
-  }
-
-  static gerarGraficoAreaQueimada(): void {
-    // Lógica de geração de gráfico
+    this.id_area_queimada = id_area_queimada;
+    this.date = date;
+    this.geometry = geometry;
   }
 }
