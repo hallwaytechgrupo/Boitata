@@ -4,24 +4,6 @@ import { FocoCalorService } from '../services/focoCalor.service';
 const focoCalorService = new FocoCalorService();
 
 export class FocoCalorController {
-  async getGraficoData_old(req: Request, res: Response): Promise<void> {
-    const { ano, mes } = req.query;
-
-    try {
-      const graficoData = await focoCalorService.getGraficoData(
-        ano ? Number(ano) : undefined,
-        mes ? Number(mes) : undefined,
-      );
-
-      console;
-
-      res.json(graficoData);
-    } catch (error) {
-      console.error('Erro ao buscar dados para gráfico:', error);
-      res.status(500).send('Erro no servidor');
-    }
-  }
-
   async getGraficoData(req: Request, res: Response): Promise<void> {
     const { ano, mes } = req.query;
     try {

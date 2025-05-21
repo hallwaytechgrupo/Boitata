@@ -25,62 +25,6 @@ const toISO = (dateStr?: string) => {
 export class FocoCalorService {
   private repository = new FocosCalorRepository();
 
-  async getGraficoData_old(
-    ano?: number,
-    mes?: number,
-  ): Promise<
-    {
-      ano: number;
-      mes: number;
-      id_estado: number;
-      numero_focos_calor: number;
-    }[]
-  > {
-    const conditions: string[] = [];
-    const params: (number | string)[] = [];
-
-    if (ano !== undefined) {
-      params.push(ano);
-      conditions.push(`EXTRACT(YEAR FROM f.data_hora) = $${params.length}`);
-    }
-
-    if (mes !== undefined) {
-      params.push(mes);
-      conditions.push(`EXTRACT(MONTH FROM f.data_hora) = $${params.length}`);
-    }
-
-    const whereClause =
-      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-
-    const queryText = `
-      SELECT 
-        EXTRACT(YEAR FROM f.data_hora)::integer AS ano,
-        EXTRACT(MONTH FROM f.data_hora)::integer AS mes,
-        e.id_estado,
-        COUNT(f.id_foco)::integer AS numero_focos_calor
-      FROM 
-        tb_focos_calor f
-      JOIN 
-        tb_municipios m ON f.id_municipio = m.id_municipio
-      JOIN 
-        tb_estados e ON m.id_estado = e.id_estado
-      ${whereClause}
-      GROUP BY 
-        ano, mes, e.id_estado
-      ORDER BY 
-        ano, mes
-    `;
-
-    const result = await query(queryText, params);
-
-    return result.rows.map((row) => ({
-      ano: Number.parseInt(row.ano),
-      mes: Number.parseInt(row.mes),
-      id_estado: Number.parseInt(row.id_estado),
-      numero_focos_calor: Number.parseInt(row.numero_focos_calor),
-    }));
-  }
-
   async getGraficoData(
     ano?: number,
     mes?: number,
