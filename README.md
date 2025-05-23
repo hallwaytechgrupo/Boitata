@@ -25,7 +25,6 @@ O sistema utiliza dados geoespaciais para gerar visualizações detalhadas, como
  | Vinicius Lemes dos Santos | Product Owner|
  | Marcos Vinicios S. A. Oliveira | Scrum Master |
  | Mário César Vieira Alves | Desenvolvedor |
- | Yan Vitor Siqueira Bergantin | Desenvolvedor |
  | Christopher Costa | Desenvolvedor |
 
 ---
