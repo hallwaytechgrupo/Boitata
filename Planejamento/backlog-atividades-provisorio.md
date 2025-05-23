@@ -94,6 +94,7 @@
 
 | **ATIVIDADES** | **PlanningPoker** |
 | --- | --- |
+| Criar procedures no banco de dados para selects especificos de area queimada e risco de fogo | 13 | 
 | **Back-end** | |
 | Configurar funções e/ou métodos para consultar os dados do banco de dados e alimentar os gráficos e retornar dos dados para plotar no mapa as áreas queimadas | 8 |
 | Configurar funções e/ou métodos para consultar os dados do banco de dados e alimentar os gráficos e retornar os dados para plotar no mapa as risco de fogo | 8 |
