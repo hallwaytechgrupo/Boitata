@@ -34,6 +34,12 @@ CREATE TABLE "tb_area_queimada" (
   "geo_area_queimada" geometry(multipolygon) NOT NULL
 );
 
+CREATE TABLE "tb_risco_de_fogo" (
+  "id_risco_de_fogo" serial PRIMARY KEY,
+  "mes_referencia" date NOT NULL,
+  "geo_area_queimada" geometry(multipolygon) NOT NULL
+);
+
 ALTER TABLE "tb_focos_calor" ADD FOREIGN KEY ("bioma_id") REFERENCES "tb_biomas" ("id_bioma");
 
 ALTER TABLE "tb_focos_calor" ADD FOREIGN KEY ("municipio_id") REFERENCES "tb_municipios" ("id_municipio");
