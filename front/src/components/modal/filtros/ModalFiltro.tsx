@@ -3,7 +3,7 @@ import { X, FilterIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ModalBase from '../_base/ModalBase';
 import { useFilter } from '../../../contexts/FilterContext';
-import { FilterType, PatternType, type LocationType } from '../../../types';
+import { FilterType, type LocationType } from '../../../types';
 import { estados } from '../../../utils/estados';
 import { biomas } from '../../../utils/biomas';
 import {
@@ -162,7 +162,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
     if (selectedId) {
 
       // ED.04 Algoritmos de busca em vetores
-      const selectedEstado = findEstadoById(selectedId, estadosOrdenados);
+      const selectedEstado = estados.find((estado) => estado.id === selectedId);
 
       if (selectedEstado) {
         setEstado(selectedEstado);

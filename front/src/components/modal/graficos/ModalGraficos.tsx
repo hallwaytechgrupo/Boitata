@@ -171,7 +171,7 @@ export default function GraficosModal({ onClose }: GraficosModalProps) {
   ];
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 2 }, (_, i) =>
+  const years = Array.from({ length: 1 }, (_, i) =>
     (currentYear - i).toString()
   );
 
