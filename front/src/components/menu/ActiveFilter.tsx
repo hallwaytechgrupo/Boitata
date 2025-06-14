@@ -1,13 +1,13 @@
-
 import { useFilter } from '../../contexts/FilterContext'
-import { FilterType } from '../../types'
+import { FilterType, PatternType } from '../../types'
 import { FilterInfo, FilterPanel, FilterTitle } from '../../styles/styles'
+
 
 export const ActiveFilter = () => {
   
-  const { estado, cidade, bioma, filterType, dateRange } = useFilter()
+  const { estado, cidade, bioma, filterType, dateRange, patternType } = useFilter()
   // Verificar se há filtros ativos
-  const hasActiveFilters = filterType !== FilterType.NONE || !!(dateRange.startDate && dateRange.endDate)
+  const hasActiveFilters = filterType !== FilterType.NONE || !!(dateRange.startDate && dateRange.endDate) || !!patternType
 
   // Construir texto do filtro para o painel
   let filterText = ""
@@ -32,6 +32,19 @@ export const ActiveFilter = () => {
     filterText += filterText
       ? ", Período: últimos 14 dias"
       : "Período: últimos 14 dias"
+  }
+
+  // Adicionar informação do tipo de visualização (patternType)
+  if (patternType) {
+    const patternTypeText = patternType === PatternType.HEAT_MAP 
+      ? "Focos de Calor"
+      : patternType === PatternType.QUEIMADA 
+        ? "Área Queimada" 
+        : "Risco de Fogo";
+    
+    filterText += filterText
+      ? `, Visualização: ${patternTypeText}`
+      : `Visualização: ${patternTypeText}`;
   }
 
   return (

@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import type { MapPattern } from './types';
+import type { MapPattern } from '../types';
 
 export class QueimadaPattern implements MapPattern {
   id = 'queimada';
@@ -28,12 +28,12 @@ export class QueimadaPattern implements MapPattern {
         type: 'fill',
         source: this.sourceId,
         layout: {
-          visibility: 'none', // Inicialmente invisível
+          visibility: 'none',
         },
         paint: {
-          'fill-color': '#8B0000', // Cor vermelho escuro
+          'fill-color': '#FF8C00',
           'fill-opacity': 0.6,
-          'fill-outline-color': '#FF0000', // Contorno vermelho
+          'fill-outline-color': '#FF4500',
         },
       });
 
@@ -45,9 +45,11 @@ export class QueimadaPattern implements MapPattern {
           new mapboxgl.Popup({ closeOnClick: true })
             .setLngLat(e.lngLat)
             .setHTML(`
-              <strong>Área:</strong> ${properties?.area ?? 0} km²<br/>
+              <strong>ID:</strong> ${properties?.gid ?? 0}<br/>
               <strong>Data:</strong> ${properties?.data ?? 'N/A'}<br/>
-              <strong>Severidade:</strong> ${properties?.severidade ?? 'N/A'}<br/>
+              <strong>Bioma:</strong> ${properties?.bioma ?? 'N/A'}<br/>
+              <strong>Estado:</strong> ${properties?.estado ?? 'N/A'}<br/>
+              <strong>Município:</strong> ${properties?.municipio ?? 'N/A'}<br/>
             `)
             .addTo(map);
         }

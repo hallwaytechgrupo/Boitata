@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react"
-import { FilterType, type LocationType } from "../types"
+import { FilterType, type PatternType, type LocationType } from "../types"
 
 interface FilterContextType {
   // Dados de localização
@@ -7,12 +7,14 @@ interface FilterContextType {
   cidade: LocationType | null
   bioma: LocationType | null
   filterType: FilterType
+  patternType: PatternType | null
   
   // Funções para definir localização
   setEstado: (estado: LocationType | null) => void
   setCidade: (cidade: LocationType | null) => void
   setBioma: (bioma: LocationType | null) => void
   setFilterType: (type: FilterType) => void
+  setPatternType: (type: PatternType | null) => void
   
   // Período de datas
   dateRange: {
@@ -38,6 +40,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [cidade, setCidadeState] = useState<LocationType | null>(null)
   const [bioma, setBiomaState] = useState<LocationType | null>(null)
   const [filterType, setFilterType] = useState<FilterType>(FilterType.NONE)
+  const [patternType, setPatternType] = useState<PatternType | null>(null)
   const [dateRange, setDateRange] = useState<{
     startDate: string
     endDate: string
@@ -85,11 +88,12 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
     setCidadeState(null)
     setBiomaState(null)
     setFilterType(FilterType.NONE)
+    setPatternType(null)
     setDateRange({ startDate: "", endDate: "" })
   }
 
   // Verificar se há algum filtro ativo
-  const hasActiveFilters = filterType !== FilterType.NONE || !!(dateRange.startDate && dateRange.endDate)
+  const hasActiveFilters = filterType !== FilterType.NONE || !!(dateRange.startDate && dateRange.endDate) || patternType !== null
 
   return (
     <FilterContext.Provider
@@ -98,10 +102,12 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
         cidade,
         bioma,
         filterType,
+        patternType,
         setEstado,
         setCidade,
         setBioma,
         setFilterType,
+        setPatternType,
         resetFilters,
         hasActiveFilters,
         dateRange,

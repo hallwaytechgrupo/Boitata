@@ -47,7 +47,7 @@ export const ModalHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: .5rem;
   // border-bottom: 1px solid rgba(75, 85, 99, 0.5);
   border-bottom: 0.5px solid rgb(255, 115, 0, 0.3);
 `;

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { createContext, useContext, useState, useCallback } from 'react';
-import { getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../services/api';
-import { FilterType, type LocationType, ModalType, PatternType } from '../types';
+import { getAreaQueimadaByBiomaId, getAreaQueimadaByEstadoId, getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../services/api';
+import { FilterType, PatternType, type LocationType, ModalType } from '../types';
 import { useFilter } from './FilterContext';
 import { useMap } from '../hooks/useMap';
 
@@ -12,11 +12,12 @@ interface ModalContextType {
   handleConfirm: () => Promise<void>;
   handleFiltrosConfirm: (
     filterType: FilterType,
-    estado?: LocationType | null,
-    cidade?: LocationType | null, 
-    bioma?: LocationType | null,
-    dataInicio?: string,
-    dataFim?: string
+    estado: LocationType | null,
+    cidade: LocationType | null, 
+    bioma: LocationType | null,
+    dataInicio: string,
+    dataFim: string,
+    patternType: PatternType | null
   ) => Promise<void>;
   isLoading: boolean;
 }
@@ -80,14 +81,17 @@ export function ModalProvider({
 
   const handleFiltrosConfirm = async (
     filterType: FilterType,
-    estado?: LocationType | null,
-    cidade?: LocationType | null, 
-    bioma?: LocationType | null,
-    dataInicio?: string,
-    dataFim?: string
+    estado: LocationType | null,
+    cidade: LocationType | null, 
+    bioma: LocationType | null,
+    dataInicio: string,
+    dataFim: string,
+    patternType: PatternType | null
   ) => {
     try {
       setIsLoading(true);
+
+      
       
       // Caso: Filtro por município
       if (filterType === FilterType.MUNICIPIO && estado && cidade) {
@@ -99,15 +103,24 @@ export function ModalProvider({
         );
         console.log('Datas de filtro:', dataInicio, dataFim);
         
-        const resultado = await getFocosCalorByMunicipioId(
-          municipioId,
-          dataInicio,
-          dataFim
-        );
-        
-        updateLayerData(PatternType.HEAT_MAP, resultado);
-        if (!activeLayers.includes(PatternType.HEAT_MAP)) {
-          toggleLayerVisibility(PatternType.HEAT_MAP);
+        // Verificar o tipo de padrão selecionado
+        if (!patternType || patternType === PatternType.HEAT_MAP) {
+          const resultado = await getFocosCalorByMunicipioId(
+            municipioId,
+            dataInicio,
+            dataFim
+          );
+          
+          updateLayerData(PatternType.HEAT_MAP, resultado);
+          if (!activeLayers.includes(PatternType.HEAT_MAP)) {
+            toggleLayerVisibility(PatternType.HEAT_MAP);
+          }
+        } else if (patternType === PatternType.RISCO_FOGO) {
+          console.log("Carregando dados de Risco de Fogo para o município:", cidade.nome);
+          // Implementação futura para dados de risco de fogo
+        } else if (patternType === PatternType.QUEIMADA) {
+          console.log("Carregando dados de Área Queimada para o município:", cidade.nome);
+          // Implementação futura para dados de área queimada
         }
 
         flyToState(estado.id);
@@ -121,15 +134,42 @@ export function ModalProvider({
         console.log(`Buscando dados para o estado: ${estado.nome} (ID: ${estadoId})`);
         console.log('Datas de filtro:', dataInicio, dataFim);
         
-        const resultado = await getFocosCalorByEstadoId(
-          estadoId,
-          dataInicio,
-          dataFim
-        );
-        
-        updateLayerData(PatternType.HEAT_MAP, resultado);
-        if (!activeLayers.includes(PatternType.HEAT_MAP)) {
-          toggleLayerVisibility(PatternType.HEAT_MAP);
+        // Verificar o tipo de padrão selecionado
+        if (!patternType || patternType === PatternType.HEAT_MAP) {
+          const resultado = await getFocosCalorByEstadoId(
+            estadoId,
+            dataInicio,
+            dataFim
+          );
+          
+          updateLayerData(PatternType.HEAT_MAP, resultado);
+          if (!activeLayers.includes(PatternType.HEAT_MAP)) {
+            toggleLayerVisibility(PatternType.HEAT_MAP);
+          }
+        } else if (patternType === PatternType.RISCO_FOGO) {
+          console.log("Carregando dados de Risco de Fogo para o estado:", estado.nome);
+          // Implementação futura para dados de risco de fogo
+        } else if (patternType === PatternType.QUEIMADA) {
+          console.log("Carregando dados de Área Queimada para o estado:", estado.nome);
+          
+          const resultado = await getAreaQueimadaByEstadoId(
+            estadoId,
+            dataInicio,
+            dataFim
+          );
+
+          console.log('Resultado da área queimada por estado:', resultado);
+          console.log("Tamanho do features:", resultado.features.length);
+
+          if (!resultado.features || resultado.features.length === 0) {
+            console.log('Nenhum dado encontrado para o estado selecionado.');
+            showToast('Nenhum dado encontrado para o estado selecionado.');
+          }
+          
+          updateLayerData(PatternType.QUEIMADA, resultado);
+          if (!activeLayers.includes(PatternType.QUEIMADA)) {
+            toggleLayerVisibility(PatternType.QUEIMADA);
+          }
         }
         
         if (estado) {
@@ -145,23 +185,52 @@ export function ModalProvider({
         console.log(`Buscando dados para o bioma: ${bioma.nome} (ID: ${biomaId})`);
         console.log('Datas de filtro:', dataInicio, dataFim);
         
-        const resultado = await getFocosByBiomaId(
-          biomaId,
-          dataInicio,
-          dataFim
-        );
+        // Verificar o tipo de padrão selecionado
+        if (!patternType || patternType === PatternType.QUEIMADA) {
+          const resultado = await getAreaQueimadaByBiomaId(
+            biomaId,
+            dataInicio,
+            dataFim
+          );
 
-        console.log('Resultado do filtro por bioma:', resultado);
-        console.log("Tamanho do features:", resultado.features.length);
+          console.log('Resultado da área queimada por bioma:', resultado);
+          console.log("Tamanho do features:", resultado.features.length);
 
-        if (!resultado.features || resultado.features.length === 0) {
-          console.log('Nenhum dado encontrado para o bioma selecionado.');
-          showToast('Nenhum dado encontrado para o bioma selecionado.');
-        }
-        
-        updateLayerData(PatternType.HEAT_MAP, resultado);
-        if (!activeLayers.includes(PatternType.HEAT_MAP)) {
-          toggleLayerVisibility(PatternType.HEAT_MAP);
+          if (!resultado.features || resultado.features.length === 0) {
+            console.log('Nenhum dado encontrado para o bioma selecionado.');
+            showToast('Nenhum dado encontrado para o bioma selecionado.');
+          }
+          
+          updateLayerData(PatternType.QUEIMADA, resultado);
+          if (!activeLayers.includes(PatternType.QUEIMADA)) {
+            toggleLayerVisibility(PatternType.QUEIMADA);
+          }
+        } else if (patternType === PatternType.RISCO_FOGO) {
+          console.log("Carregando dados de Risco de Fogo para o bioma:", bioma.nome);
+          // Implementação futura para dados de risco de fogo
+
+          const resultado = await getFocosByBiomaId(
+            biomaId,
+            dataInicio,
+            dataFim
+          );
+
+          console.log('Resultado do filtro por bioma:', resultado);
+          console.log("Tamanho do features:", resultado.features.length);
+
+          if (!resultado.features || resultado.features.length === 0) {
+            console.log('Nenhum dado encontrado para o bioma selecionado.');
+            showToast('Nenhum dado encontrado para o bioma selecionado.');
+          }
+          
+          updateLayerData(PatternType.HEAT_MAP, resultado);
+          if (!activeLayers.includes(PatternType.HEAT_MAP)) {
+            toggleLayerVisibility(PatternType.HEAT_MAP);
+          }
+
+        } else if (patternType === PatternType.QUEIMADA) {
+          console.log("Carregando dados de Área Queimada para o bioma:", bioma.nome);
+          // Implementação futura para dados de área queimada
         }
         
         setFilterType(FilterType.BIOMA);

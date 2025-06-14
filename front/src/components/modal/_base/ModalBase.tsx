@@ -18,6 +18,7 @@ interface ModalProps {
   className?: string;
   customWidth?: string;
   customHeight?: string;
+  compact?: boolean;
 }
 
 export default function ModalBase({
@@ -25,6 +26,7 @@ export default function ModalBase({
   onClose,
   children,
   customWidth,
+  compact = false,
 }: ModalProps) {
   // Impedir o scroll do body quando o modal estiver aberto
   useEffect(() => {
@@ -42,10 +44,19 @@ export default function ModalBase({
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
           <CloseButton onClick={onClose} aria-label="Fechar">
-            <X size={24} color="#FF7300" />
+            <X size={compact ? 16 : 20} color="#FF7300" />
           </CloseButton>
         </ModalHeader>
-        <ModalContent>{children}</ModalContent>
+        <ModalContent
+          onClick={(e) => e.stopPropagation()}
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          transition={{ duration: 0.3 }}
+          $compact={compact}
+        >
+          {children}
+        </ModalContent>
       </ModalContainer>
     </ModalOverlay>
   );
