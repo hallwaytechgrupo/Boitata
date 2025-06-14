@@ -14,6 +14,8 @@ export enum ModalType {
   FOCOS = 'focos',
   GRAFICOS = 'graficos',
   RISCO = 'risco',
+  GRAFICO_AREA_QUEIMADA = 'graficoAreaQueimada',
+  GRAFICO_RISCO = 'graficoRisco',
 }
 
 export enum FilterType {

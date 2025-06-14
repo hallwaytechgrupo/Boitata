@@ -17,30 +17,33 @@ import { ActiveFilter } from './components/menu/ActiveFilter';
 import { useFilter } from './contexts/FilterContext';
 import { FilterType, ModalType, PatternType } from './types';
 import Toast from './components/search/Toast';
-
+import { getDadosAreaQueimada } from "./services/api";
+import mapboxgl from "mapbox-gl";
+import { VscGraph } from "react-icons/vsc";
 
 // Componente interno que usa o contexto de modais
 const AppContent = () => {
   const { estado, filterType } = useFilter();
-  const { 
-    mapContainerRef, 
-    isMapLoaded, 
-    mapError, 
-    flyToState, 
+  const {
+    mapContainerRef,
+    isMapLoaded,
+    mapError,
+    flyToState,
     resetMapView,
     activeLayers,
     toggleLayerVisibility,
+    mapRef
   } = useMap();
-  
+
   const [activeLayer, setActiveLayer] = useState<string | null>("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  
+  const [areaQueimadaData, setAreaQueimadaData] = useState<GeoJSON.FeatureCollection | null>(null);
   const { activeModal, closeModal, openModal } = useModal();
 
   const handleLayerChange = (layer: string) => {
     console.log("Alterando camada para:", layer);
     setActiveLayer(layer);
-    
+
     // Mapeamento de layers para patterns
     const layerToPattern = {
       "focos": PatternType.HEAT_MAP,
@@ -48,7 +51,68 @@ const AppContent = () => {
       "queimada": PatternType.QUEIMADA,
       "risco": PatternType.RISCO_FOGO
     };
-    
+
+    // Carregar dados de área queimada quando o mapa estiver carregado
+    useEffect(() => {
+      const carregarAreaQueimada = async () => {
+        try {
+          const data = await getDadosAreaQueimada();
+          setAreaQueimadaData(data);
+          console.log('Dados de área queimada carregados:', data);
+
+
+        } catch (error) {
+          console.error('Erro ao carregar área queimada:', error);
+        }
+      };
+
+      if (isMapLoaded) {
+        carregarAreaQueimada();
+      }
+    }, [isMapLoaded]);
+
+    // Adicionar/atualizar camada de área queimada no mapa
+    useEffect(() => {
+      console.log('Entrei no useEffect de área queimada', areaQueimadaData);
+      const map = mapRef?.current;
+      if (map && areaQueimadaData) {
+        if (map.getSource('area-queimada-source')) {
+          (map.getSource('area-queimada-source') as mapboxgl.GeoJSONSource).setData(areaQueimadaData);
+        } else {
+          map.addSource('area-queimada-source', {
+            type: 'geojson',
+            data: areaQueimadaData,
+          });
+
+          map.addLayer({
+            id: 'area-queimada-fill',
+            type: 'fill',
+            source: 'area-queimada-source',
+            paint: {
+              'fill-color': '#FFA07A',
+              'fill-opacity': 0.6,
+              'fill-outline-color': '#FF4500'
+            }
+          });
+
+          map.on("click", "area-queimada-fill", (e: any) => {
+            if (e.features && e.features.length > 0) {
+              const properties = e.features[0].properties;
+              new mapboxgl.Popup()
+                .setLngLat(e.lngLat as mapboxgl.LngLatLike)
+                .setHTML(`
+                <strong>Área:</strong> ${properties?.areaKm2?.toFixed(2) ?? 'N/A'} km²<br/>
+                <strong>Data:</strong> ${properties?.dataQueimada ? new Date(properties.dataQueimada).toLocaleDateString() : 'N/A'}<br/>
+                <strong>Severidade:</strong> ${properties?.nivelSeveridade ?? 'N/A'}
+              `)
+                .addTo(map);
+            }
+          });
+        }
+      }
+    }, [mapRef, areaQueimadaData]);
+
+
     // Alternar a visibilidade da layer correspondente
     const patternType = layerToPattern[layer as keyof typeof layerToPattern];
     if (patternType && !activeLayers.includes(patternType)) {
@@ -69,7 +133,7 @@ const AppContent = () => {
 
   // Show error message if map fails to load
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
+  useEffect(() => {
     if (mapError) {
       showToast(mapError);
     }
@@ -87,12 +151,12 @@ const AppContent = () => {
 
       <BoitataLogo />
       {/* <FilterBadge /> */}
-      <SideNavigation 
-        openModal={openModal} 
-        activeLayer={activeLayer} 
-        // onLayerChange={handleLayerChange}
+      <SideNavigation
+        openModal={openModal}
+        activeLayer={activeLayer}
+      // onLayerChange={handleLayerChange}
       />
-      <LayersNavigation 
+      <LayersNavigation
         activePatterns={activeLayers}
         onTogglePattern={toggleLayerVisibility}
       />
@@ -108,6 +172,25 @@ const AppContent = () => {
         3. BIOMA = 'bioma',
       */}
 
+      {/* Botão para abrir o modal de gráfico de área queimada */}
+      <button
+        type="button"
+        className="search-button"
+        onClick={() => openModal(ModalType.GRAFICO_AREA_QUEIMADA)}
+      >
+        <VscGraph />
+        Área Queimada
+      </button>
+
+      <SideNavigation
+        openModal={openModal}
+        activeLayer={activeLayer}
+      />
+      <LayersNavigation
+        activePatterns={activeLayers}
+        onTogglePattern={toggleLayerVisibility}
+      />
+
       {/* Renderização condicional dos modais baseada no activeModal */}
       {activeModal === ModalType.FILTROS && (
         <ModalFiltro onClose={closeModal} />
@@ -121,6 +204,14 @@ const AppContent = () => {
       {activeModal === ModalType.ANALISES && (
         <ModalAnalises onClose={closeModal} />
       )}
+      {/* Modal para gráficos de área queimada */}
+      {activeModal === ModalType.GRAFICO_AREA_QUEIMADA && (
+        <GraficosModal
+          title="Gráficos de Área Queimada"
+          onClose={closeModal}
+          dataType="areaQueimada"
+        />
+      )}
       {activeModal === ModalType.AREA && (
         <ModalAreaQueimada onClose={closeModal} />
       )}
@@ -131,29 +222,31 @@ const AppContent = () => {
         <ModalFocos onClose={closeModal} />
       )}
 
-      {/* Adicione outros modais conforme necessário */}
+      {/* Adicione outros modais conforme necessário */
+      }
     </>
   );
 };
 
+
 // Componente principal que providencia o contexto
 function App() {
-  const { 
+  const {
     flyToState,
     activeLayers,
     toggleLayerVisibility,
     updateLayerData
   } = useMap();
-  
+
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  
+
   const showToast = (message: string) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 5000);
   };
 
   return (
-    <ModalProvider 
+    <ModalProvider
       updateLayerData={updateLayerData}
       toggleLayerVisibility={toggleLayerVisibility}
       activeLayers={activeLayers}
@@ -162,9 +255,9 @@ function App() {
     >
       <AppContent />
       {toastMessage && (
-        <Toast 
-          message={toastMessage} 
-          onClose={() => setToastMessage(null)} 
+        <Toast
+          message={toastMessage}
+          onClose={() => setToastMessage(null)}
         />
       )}
     </ModalProvider>

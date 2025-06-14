@@ -149,3 +149,26 @@ export const getBiomasShp = async () => {
     throw error;
   }
 };
+export const getEstatisticasAreaQueimada = async (params?: URLSearchParams): Promise<any> => {
+  try {
+    const queryString = params ? `?${params.toString()}` : '';
+    // Use a instância 'api' do axios para consistência
+    const response = await api.get(`/areas_queimada/estatisticas-area-queimada${queryString}`); // Caminho da rota no back-end
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar estatísticas de área queimada:', error);
+    throw error;
+  }
+};
+// --- NOVAS FUNÇÕES PARA ÁREA QUEIMADA ---
+export const getDadosAreaQueimada = async (): Promise<GeoJSON.FeatureCollection> => {
+  try {
+    // Use a instância 'api' do axios para consistência
+    const response = await api.get('/areas_queimada/dados-area-queimada'); // Caminho da rota no back-end
+    console.log('Dados de área queimada obtidos:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar dados de área queimada:', error);
+    throw error;
+  }
+};

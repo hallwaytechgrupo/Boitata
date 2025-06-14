@@ -28,6 +28,8 @@ import { CiTextAlignCenter } from "react-icons/ci";
 
 interface GraficosModalProps {
   onClose: () => void;
+  dataType?: string;
+  title?: string;
 }
 
 export const estadosSiglas: Record<number, string> = {

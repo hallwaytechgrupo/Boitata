@@ -3,7 +3,23 @@ import type { Pool } from 'pg';
 import { estadosBrasil } from '../utils/id_estados';
 import { EstadoModel } from '../models';
 import type { EstadoRepository } from '../repositories/EstadoRepository';
+import * as fs from 'fs'; // Para ler o arquivo local
+import * as path from 'path'; // Para construir o caminho do arquivo
+import * as GeoJSON from 'geojson'; // Para tipagem
 
+// Suponha que você tenha um arquivo states.geojson em back/src/data/states.geojson
+const statesGeoJsonPath = path.join(__dirname, '../data/states.geojson');
+
+export const getBordasEstadosGeoJSON = async (): Promise<GeoJSON.FeatureCollection> => {
+  try {
+    const data = await fs.promises.readFile(statesGeoJsonPath, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Erro ao ler o arquivo GeoJSON dos estados:', error);
+    // Retorne um GeoJSON vazio ou um erro, dependendo da sua estratégia
+    return { type: 'FeatureCollection', features: [] };
+  }
+};
 export class EstadoService {
   private baseUrl = 'https://servicodados.ibge.gov.br/api/v4/malhas/estados';
   private estadoRepository: EstadoRepository;

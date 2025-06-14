@@ -1,6 +1,6 @@
 import type React from 'react';
 import { createContext, useContext, useState, useCallback } from 'react';
-import { getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../services/api';
+import { getDadosAreaQueimada, getEstatisticasAreaQueimada, getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../services/api';
 import { FilterType, type LocationType, ModalType, PatternType } from '../types';
 import { useFilter } from './FilterContext';
 import { useMap } from '../hooks/useMap';
@@ -13,7 +13,7 @@ interface ModalContextType {
   handleFiltrosConfirm: (
     filterType: FilterType,
     estado?: LocationType | null,
-    cidade?: LocationType | null, 
+    cidade?: LocationType | null,
     bioma?: LocationType | null,
     dataInicio?: string,
     dataFim?: string
@@ -40,7 +40,7 @@ export function ModalProvider({
   flyToState,
   showToast,
 }: ModalProviderProps) {
-  const {resetMapView} = useMap();
+  const { resetMapView } = useMap();
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -57,7 +57,7 @@ export function ModalProvider({
 
   // Centralização da lógica de confirmação dos modais
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    const handleConfirm = useCallback(async () => {
+  const handleConfirm = useCallback(async () => {
     try {
       setIsLoading(true);
 
@@ -81,70 +81,77 @@ export function ModalProvider({
   const handleFiltrosConfirm = async (
     filterType: FilterType,
     estado?: LocationType | null,
-    cidade?: LocationType | null, 
+    cidade?: LocationType | null,
     bioma?: LocationType | null,
     dataInicio?: string,
     dataFim?: string
   ) => {
     try {
       setIsLoading(true);
-      
+
       // Caso: Filtro por município
       if (filterType === FilterType.MUNICIPIO && estado && cidade) {
         const estadoId = estado.id.toString();
         const municipioId = cidade.id.toString();
-        
+
         console.log(
           `Buscando dados para o município: ${cidade.nome} (ID: ${municipioId}) no estado ${estado.nome} (ID: ${estadoId})`
         );
         console.log('Datas de filtro:', dataInicio, dataFim);
-        
+
         const resultado = await getFocosCalorByMunicipioId(
           municipioId,
           dataInicio,
           dataFim
         );
-        
+
         updateLayerData(PatternType.HEAT_MAP, resultado);
         if (!activeLayers.includes(PatternType.HEAT_MAP)) {
           toggleLayerVisibility(PatternType.HEAT_MAP);
         }
 
         flyToState(estado.id);
-        
+
         setFilterType(FilterType.MUNICIPIO);
       }
       // Caso: Filtro por estado
       else if (filterType === FilterType.ESTADO && estado) {
         const estadoId = estado.id.toString();
-        
+
         console.log(`Buscando dados para o estado: ${estado.nome} (ID: ${estadoId})`);
         console.log('Datas de filtro:', dataInicio, dataFim);
-        
+
         const resultado = await getFocosCalorByEstadoId(
           estadoId,
           dataInicio,
           dataFim
         );
-        
+
         updateLayerData(PatternType.HEAT_MAP, resultado);
         if (!activeLayers.includes(PatternType.HEAT_MAP)) {
           toggleLayerVisibility(PatternType.HEAT_MAP);
         }
-        
+
+        // Também busca dados complementares de área queimada
+        const dadosAreaQueimada = await getDadosAreaQueimada();
+        const estatisticasAreaQueimada = await getEstatisticasAreaQueimada();
+
+        updateLayerData(PatternType.HEAT_MAP, dadosAreaQueimada);
+        console.log('Estatísticas de área queimada:', estatisticasAreaQueimada);
+
         if (estado) {
           flyToState(estado.id);
         }
-        
+
         setFilterType(FilterType.ESTADO);
       }
       // Caso: Filtro por bioma
       else if (filterType === FilterType.BIOMA && bioma) {
         const biomaId = bioma.id.toString();
-        
+
         console.log(`Buscando dados para o bioma: ${bioma.nome} (ID: ${biomaId})`);
         console.log('Datas de filtro:', dataInicio, dataFim);
-        
+
         const resultado = await getFocosByBiomaId(
           biomaId,
           dataInicio,
@@ -158,12 +165,12 @@ export function ModalProvider({
           console.log('Nenhum dado encontrado para o bioma selecionado.');
           showToast('Nenhum dado encontrado para o bioma selecionado.');
         }
-        
+
         updateLayerData(PatternType.HEAT_MAP, resultado);
         if (!activeLayers.includes(PatternType.HEAT_MAP)) {
           toggleLayerVisibility(PatternType.HEAT_MAP);
         }
-        
+
         setFilterType(FilterType.BIOMA);
       }
     } catch (error) {
