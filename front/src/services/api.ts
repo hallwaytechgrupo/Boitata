@@ -139,6 +139,46 @@ export async function getEstatisticasBioma(biomaId?: string) {
   }
 }
 
+export async function getAreaQueimadaByBiomaId(
+  biomaId: string,
+  dataInicio?: string,
+  dataFim?: string,
+) {
+  try {
+    const response = await api.get(`area_queimada/bioma/${biomaId}`, {
+      params: {
+        ...(dataInicio && { dataInicio }),
+        ...(dataFim && { dataFim }),
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching areaQueimada:', error);
+    throw error;
+  }
+}
+
+export async function getAreaQueimadaByEstadoId(
+  estadoId: string,
+  dataInicio?: string,
+  dataFim?: string,
+) {
+  try {
+    const response = await api.get(`area_queimada/estado/${estadoId}`, {
+      params: {
+        ...(dataInicio && { dataInicio }),
+        ...(dataFim && { dataFim }),
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching areaQueimada:', error);
+    throw error;
+  }
+}
+
 export const getBiomasShp = async () => {
   try {
     const response = await api.get('biomas');
