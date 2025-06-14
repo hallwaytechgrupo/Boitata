@@ -10,5 +10,6 @@ app.use(express.json());
 
 app.use("/focos_calor", focoCalorRouter);
 app.use("/biomas", biomasRouter);
+app.use("/riscofogo", router);
 
 export default app;
