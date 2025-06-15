@@ -4,3 +4,4 @@ json_mock.json
 package-lock.json
 focos_de_calor/*
 back/src/biomas.sql
+/coverage

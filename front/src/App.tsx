@@ -112,6 +112,100 @@ const AppContent = () => {
       }
     }, [mapRef, areaQueimadaData]);
 
+    //Teste para bordas dos estados
+    // Este é o useEffect que você deve ter para as BORDAS DOS ESTADOS
+    // useEffect(() => {
+    //   console.log('Entrei no useEffect de bordas dos estados');
+    //   if (isMapLoaded && areaQueimadaData && mapRef.current) {
+    //     const activeStateId = estado?.id; // Estado do useFilter para destaque
+    //     const map = mapRef.current;
+    //     if (map && areaQueimadaData) {
+    //       if (map.getSource('bordas-estados-source')) {
+    //         (map.getSource('area-queimada-source') as mapboxgl.GeoJSONSource).setData(areaQueimadaData);
+    //       } else {
+    //         map.addSource('bordas-estados-source', {
+    //           type: 'geojson',
+    //           data: areaQueimadaData,
+    //         });
+
+    //         map.addLayer({
+    //           id: 'bordas-estados-line',
+    //           type: 'fill',
+    //           source: 'bordas-estados-source',
+    //           paint: {
+    //             'line-color': [
+    //               'case',
+    //               ['==', ['get', 'id'], activeStateId],
+    //               '#FFD700', // Destaque: Dourado
+    //               '#000000'  // Padrão: Preto
+    //             ],
+    //             'line-width': [
+    //               'case',
+    //               ['==', ['get', 'id'], activeStateId],
+    //               3,     // Destaque: Mais grossa
+    //               1.5    // Padrão: Normal
+    //             ],
+    //             'line-opacity': 1
+    //           },
+    //           layout: {
+    //             'visibility': 'visible'
+    //           }
+    //         });
+
+    //         map.on("click", "bordas-estados-line", (e: any) => {
+    //           if (e.features && e.features.length > 0) {
+    //             const properties = e.features[0].properties;
+    //             new mapboxgl.Popup()
+    //               .setLngLat(e.lngLat as mapboxgl.LngLatLike)
+    //               .setHTML(`
+    //                             <strong>Estado:</strong> ${properties?.nome ?? 'N/A'}<br/>
+    //                             <strong>ID:</strong> ${properties?.id ?? 'N/A'}
+    //                         `)
+    //               .addTo(mapRef.current!);
+    //           }
+    //         });
+    //       }
+    //     }
+    //     //     'bordas-estados-line', // ID ÚNICO para a camada de LINHA das bordas
+    //     //     'bordas-estados-source', // ID ÚNICO para a fonte de dados das bordas
+    //     //     areaQueimadaData, // Seus dados GeoJSON dos estados (Polígonos)
+    //     //     {
+    //     //         type: 'line', // <<< ESTE É O TIPO CORRETO PARA DESENHAR AS BORDAS
+    //     //         paint: {
+    //     //             'line-color': [
+    //     //                 'case',
+    //     //                 ['==', ['get', 'id'], activeStateId],
+    //     //                 '#FFD700', // Destaque: Dourado
+    //     //                 '#000000'  // Padrão: Preto
+    //     //             ],
+    //     //             'line-width': [
+    //     //                 'case',
+    //     //                 ['==', ['get', 'id'], activeStateId],
+    //     //                 3,     // Destaque: Mais grossa
+    //     //                 1.5    // Padrão: Normal
+    //     //             ],
+    //     //             'line-opacity': 1
+    //     //         },
+    //     //         layout: {
+    //     //             'visibility': 'visible'
+    //     //         }
+    //     //     },
+    //     //     (e) => { // Popup de clique para as bordas (opcional)
+    //     //         if (e.features && e.features.length > 0) {
+    //     //             const properties = e.features[0].properties;
+    //     //             new mapboxgl.Popup()
+    //     //                 .setLngLat(e.lngLat as mapboxgl.LngLatLike)
+    //     //                 .setHTML(`
+    //     //                     <strong>Estado:</strong> ${properties?.nome ?? 'N/A'}<br/>
+    //     //                     <strong>ID:</strong> ${properties?.id ?? 'N/A'}
+    //     //                 `)
+    //     //                 .addTo(mapRef.current!);
+    //     //         }
+    //     //     }
+    //     // );
+    //   }
+    // }, [isMapLoaded, areaQueimadaData, mapRef, estado]); // Dependências
+
 
     // Alternar a visibilidade da layer correspondente
     const patternType = layerToPattern[layer as keyof typeof layerToPattern];
