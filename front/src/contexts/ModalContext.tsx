@@ -3,7 +3,17 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import { getAreaQueimadaByBiomaId, getAreaQueimadaByEstadoId, getFocosByBiomaId, getFocosCalorByEstadoId, getFocosCalorByMunicipioId } from '../services/api';
 import { FilterType, PatternType, type LocationType, ModalType } from '../types';
 import { useFilter } from './FilterContext';
-import { useMap } from '../hooks/useMap';
+import { useMap } from '../hooks/useMap'
+import geoData from '../../public/bioma.json';
+
+// Define a type for the GeoJSON FeatureCollection if not already available
+interface GeoJsonFeatureCollection {
+  type: string;
+  features: any[];
+}
+
+// Cast geoData to the correct type
+const typedGeoData = geoData as GeoJsonFeatureCollection;
 
 interface ModalContextType {
   activeModal: ModalType | null;
@@ -180,15 +190,48 @@ export function ModalProvider({
       }
       // Caso: Filtro por bioma
       else if (filterType === FilterType.BIOMA && bioma) {
-        const biomaId = bioma.id.toString();
-        
-        console.log(`Buscando dados para o bioma: ${bioma.nome} (ID: ${biomaId})`);
         console.log('Datas de filtro:', dataInicio, dataFim);
+        
+        // Carrega o contorno do bioma a partir do arquivo local biomas.json
+        try {
+          
+          // Filtra o geojson para obter apenas o bioma selecionado
+
+          console.log("O typedGeoData é:", typedGeoData);
+
+            const biomaFeature = typedGeoData.features.find((feature: any) =>
+            feature.properties.id_bioma?.toString() === bioma.id.toString()
+            );
+
+          console.log('Bioma selecionado:', bioma.nome);
+          console.log('Contorno do bioma encontrado:', biomaFeature);
+          
+          if (biomaFeature) {
+            const biomaData = {
+              type: "FeatureCollection",
+              features: [biomaFeature]
+            };
+
+            console.log('Contorno do bioma encontrado:', biomaData);
+            
+            // Adiciona a camada de contorno do bioma
+            updateLayerData(PatternType.BIOMA, biomaData);
+            if (!activeLayers.includes(PatternType.BIOMA)) {
+              toggleLayerVisibility(PatternType.BIOMA);
+            }
+            
+            console.log('Contorno do bioma carregado para:', bioma.nome);
+          } else {
+            console.warn('Contorno do bioma não encontrado para o ID:', bioma.id);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar o contorno do bioma:', error);
+        }
         
         // Verificar o tipo de padrão selecionado
         if (!patternType || patternType === PatternType.QUEIMADA) {
           const resultado = await getAreaQueimadaByBiomaId(
-            biomaId,
+            bioma.id.toString(),
             dataInicio,
             dataFim
           );
@@ -210,7 +253,7 @@ export function ModalProvider({
           // Implementação futura para dados de risco de fogo
 
           const resultado = await getFocosByBiomaId(
-            biomaId,
+            bioma.id.toString(),
             dataInicio,
             dataFim
           );
@@ -228,11 +271,12 @@ export function ModalProvider({
             toggleLayerVisibility(PatternType.HEAT_MAP);
           }
 
-        } else if (patternType === PatternType.QUEIMADA) {
+        } else if (patternType === PatternType.RISCO_FOGO) {
           console.log("Carregando dados de Área Queimada para o bioma:", bioma.nome);
           // Implementação futura para dados de área queimada
         }
         
+        resetMapView(); // Reset view to show all biomas
         setFilterType(FilterType.BIOMA);
       }
     } catch (error) {
