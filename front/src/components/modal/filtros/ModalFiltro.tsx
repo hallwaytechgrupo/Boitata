@@ -262,6 +262,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
   // Add console logging to debug tab changes
   console.log("Current activeTab:", activeTab);
   console.log("Current filterType:", filterType);
+  console.log("Current patternType:", patternType);
 
   // Handle tab change function to ensure proper state update
   const handleTabChange = (tab: 'estado' | 'bioma') => {

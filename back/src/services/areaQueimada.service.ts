@@ -76,4 +76,75 @@ export class AreaQueimadaService {
       throw new Error('Erro ao obter focos de calor por bioma');
     }
   }
+  
+  async getEstatisticasEstado(ano?: number, mes?: number): Promise<any[]> {
+    try {
+      return await this.repository.getEstatisticasEstado(ano, mes);
+    } catch (error) {
+      console.error('✗ Erro ao buscar estatísticas do estado:', error);
+      throw new Error('Erro ao buscar estatísticas do estado');
+    }
+  }
+
+  /**
+   * Retorna estatísticas de área queimada por bioma, agrupadas por ano e mês.
+   * Pode filtrar por ano e mês.
+   */
+  async getEstatisticasBioma(ano?: number, mes?: number): Promise<Array<{
+    ano: number;
+    mes: number;
+    bioma: string;
+    area_queimada_km2: number;
+  }>> {
+    try {
+      return await this.repository.getEstatisticasBioma(ano, mes);
+    } catch (error) {
+      console.error('✗ Erro ao buscar estatísticas do bioma:', error);
+      throw new Error('Erro ao buscar estatísticas do bioma');
+    }
+  }
+
+  /**
+   * Retorna o ranking dos estados por área queimada em km² e percentual nacional.
+   * Pode filtrar por ano e limitar o número de resultados.
+   */
+  async getRankingEstadosAreaQueimada(
+    ano?: number,
+    limite: number = 10
+  ): Promise<Array<{
+    posicao: number;
+    estado: string;
+    area_total_km2: number;
+    percentual_nacional: number;
+  }>> {
+    try {
+      return await this.repository.getRankingEstadosAreaQueimada(ano, limite);
+    } catch (error) {
+      console.error('✗ Erro ao buscar ranking de estados por área queimada:', error);
+      throw new Error('Erro ao buscar ranking de estados por área queimada');
+    }
+  }
+
+  /**
+   * Retorna o ranking dos municípios por área queimada em km² e percentual do estado.
+   * Pode filtrar por ano, mês, estado e limitar o número de resultados.
+   */
+  async getAreaQueimadaPorMunicipio(
+    ano?: number,
+    mes?: number,
+    estado?: string,
+    limite: number = 20
+  ): Promise<Array<{
+    municipio: string;
+    estado: string;
+    area_queimada_km2: number;
+    percentual_do_estado: number;
+  }>> {
+    try {
+      return await this.repository.getAreaQueimadaPorMunicipio(ano, mes, estado, limite);
+    } catch (error) {
+      console.error('✗ Erro ao buscar ranking de municípios por área queimada:', error);
+      throw new Error('Erro ao buscar ranking de municípios por área queimada');
+    }
+  }
 }

@@ -8,4 +8,8 @@ areaQueimadaRouter.get('/estado/:estadoId', areaQueimadaController.getByEstado);
 
 areaQueimadaRouter.get('/bioma/:biomaId', areaQueimadaController.getByBioma);
 
+areaQueimadaRouter.get('/info/estado', areaQueimadaController.getEstatisticasEstado);
+areaQueimadaRouter.get('/info/bioma', areaQueimadaController.getEstatisticasBioma);
+areaQueimadaRouter.get('/ranking/estados', areaQueimadaController.getRankingEstadosAreaQueimada);
+
 export default areaQueimadaRouter;

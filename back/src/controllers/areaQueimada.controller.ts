@@ -51,4 +51,66 @@ export class AreaQueimadaController {
       res.status(500).send('Erro no servidor');
     }
   }
+
+  async getEstatisticasEstado(req: Request, res: Response): Promise<void> {
+    const { ano, mes } = req.query;
+
+    try {
+      const estatisticas = await areaQueimadaService.getEstatisticasEstado(
+        ano ? Number(ano) : undefined,
+        mes ? Number(mes) : undefined
+      );
+      res.json(estatisticas);
+    } catch (error) {
+      console.error('Erro ao buscar estatísticas do estado:', error);
+      res.status(500).send('Erro no servidor');
+    }
+  }
+
+  async getEstatisticasBioma(req: Request, res: Response): Promise<void> {
+    const { ano, mes } = req.query;
+
+    try {
+      const estatisticas = await areaQueimadaService.getEstatisticasBioma(
+        ano ? Number(ano) : undefined,
+        mes ? Number(mes) : undefined
+      );
+      res.json(estatisticas);
+    } catch (error) {
+      console.error('Erro ao buscar estatísticas do bioma:', error);
+      res.status(500).send('Erro no servidor');
+    }
+  }
+
+  async getRankingEstadosAreaQueimada(req: Request, res: Response): Promise<void> {
+    const { ano, limite } = req.query;
+
+    try {
+      const ranking = await areaQueimadaService.getRankingEstadosAreaQueimada(
+        ano ? Number(ano) : undefined,
+        limite ? Number(limite) : 10
+      );
+      res.json(ranking);
+    } catch (error) {
+      console.error('Erro ao buscar ranking de estados por área queimada:', error);
+      res.status(500).send('Erro no servidor');
+    }
+  }
+
+  async getAreaQueimadaPorMunicipio(req: Request, res: Response): Promise<void> {
+    const { ano, mes, estado, limite } = req.query;
+
+    try {
+      const ranking = await areaQueimadaService.getAreaQueimadaPorMunicipio(
+        ano ? Number(ano) : undefined,
+        mes ? Number(mes) : undefined,
+        estado ? String(estado) : undefined,
+        limite ? Number(limite) : 20
+      );
+      res.json(ranking);
+    } catch (error) {
+      console.error('Erro ao buscar ranking de municípios por área queimada:', error);
+      res.status(500).send('Erro no servidor');
+    }
+  }
 }

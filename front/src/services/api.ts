@@ -72,12 +72,18 @@ export const getFocosByBiomaId = async (
   dataFim?: string,
 ) => {
   try {
+
+    console.log('Fetching focosCalor for biomaId:', biomaId, 'from', dataInicio, 'to', dataFim);
+    console.log('API URL:', `focos_calor/bioma/${biomaId}`);
+
     const response = await api.get(`focos_calor/bioma/${biomaId}`, {
       params: {
         ...(dataInicio && { dataInicio }),
         ...(dataFim && { dataFim }),
       },
     });
+
+    console.log('Response data:', response.data);
 
     return response.data;
   } catch (error) {
@@ -187,5 +193,35 @@ export const getBiomasShp = async () => {
   } catch (error) {
     console.error('Error fetching focosCalor:', error);
     throw error;
-  }
+  }  
 };
+
+export async function getEstatisticasAreaQueimadaEstado() {
+    try {
+      const response = await api.get('area_queimada/info/estado');
+      return response.data;
+    } catch (error) {
+      console.error('Erro na requisição de estatísticas de área queimada por estado:', error);
+      throw error;
+    }
+  }
+
+  export async function getEstatisticasAreaQueimadaBioma() {
+    try {
+      const response = await api.get('area_queimada/info/bioma');
+      return response.data;
+    } catch (error) {
+      console.error('Erro na requisição de estatísticas de área queimada por bioma:', error);
+      throw error;
+    }
+  }
+
+  export async function getRankingEstadosAreaQueimada() {
+    try {
+      const response = await api.get('area_queimada/ranking/estados');
+      return response.data;
+    } catch (error) {
+      console.error('Erro na requisição do ranking de estados por área queimada:', error);
+      throw error;
+    }
+  }

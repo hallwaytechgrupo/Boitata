@@ -67,25 +67,6 @@ const LayersNavigation: React.FC<LayersNavigationProps> = ({
     
     if (!activePatterns.includes(patternType)) {
       console.log(`Carregando dados mock para ${patternType}...`);
-      switch(patternType) {
-        // case PatternType.ESTADO:
-        // // Add estado data when available
-        // break;
-        // case PatternType.BIOMA:
-        //   updateLayerData(PatternType.BIOMA, mockBiomas);
-        //   break;
-        
-        // case PatternType.HEAT_MAP:
-        //   updateLayerData(PatternType.HEAT_MAP, mockFocosCalor);
-        //   break;
-        // case PatternType.QUEIMADA:
-        //   updateLayerData(PatternType.QUEIMADA, mockAreasQueimadas);
-        //   break;
-        // case PatternType.RISCO_FOGO:
-        //   updateLayerData(PatternType.RISCO_FOGO, mockRiscoFogo);
-        //   break;
-        
-      }
     }
   };
 

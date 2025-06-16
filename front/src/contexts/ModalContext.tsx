@@ -205,7 +205,7 @@ export function ModalProvider({
           if (!activeLayers.includes(PatternType.QUEIMADA)) {
             toggleLayerVisibility(PatternType.QUEIMADA);
           }
-        } else if (patternType === PatternType.RISCO_FOGO) {
+        } else if (patternType === PatternType.HEAT_MAP) {
           console.log("Carregando dados de Risco de Fogo para o bioma:", bioma.nome);
           // Implementação futura para dados de risco de fogo
 

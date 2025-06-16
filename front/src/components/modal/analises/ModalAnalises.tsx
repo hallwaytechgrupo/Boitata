@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
 import Modal from '../_base/ModalBase';
 import { Loader } from "lucide-react";
-import { Container, Section, SectionTitle, InfoText, InfoCard, InfoLabel, InfoValue, LoadingContainer } from './analises-styled';
+import { Container, Section, SectionTitle, InfoText, LoadingContainer } from './analises-styled';
 import { useFilter } from "../../../contexts/FilterContext";
-import { FilterType } from "../../../types";
+import { FilterType, PatternType } from "../../../types";
 import { 
   getEstatisticasEstado, 
   getEstatisticasMunicipio, 
   getEstatisticasBioma 
 } from "../../../services/api";
 
+// Import dos subcomponentes
+import FocoCalorAnaliseEstado from "./FocoCalorAnaliseEstado";
+import FocoCalorAnaliseMunicipio from "./FocoCalorAnaliseMunicipio";
+import FocoCalorAnaliseBioma from "./FocoCalorAnaliseBioma";
+import AreaQueimadaAnaliseEstado from "./AreaQueimadaAnaliseEstado";
+
 interface AnalisesModalProps {
   onClose: () => void;
 }
 
 export default function ModalAnalises({ onClose }: AnalisesModalProps) {
-  const { filterType, estado, cidade, bioma } = useFilter();
+  const { filterType, estado, cidade, bioma, patternType } = useFilter();
   const [estatisticasData, setEstatisticasData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -27,26 +33,47 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
         
         let dados = null;
         
-        // Buscar dados com base no filtro ativo
+        // Buscar dados com base no filtro ativo e padrão
         switch (filterType) {
           case FilterType.ESTADO:
             if (estado) {
-              dados = await getEstatisticasEstado(estado.id.toString());
-              console.log("Dados do estado carregados:", dados);
+              // Considerar patternType para diferentes análises
+              if (patternType === PatternType.HEAT_MAP) {
+                dados = await getEstatisticasEstado(estado.id.toString());
+              } else if (patternType === PatternType.QUEIMADA) {
+                dados = await getEstatisticasEstado(estado.id.toString());
+              } else if (patternType === PatternType.RISCO_FOGO) {
+                dados = await getEstatisticasEstado(estado.id.toString());
+              }
+              console.log(`Dados do estado carregados (${patternType}):`, dados);
             }
             break;
 
           case FilterType.MUNICIPIO:
             if (cidade) {
-              dados = await getEstatisticasMunicipio(cidade.id.toString());
-              console.log("Dados do município carregados:", dados);
+              // Considerar patternType para diferentes análises
+              if (patternType === PatternType.HEAT_MAP) {
+                dados = await getEstatisticasMunicipio(cidade.id.toString());
+              } else if (patternType === PatternType.QUEIMADA) {
+                dados = await getEstatisticasMunicipio(cidade.id.toString());
+              } else if (patternType === PatternType.RISCO_FOGO) {
+                dados = await getEstatisticasMunicipio(cidade.id.toString());
+              }
+              console.log(`Dados do município carregados (${patternType}):`, dados);
             }
             break;
 
           case FilterType.BIOMA:
             if (bioma) {
-              dados = await getEstatisticasBioma(bioma.id.toString());
-              console.log("Dados do bioma carregados:", dados);
+              // Considerar patternType para diferentes análises
+              if (patternType === PatternType.HEAT_MAP) {
+                dados = await getEstatisticasBioma(bioma.id.toString());
+              } else if (patternType === PatternType.QUEIMADA) {
+                dados = await getEstatisticasBioma(bioma.id.toString());
+              } else if (patternType === PatternType.RISCO_FOGO) {
+                dados = await getEstatisticasBioma(bioma.id.toString());
+              }
+              console.log(`Dados do bioma carregados (${patternType}):`, dados);
             }
             break;
         }
@@ -61,8 +88,25 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
 
     carregarEstatisticas();
     
-    // As dependências são os IDs dos filtros, não as funções ou objetos completos
-  }, [filterType, estado, cidade, bioma]);
+  }, [filterType, estado, cidade, bioma, patternType]);
+
+  // Função para obter o título do padrão
+  const getPatternLabel = () => {
+    switch (patternType) {
+      case PatternType.HEAT_MAP:
+        return 'Mapa de Calor';
+      case PatternType.BIOMA:
+        return 'Análise por Bioma';
+      case PatternType.QUEIMADA:
+        return 'Focos de Queimada';
+      case PatternType.RISCO_FOGO:
+        return 'Risco de Fogo';
+      case PatternType.ESTADO:
+        return 'Análise por Estado';
+      default:
+        return 'Análise Geral';
+    }
+  };
 
   // Função para formatar números grandes
   const formatNumero = (num: number) => {
@@ -100,153 +144,48 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
       );
     }
 
+    const patternLabel = getPatternLabel();
+
     switch (filterType) {
       case FilterType.ESTADO:
-        return (
-          <>
-        <Section>
-          <SectionTitle>Estatísticas do Estado: {estatisticasData.estado}</SectionTitle>
-          
-          <InfoCard>
-            <InfoLabel>Última atualização:</InfoLabel>
-            <InfoValue>{formatarData(estatisticasData.ultima_atualizacao)}</InfoValue>
-          </InfoCard>
+        switch (patternType) {
+          case PatternType.QUEIMADA:
+            return <AreaQueimadaAnaliseEstado />;
+            case PatternType.RISCO_FOGO:
+              return <div>Heat Map Estado em desenvolvimento...</div>;
+              case PatternType.HEAT_MAP:
+            return <FocoCalorAnaliseEstado data={estatisticasData} patternLabel={patternLabel} />;
+          default:
+            return <FocoCalorAnaliseEstado data={estatisticasData} patternLabel={patternLabel} />;
+        }
 
-          {estatisticasData.maior_frp && (
-            <InfoCard>
-          <InfoLabel>Maior poder radiativo (FRP):</InfoLabel>
-          <InfoValue>
-            {estatisticasData.maior_frp.frp.toFixed(2)} MW em {estatisticasData.maior_frp.municipio} ({formatarData(estatisticasData.maior_frp.data)})
-          </InfoValue>
-            </InfoCard>
-          )}
-
-          {estatisticasData.top_cidades && estatisticasData.top_cidades.length > 0 && (
-            <>
-          <SectionTitle>Top Municípios Afetados</SectionTitle>
-          {estatisticasData.top_cidades.map((cidade: any, index: number) => (
-            <InfoCard key={index}>
-              <InfoLabel>{index + 1}. {cidade.municipio}</InfoLabel>
-              <InfoValue>{formatNumero(cidade.total_focos)} focos</InfoValue>
-            </InfoCard>
-          ))}
-            </>
-          )}
-        </Section>
-          </>
-        );
-
-        case FilterType.MUNICIPIO:
-          return (
-            <>
-          <Section>
-            <SectionTitle>Estatísticas do Município: {estatisticasData.municipio} - {estatisticasData.estado}</SectionTitle>
-            
-            <InfoCard>
-              <InfoLabel>Total de focos nos últimos 30 dias:</InfoLabel>
-              <InfoValue>{formatNumero(Number(estatisticasData.total_focos_30dias) || 0)} focos</InfoValue>
-            </InfoCard>
-            
-            <InfoCard>
-              <InfoLabel>Risco médio de fogo:</InfoLabel>
-              <InfoValue>{(Number.parseFloat(estatisticasData.risco_fogo_medio) * 100).toFixed(2)}%</InfoValue>
-            </InfoCard>
-            
-            <InfoCard>
-              <InfoLabel>Risco máximo de fogo:</InfoLabel>
-              <InfoValue>{(Number.parseFloat(estatisticasData.risco_fogo_maximo) * 100).toFixed(2)}%</InfoValue>
-            </InfoCard>
-            
-            <InfoCard>
-              <InfoLabel>Poder radiativo médio (FRP):</InfoLabel>
-              <InfoValue>{Number.parseFloat(estatisticasData.frp_medio).toFixed(2)} MW</InfoValue>
-            </InfoCard>
-            
-            <InfoCard>
-              <InfoLabel>Poder radiativo máximo (FRP):</InfoLabel>
-              <InfoValue>{Number.parseFloat(estatisticasData.frp_maximo).toFixed(2)} MW</InfoValue>
-            </InfoCard>
-            
-            <InfoCard>
-              <InfoLabel>Última atualização:</InfoLabel>
-              <InfoValue>{formatarData(estatisticasData.ultima_atualizacao)}</InfoValue>
-            </InfoCard>
-            
-            {estatisticasData.deteccao_satelites && estatisticasData.deteccao_satelites.length > 0 && (
-              <>
-            <SectionTitle>Detecção por Satélites</SectionTitle>
-            {estatisticasData.deteccao_satelites.map((sat: any, index: number) => (
-              <InfoCard key={index}>
-                <InfoLabel>Satélite {sat.satelite}:</InfoLabel>
-                <InfoValue>{formatNumero(Number(sat.total_focos) || 0)} detecções</InfoValue>
-              </InfoCard>
-            ))}
-              </>
-            )}
-
-            {estatisticasData.serie_historica && estatisticasData.serie_historica.length > 0 && (
-              <>
-            <SectionTitle>Série Histórica (últimos meses)</SectionTitle>
-            {estatisticasData.serie_historica.map((item: any, index: number) => (
-              <InfoCard key={index}>
-                <InfoLabel>{item.mes}</InfoLabel>
-                <InfoValue>{formatNumero(Number(item.total) || 0)} focos</InfoValue>
-              </InfoCard>
-            ))}
-              </>
-            )}
-          </Section>
-            </>
-          );
+      case FilterType.MUNICIPIO:
+        switch (patternType) {
+          case PatternType.QUEIMADA:
+            return <div>Risco de Fogo Município em desenvolvimento...</div>;
+            case PatternType.RISCO_FOGO:
+              return <FocoCalorAnaliseMunicipio data={estatisticasData} patternLabel={patternLabel} />;
+              case PatternType.HEAT_MAP:
+            return <div>Heat Map Município em desenvolvimento...</div>;
+          default:
+            return <FocoCalorAnaliseMunicipio data={estatisticasData} patternLabel={patternLabel} />;
+        }
 
       case FilterType.BIOMA:
-        return (
-          <>
-            <Section>
-              <SectionTitle>Estatísticas do Bioma: {bioma?.nome}</SectionTitle>
-              
-              <InfoCard>
-                <InfoLabel>Área total do bioma:</InfoLabel>
-                <InfoValue>{formatNumero(Math.round(estatisticasData.area_km2 || 0))} km²</InfoValue>
-              </InfoCard>
-              
-              <InfoCard>
-                <InfoLabel>Total de focos nos últimos 30 dias:</InfoLabel>
-                <InfoValue>{formatNumero(estatisticasData.total_focos_30dias || 0)} focos</InfoValue>
-              </InfoCard>
-              
-              <InfoCard>
-                <InfoLabel>Total de focos histórico:</InfoLabel>
-                <InfoValue>{formatNumero(estatisticasData.total_focos_historico || 0)} focos</InfoValue>
-              </InfoCard>
-              
-              <InfoCard>
-                <InfoLabel>Densidade de focos por km²:</InfoLabel>
-                <InfoValue>{estatisticasData.densidade_focos_por_km2?.toFixed(4) || 0}</InfoValue>
-              </InfoCard>
-              
-              <InfoCard>
-                <InfoLabel>Última atualização:</InfoLabel>
-                <InfoValue>{formatarData(estatisticasData.ultima_atualizacao)}</InfoValue>
-              </InfoCard>
-              
-              {estatisticasData.top_municipios_afetados && estatisticasData.top_municipios_afetados.length > 0 && (
-                <>
-                  <SectionTitle>Top Municípios Afetados</SectionTitle>
-                  {estatisticasData.top_municipios_afetados.map((mun: any, index: number) => (
-                    <InfoCard key={index}>
-                      <InfoLabel>{index + 1}. {mun.municipio} - {mun.estado}</InfoLabel>
-                      <InfoValue>{formatNumero(mun.total_focos)} focos</InfoValue>
-                    </InfoCard>
-                  ))}
-                </>
-              )}
-            </Section>
-          </>
-        );
+        switch (patternType) {
+          case PatternType.QUEIMADA:
+            return <div>Risco de Fogo Bioma em desenvolvimento...</div>;
+          case PatternType.RISCO_FOGO:
+            return <div>Heat Map Bioma em desenvolvimento...</div>;
+          case PatternType.HEAT_MAP:
+            return <FocoCalorAnaliseBioma data={estatisticasData} patternLabel={patternLabel} />;
+          default:
+            return <FocoCalorAnaliseBioma data={estatisticasData} patternLabel={patternLabel} />;
+        }
 
-      // Os outros cases (MUNICIPIO, BIOMA, default) continuam iguais
-    };
+      default:
+        return null;
+    }
   };
 
   return (
