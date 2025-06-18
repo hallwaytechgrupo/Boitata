@@ -1,68 +1,84 @@
+import mapboxgl from 'mapbox-gl';
+import type { MapPattern } from '../types';
 
-export class TilesetPattern   {
-  private sourceId = 'risco-fogo-geotiff-source';
-  private layerId = 'risco-fogo-geotiff-layer';
-  private initialized = false;
+export class TilesetPattern implements MapPattern {
+  id = 'risco-fogo';
+  name = 'Risco de Fogo';
+  description = 'Visualização do tileset de risco de fogo (raster)';
+  sourceId = 'risco-fogo-geotiff-source';
+  layerId = 'risco-fogo-geotiff-layer';
+
+  initialized = false;
+  initializationPromise: Promise<void> | null = null;
 
   async initialize(map: mapboxgl.Map): Promise<void> {
-    try {
-      if (this.initialized) return;
+    if (this.initializationPromise) return this.initializationPromise;
+    this.initializationPromise = this._initialize(map);
+    return this.initializationPromise;
+  }
 
-      // Aguarda o carregamento do estilo do mapa, se necessário
-      if (!map.isStyleLoaded()) {
-        await new Promise((resolve) => map.once('load', resolve));
+  private async _initialize(map: mapboxgl.Map): Promise<void> {
+    try {
+      // O mapa já deve estar carregado
+      if (!map.getSource(this.sourceId)) {
+        map.addSource(this.sourceId, {
+          type: 'raster',
+          url: 'mapbox://chrisf5m.0e3rcse2',
+        });
       }
 
-      // Adiciona um listener para erros do source
-      map.on('error', (e) => {
-        if (e.sourceId === this.sourceId) {
-          console.error(`Failed to load tileset ${this.sourceId}:`, e.error);
-        }
-      });
-
-      // Adiciona o source do tileset
-      map.addSource(this.sourceId, {
-        type: 'raster',
-        url: 'mapbox://chrisf5m.0e3rcse2' // Confirme que este ID está correto
-      });
-
-      // Adiciona a camada raster
-      map.addLayer({
-        id: this.layerId,
-        type: 'raster',
-        source: this.sourceId,
-        paint: {
-          'raster-opacity': 0.5 // Aumentado para teste
-        },
-        layout: {
-          visibility: 'none' // Inicialmente oculta
-        }
-      }, ''); // Adiciona no topo da pilha de camadas
-
-      // Torna a camada visível para teste
-      this.setVisibility(map, false);
+      if (!map.getLayer(this.layerId)) {
+        map.addLayer({
+          id: this.layerId,
+          type: 'raster',
+          source: this.sourceId,
+          paint: {
+            'raster-opacity': 0.5,
+          },
+          layout: {
+            visibility: 'none',
+          },
+        });
+      }
 
       this.initialized = true;
-      console.log('Tileset pattern initialized');
-      console.log('Source:', map.getSource(this.sourceId));
-      console.log('Layer:', map.getLayer(this.layerId));
+      console.log('TilesetPattern initialized');
     } catch (error) {
-      console.error('Failed to initialize tileset pattern:', error);
+      this.initializationPromise = null;
+      console.error('Failed to initialize TilesetPattern:', error);
       throw error;
     }
   }
 
-  setVisibility(map: mapboxgl.Map, visible: boolean): void {
-    console.log(`Setting visibility of layer ${this.layerId} to ${visible}`);
-    const visibility = visible ? 'visible' : 'none';
+  async setVisibility(map: mapboxgl.Map, visible: boolean): Promise<void> {
+    if (!this.initialized) {
+      try {
+        await this.initialize(map);
+      } catch {
+        return;
+      }
+    }
     if (map.getLayer(this.layerId)) {
-      map.setLayoutProperty(this.layerId, 'visibility', visibility);
-      console.log(`Layer ${this.layerId} visibility set to ${visibility}`);
-    } else {
-      console.error(`Layer ${this.layerId} not found`);
+      map.setLayoutProperty(this.layerId, 'visibility', visible ? 'visible' : 'none');
     }
   }
 
   update(map: mapboxgl.Map, data: any): void {
+    // Tileset raster não precisa de update dinâmico normalmente
+  }
+
+  cleanup(map: mapboxgl.Map): void {
+    try {
+      if (map.getLayer(this.layerId)) {
+        map.removeLayer(this.layerId);
+      }
+      if (map.getSource(this.sourceId)) {
+        map.removeSource(this.sourceId);
+      }
+      this.initialized = false;
+      this.initializationPromise = null;
+    } catch (error) {
+      console.error('Error cleaning up TilesetPattern:', error);
+    }
   }
 }

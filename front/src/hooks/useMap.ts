@@ -96,94 +96,63 @@ export const useMap = (initialOptions = {}) => {
   }, []);
 
   // Initialize all patterns directly
-  const initializePatterns = async (map: mapboxgl.Map) => {
-    const initResults = [];
-    
-    try {
-      // Inicializar HeatMap pattern
-      console.log('🔥 Iniciando HeatMapPattern...');
-      try {
-        await heatMapPattern.initialize(map);
-        heatMapPattern.setVisibility(
-          map,
-          activeLayers.includes(PatternType.HEAT_MAP),
-        );
-        console.log('🔥 HeatMapPattern inicializado com sucesso!');
-        initResults.push(PatternType.HEAT_MAP);
-      } catch (error) {
-        console.error('❌ Erro ao inicializar HeatMapPattern:', error);
-      }
+  const initializePatterns = (map: mapboxgl.Map) => {
+    const patternInitializers = [
+      {
+        type: PatternType.HEAT_MAP,
+        pattern: heatMapPattern,
+        visible: activeLayers.includes(PatternType.HEAT_MAP),
+      },
+      {
+        type: PatternType.BIOMA,
+        pattern: biomaPattern,
+        visible: true, // Sempre visível por padrão
+      },
+      {
+        type: PatternType.QUEIMADA,
+        pattern: queimadaPattern,
+        visible: activeLayers.includes(PatternType.QUEIMADA),
+      },
+      {
+        type: PatternType.ESTADO,
+        pattern: estadoPattern,
+        visible: activeLayers.includes(PatternType.ESTADO),
+      },
+      {
+        type: PatternType.RISCO_FOGO,
+        pattern: tilesetPattern,
+        visible: activeLayers.includes(PatternType.RISCO_FOGO),
+      },
+    ];
 
-      // Inicializar Bioma pattern primeiro (já que deve aparecer por padrão)
-      console.log('🌿 Iniciando BiomaPattern...');
-      try {
-        await biomaPattern.initialize(map);
-        console.log('🌿 BiomaPattern inicializado com sucesso!');
-        biomaPattern.setVisibility(map, true); // Deixar VISÍVEL por padrão
-        console.log('🌿 BiomaPattern visibilidade definida como true');
-        initResults.push(PatternType.BIOMA);
-      } catch (error) {
-        console.error('❌ Erro ao inicializar BiomaPattern:', error);
-      }
-
-      // Inicializar Queimada pattern
-      console.log('🔥 Iniciando QueimadaPattern...');
-      try {
-        await queimadaPattern.initialize(map);
-        queimadaPattern.setVisibility(
-          map,
-          activeLayers.includes(PatternType.QUEIMADA),
-        );
-        console.log('🔥 QueimadaPattern inicializado com sucesso!');
-        initResults.push(PatternType.QUEIMADA);
-      } catch (error) {
-        console.error('❌ Erro ao inicializar QueimadaPattern:', error);
-      }
-
-      // Inicializar Estado pattern
-      console.log('🏛️ Iniciando EstadoPattern...');
-      try {
-        await estadoPattern.initialize(map);
-        console.log('🏛️ EstadoPattern inicializado, aguardando um momento antes de definir visibilidade...');
-        
-        // Pequeno delay para garantir que a inicialização está completa
-        await new Promise(resolve => setTimeout(resolve, 50));
-        
-        estadoPattern.setVisibility(
-          map,
-          activeLayers.includes(PatternType.ESTADO),
-        );
-        console.log('🏛️ EstadoPattern inicializado com sucesso!');
-        initResults.push(PatternType.ESTADO);
-      } catch (error) {
-        console.error('❌ Erro ao inicializar EstadoPattern:', error);
-      }
-
-      // Inicializar Tileset pattern (por último, já que pode ser problemático)
-      console.log('🗺️ Iniciando TilesetPattern...');
-      try {
-        await tilesetPattern.initialize(map);
-        tilesetPattern.setVisibility(
-          map,
-          activeLayers.includes(PatternType.RISCO_FOGO),
-        );
-        console.log('🗺️ TilesetPattern inicializado com sucesso!');
-        initResults.push(PatternType.RISCO_FOGO);
-      } catch (error) {
-        console.error('❌ Erro ao inicializar TilesetPattern:', error);
-      }
-
-      // Marcar todos os padrões como inicializados (mesmo que alguns falharam)
-      setInitializedPatterns(initResults);
-      setAllPatternsInitialized(true);
-
-      console.log('All patterns initialization completed. Initialized patterns:', initResults);
-    } catch (error) {
-      console.error('Error in pattern initialization process:', error);
-      // Ainda definir como inicializado para não bloquear a UI
-      setAllPatternsInitialized(true);
-      setMapError('Algumas camadas podem não estar disponíveis.');
-    }
+    Promise.all(
+      patternInitializers.map(async ({ type, pattern, visible }) => {
+        try {
+          await pattern.initialize(map);
+          // Pequeno delay para EstadoPattern
+          if (type === PatternType.ESTADO) {
+            await new Promise((resolve) => setTimeout(resolve, 50));
+          }
+          pattern.setVisibility(map, visible);
+          console.log(`${type} inicializado com sucesso!`);
+          return type;
+        } catch (error) {
+          console.error(`Erro ao inicializar ${type}:`, error);
+          return null;
+        }
+      })
+    )
+      .then((results) => {
+        const initialized = results.filter(Boolean) as PatternType[];
+        setInitializedPatterns(initialized);
+        setAllPatternsInitialized(true);
+        console.log('All patterns initialization completed. Initialized patterns:', initialized);
+      })
+      .catch((error) => {
+        console.error('Error in pattern initialization process:', error);
+        setAllPatternsInitialized(true);
+        setMapError('Algumas camadas podem não estar disponíveis.');
+      });
   };
 
   // Toggle layer visibility using pattern classes

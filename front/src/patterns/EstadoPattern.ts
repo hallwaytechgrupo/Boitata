@@ -92,15 +92,7 @@ export class EstadoPattern implements MapPattern {
           try {
             if (e.features && e.features.length > 0) {
               const properties = e.features[0].properties;
-              new mapboxgl.Popup({ closeOnClick: true })
-                .setLngLat(e.lngLat)
-                .setHTML(`
-                  <div style="font-family: Arial, sans-serif;">
-                    <strong>Estado:</strong> ${properties?.nome ?? 'N/A'}<br/>
-                    <strong>UF:</strong> ${properties?.uf ?? properties?.id ?? 'N/A'}
-                  </div>
-                `)
-                .addTo(map);
+              console.log('🏛️ Clique detectado no estado:', properties);
             }
           } catch (clickError) {
             console.error('Erro ao processar clique no estado:', clickError);
