@@ -373,4 +373,152 @@ export class FocosCalorRepository {
       throw error;
     }
   }
+
+  /**
+   * Consulta para KPIs: retorna bioma, total de focos, frp médio e dias com focos
+   */
+  async getKpiBioma(): Promise<any[]> {
+    const queryText = `
+      SELECT
+        bioma,
+        total_focos_30dias,
+        frp_medio,
+        dias_com_focos
+      FROM v_focos_calor_estatisticas_bioma
+      ORDER BY total_focos_30dias DESC
+    `;
+    const result = await query(queryText);
+    return result.rows;
+  }
+
+  /**
+   * Consulta para gráfico de pizza: distribuição de focos por bioma
+   */
+  async getDistribuicaoFocosPorBioma(): Promise<any[]> {
+    const queryText = `
+      SELECT
+        bioma,
+        total_focos_30dias
+      FROM v_focos_calor_estatisticas_bioma
+      WHERE total_focos_30dias > 0
+      ORDER BY total_focos_30dias DESC
+    `;
+    const result = await query(queryText);
+    return result.rows;
+  }
+
+  /**
+   * Consulta para gráfico de dispersão: FRP médio vs. total de focos por dia
+   */
+  async getDispersaoFrpMedioPorDia(): Promise<any[]> {
+    const queryText = `
+      SELECT
+        v.id_bioma,
+        v.bioma,
+        elem->>'dia' AS dia,
+        (elem->>'total')::INTEGER AS total_focos,
+        (elem->>'frp_medio')::NUMERIC AS frp_medio
+      FROM v_focos_calor_estatisticas_bioma v
+      CROSS JOIN LATERAL jsonb_array_elements(v.serie_historica) AS elem
+      WHERE (elem->>'total')::INTEGER > 0
+      ORDER BY v.id_bioma, dia
+    `;
+    const result = await query(queryText);
+    return result.rows;
+  }
+
+  /**
+   * Consulta para gráfico de barras: top 5 dias com mais focos por bioma
+   */
+  async getTop5DiasMaisFocosPorBioma(): Promise<any[]> {
+    const queryText = `
+      SELECT
+        v.id_bioma,
+        v.bioma,
+        elem->>'dia' AS dia,
+        (elem->>'total')::INTEGER AS total_focos,
+        (elem->>'frp_medio')::NUMERIC AS frp_medio
+      FROM v_focos_calor_estatisticas_bioma v
+      CROSS JOIN LATERAL jsonb_array_elements(v.serie_historica) AS elem
+      WHERE (elem->>'total')::INTEGER > 0
+      ORDER BY v.id_bioma, (elem->>'total')::INTEGER DESC
+      LIMIT 5
+    `;
+    const result = await query(queryText);
+    return result.rows;
+  }
+
+  /**
+   * Consulta para gráfico de linha: crescimento de focos diários para os 5 biomas com mais focos
+   */
+  async getCrescimentoFocosDiariosTop5Biomas(): Promise<any[]> {
+    const queryText = `
+      SELECT
+        v.id_bioma,
+        v.bioma,
+        elem->>'dia' AS dia,
+        (elem->>'total')::INTEGER AS total_focos
+      FROM v_focos_calor_estatisticas_bioma v
+      CROSS JOIN LATERAL jsonb_array_elements(v.serie_historica) AS elem
+      WHERE v.id_bioma IN (
+        SELECT id_bioma
+        FROM v_focos_calor_estatisticas_bioma
+        ORDER BY total_focos_30dias DESC
+        LIMIT 5
+      )
+      ORDER BY v.id_bioma, dia
+    `;
+    const result = await query(queryText);
+    return result.rows;
+  }
+
+  /**
+   * Consulta para KPI: média diária de focos para um bioma específico
+   */
+  async getMediaDiariaFocosBioma(idBioma: number): Promise<any> {
+    const queryText = `
+      SELECT
+        bioma,
+        total_focos_30dias,
+        dias_com_focos,
+        CASE
+          WHEN dias_com_focos > 0
+          THEN ROUND((total_focos_30dias::FLOAT / dias_com_focos)::NUMERIC, 2)
+          ELSE 0
+        END AS media_diaria_focos
+      FROM v_focos_calor_estatisticas_bioma
+      WHERE id_bioma = $1
+    `;
+    const result = await query(queryText, [idBioma]);
+    return result.rows[0] || null;
+  }
+
+  /**
+   * Consulta para evolução histórica: série diária de focos e FRP médio para um bioma específico
+   */
+  async getEvolucaoHistoricaBioma(idBioma: number): Promise<any[]> {
+    const queryText = `
+      SELECT
+        bioma,
+        elem->>'dia' AS dia,
+        (elem->>'total')::INTEGER AS total_focos,
+        (elem->>'frp_medio')::NUMERIC AS frp_medio
+      FROM v_focos_calor_estatisticas_bioma
+      CROSS JOIN LATERAL jsonb_array_elements(serie_historica) AS elem
+      WHERE id_bioma = $1
+      ORDER BY dia
+    `;
+    const result = await query(queryText, [idBioma]);
+    return result.rows;
+  }
+
+  /**
+   * Atualiza a view materializada de estatísticas de focos de calor por bioma
+   */
+  async refreshEstatisticasBioma(concurrent = false): Promise<void> {
+    const queryText = concurrent
+      ? 'REFRESH MATERIALIZED VIEW CONCURRENTLY public.v_focos_calor_estatisticas_bioma'
+      : 'REFRESH MATERIALIZED VIEW public.v_focos_calor_estatisticas_bioma';
+    await query(queryText);
+  }
 }

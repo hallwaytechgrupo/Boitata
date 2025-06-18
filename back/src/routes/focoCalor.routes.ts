@@ -8,7 +8,6 @@ focoCalorRouter.get('/municipio/:municipioId', (req, res) => {
   focoCalorController.getFocosByMunicipioId(req, res);
 });
 focoCalorRouter.get('/estado/:estadoId', focoCalorController.getFocosByEstado);
-focoCalorRouter.get('/bioma/:biomaId', focoCalorController.getFocosByBioma);
 focoCalorRouter.get('/grafico', focoCalorController.getGraficoData);
 focoCalorRouter.get(
   '/estado/basicInfo/:estadoId',
@@ -75,5 +74,40 @@ focoCalorRouter.get(
   '/estado/grafico-correlacao-risco-focos/:estadoId',
   (req, res) => {focoCalorController.getGraficoCorrelacaoRiscoFocos(req, res)}
 );
+
+focoCalorRouter.get('/bioma/kpi', (req, res) => {
+  focoCalorController.getKpiBioma(req, res);
+});
+
+focoCalorRouter.get('/bioma/distribuicao-focos', (req, res) => {
+  focoCalorController.getDistribuicaoFocosPorBioma(req, res);
+});
+
+focoCalorRouter.get('/bioma/dispersao-frp-medio', (req, res) => {
+  focoCalorController.getDispersaoFrpMedioPorDia(req, res);
+});
+
+focoCalorRouter.get('/bioma/top5-dias-mais-focos', (req, res) => {
+  focoCalorController.getTop5DiasMaisFocosPorBioma(req, res);
+});
+
+focoCalorRouter.get('/bioma/crescimento-focos-diarios-top5', (req, res) => {
+  focoCalorController.getCrescimentoFocosDiariosTop5Biomas(req, res);
+});
+
+focoCalorRouter.get('/bioma/media-diaria/:biomaId', (req, res) => {
+  focoCalorController.getMediaDiariaFocosBioma(req, res);
+});
+
+focoCalorRouter.get('/bioma/evolucao-historica/:biomaId', (req, res) => {
+  focoCalorController.getEvolucaoHistoricaBioma(req, res);
+});
+
+focoCalorRouter.post('/bioma/refresh-estatisticas', (req, res) => {
+  focoCalorController.refreshEstatisticasBioma(req, res);
+});
+
+focoCalorRouter.get('/bioma/:biomaId', focoCalorController.getFocosByBioma);
+
 
 export default focoCalorRouter;

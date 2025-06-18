@@ -259,4 +259,95 @@ export class FocoCalorController {
       return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
     }
   }
+
+  async getKpiBioma(req: Request, res: Response) {
+    try {
+      const result = await focoCalorService.getKpiBioma();
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar KPI do bioma:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getDistribuicaoFocosPorBioma(req: Request, res: Response) {
+    try {
+      const result = await focoCalorService.getDistribuicaoFocosPorBioma();
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar distribuição de focos por bioma:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getDispersaoFrpMedioPorDia(req: Request, res: Response) {
+    try {
+      const result = await focoCalorService.getDispersaoFrpMedioPorDia();
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar dispersão FRP médio por dia:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getTop5DiasMaisFocosPorBioma(req: Request, res: Response) {
+    try {
+      const result = await focoCalorService.getTop5DiasMaisFocosPorBioma();
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar top 5 dias com mais focos por bioma:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getCrescimentoFocosDiariosTop5Biomas(req: Request, res: Response) {
+    try {
+      const result = await focoCalorService.getCrescimentoFocosDiariosTop5Biomas();
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar crescimento de focos diários dos top 5 biomas:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getMediaDiariaFocosBioma(req: Request, res: Response) {
+    try {
+      const { biomaId } = req.params;
+      const id = biomaId ? Number.parseInt(biomaId) : undefined;
+      if (id === undefined || isNaN(id)) {
+        return res.status(400).json({ error: 'Parâmetro biomaId é obrigatório e deve ser um número válido.' });
+      }
+      const result = await focoCalorService.getMediaDiariaFocosBioma(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar média diária de focos do bioma:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getEvolucaoHistoricaBioma(req: Request, res: Response) {
+    try {
+      const { biomaId } = req.params;
+      const id = biomaId ? Number.parseInt(biomaId) : undefined;
+      if (id === undefined || isNaN(id)) {
+        return res.status(400).json({ error: 'Parâmetro biomaId é obrigatório e deve ser um número válido.' });
+      }
+      const result = await focoCalorService.getEvolucaoHistoricaBioma(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar evolução histórica do bioma:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async refreshEstatisticasBioma(req: Request, res: Response) {
+    try {
+      const { concurrent } = req.query;
+      await focoCalorService.refreshEstatisticasBioma(concurrent === 'true');
+      return res.json({ success: true });
+    } catch (error: any) {
+      console.error('Erro ao atualizar estatísticas do bioma:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
 }

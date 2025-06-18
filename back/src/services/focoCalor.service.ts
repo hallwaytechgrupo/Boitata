@@ -227,4 +227,36 @@ export class FocoCalorService {
   async getGraficoCorrelacaoRiscoFocos(estadoId?: number): Promise<any[]> {
     return this.repository.getGraficoCorrelacaoRiscoFocos(estadoId);
   }
+
+  async getKpiBioma(): Promise<any[]> {
+    return this.repository.getKpiBioma();
+  }
+
+  async getDistribuicaoFocosPorBioma(): Promise<any[]> {
+    return this.repository.getDistribuicaoFocosPorBioma();
+  }
+
+  async getDispersaoFrpMedioPorDia(): Promise<any[]> {
+    return this.repository.getDispersaoFrpMedioPorDia();
+  }
+
+  async getTop5DiasMaisFocosPorBioma(): Promise<any[]> {
+    return this.repository.getTop5DiasMaisFocosPorBioma();
+  }
+
+  async getCrescimentoFocosDiariosTop5Biomas(): Promise<any[]> {
+    return this.repository.getCrescimentoFocosDiariosTop5Biomas();
+  }
+
+  async getMediaDiariaFocosBioma(idBioma: number): Promise<any> {
+    return this.repository.getMediaDiariaFocosBioma(idBioma);
+  }
+
+  async getEvolucaoHistoricaBioma(idBioma: number): Promise<any[]> {
+    return this.repository.getEvolucaoHistoricaBioma(idBioma);
+  }
+
+  async refreshEstatisticasBioma(concurrent = false): Promise<void> {
+    return this.repository.refreshEstatisticasBioma(concurrent);
+  }
 }
