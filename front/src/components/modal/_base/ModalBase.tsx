@@ -26,6 +26,7 @@ export default function ModalBase({
   onClose,
   children,
   customWidth,
+  customHeight,
   compact = false,
 }: ModalProps) {
   // Impedir o scroll do body quando o modal estiver aberto
@@ -40,7 +41,7 @@ export default function ModalBase({
     // biome-ignore lint/a11y/useSemanticElements: <explanation>
     <ModalOverlay aria-modal="true" role="dialog">
       <ModalBackdrop onClick={onClose} />
-      <ModalContainer customWidth={customWidth}>
+      <ModalContainer customWidth={customWidth} $customHeight={customHeight}>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
           <CloseButton onClick={onClose} aria-label="Fechar">

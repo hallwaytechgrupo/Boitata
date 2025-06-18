@@ -180,7 +180,6 @@ export default function GraficosModal({ onClose }: GraficosModalProps) {
       title="Gráficos"
       onClose={onClose}
       customWidth="100vw"
-      customHeight="40vh"
     >
       <Container>
         <FilterGrid>

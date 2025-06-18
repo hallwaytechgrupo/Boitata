@@ -3,7 +3,7 @@ import pool from './config/database';
 import { verifyDatabaseConnection } from './database/verifyConnection';
 import { initializeDatabase } from './database/initializeDatabase';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2000;
 const isCloud = process.env.NODE_ENV === 'cloud';
 
 const startServer = () => {

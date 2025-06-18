@@ -191,4 +191,40 @@ export class FocoCalorService {
       throw error;
     }
   }
+
+  async getEstatisticasEstadoFinal(estadoId?: number): Promise<any[]> {
+    return this.repository.getEstatisticasEstadoFinal(estadoId);
+  }
+
+  async getKpiTotalFocosEstado(estadoId?: number): Promise<any[]> {
+    return this.repository.getKpiTotalFocosEstado(estadoId);
+  }
+
+  async getKpiMesMaiorFocos(estadoId?: number): Promise<any[]> {
+    return this.repository.getKpiMesMaiorFocos(estadoId);
+  }
+
+  async getKpiRiscoMedioEstado(estadoId?: number): Promise<any[]> {
+    return this.repository.getKpiRiscoMedioEstado(estadoId);
+  }
+
+  async getKpiFocosPorSatelite(estadoId?: number): Promise<any[]> {
+    return this.repository.getKpiFocosPorSatelite(estadoId);
+  }
+
+  async getGraficoEvolucaoTemporal(estadoId?: number): Promise<any[]> {
+    return this.repository.getGraficoEvolucaoTemporal(estadoId);
+  }
+
+  async getGraficoComparacaoSatelite(estadoId?: number): Promise<any[]> {
+    return this.repository.getGraficoComparacaoSatelite(estadoId);
+  }
+
+  async getGraficoDistribuicaoEstado(estadoId?: number): Promise<any[]> {
+    return this.repository.getGraficoDistribuicaoEstado(estadoId);
+  }
+
+  async getGraficoCorrelacaoRiscoFocos(estadoId?: number): Promise<any[]> {
+    return this.repository.getGraficoCorrelacaoRiscoFocos(estadoId);
+  }
 }

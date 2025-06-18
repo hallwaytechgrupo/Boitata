@@ -21,15 +21,23 @@ const LayersNavigation: React.FC<LayersNavigationProps> = ({
   // Verificação mais robusta para o carregamento do mapa
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
       useEffect(() => {
-    console.log("Verificando se o mapa está carregado...", allPatternsInitialized);
-    // Verificar se o mapa está carregado usando isMapLoaded
-    if (isMapLoaded) {
+    console.log("Verificando se o mapa está carregado...", {
+      isMapLoaded,
+      allPatternsInitialized,
+      mapExists: !!mapRef?.current
+    });
+    console.log("Active patterns on load:", activePatterns);
+    
+    // Verificar se o mapa está carregado E os padrões estão inicializados
+    if (isMapLoaded && allPatternsInitialized) {
+      console.log("Mapa e padrões carregados - mostrando controles");
       setCanShowControls(true);
       return;
     }
     
     // Verificação alternativa - mapRef.current existe?
-    if (mapRef?.current) {
+    if (mapRef?.current && allPatternsInitialized) {
+      console.log("Map ref exists and patterns initialized - mostrando controles");
       setCanShowControls(true);
       return;
     }
@@ -38,11 +46,11 @@ const LayersNavigation: React.FC<LayersNavigationProps> = ({
     const timeoutId = setTimeout(() => {
       console.log("Timeout de segurança ativado para mostrar controles de camada.");
       setCanShowControls(true);
-    }, 5000); // 5 segundos de timeout
+    }, 3000); // Reduzir timeout para 3 segundos
     
     // Verificar periodicamente se o mapa existe
     const intervalId = setInterval(() => {
-      if (mapRef?.current) {
+      if (mapRef?.current && (allPatternsInitialized || isMapLoaded)) {
         console.log("Mapa detectado em verificação periódica");
         setCanShowControls(true);
         clearInterval(intervalId);
@@ -54,19 +62,14 @@ const LayersNavigation: React.FC<LayersNavigationProps> = ({
       clearTimeout(timeoutId);
       clearInterval(intervalId);
     };
-  }, [isMapLoaded, mapRef]);
+  }, [isMapLoaded, mapRef, activePatterns, allPatternsInitialized]); // Adicionar activePatterns para reagir a mudanças
   
   const handleToggleLayer = (patternType: PatternType) => {
     onTogglePattern(patternType);
     
-    // Verificar se mapRef.current existe antes de atualizar os dados
     if (!mapRef?.current) {
       console.warn("Mapa ainda não está disponível. A atualização de dados será ignorada.");
       return;
-    }
-    
-    if (!activePatterns.includes(patternType)) {
-      console.log(`Carregando dados mock para ${patternType}...`);
     }
   };
 
@@ -97,7 +100,7 @@ const LayersNavigation: React.FC<LayersNavigationProps> = ({
         Camadas
       </LayerHeader>
       
-      {!canShowControls && !allPatternsInitialized ? (
+      {!canShowControls ? (
         <LoadingContainer>
           <Loader size={18} className="animate-spin" />
           <LoadingText>Carregando mapa...</LoadingText>

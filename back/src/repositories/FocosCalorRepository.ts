@@ -290,6 +290,69 @@ export class FocosCalorRepository {
     }
   }
 
+  async getEstatisticasEstadoFinal(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM v_estatisticas_estado_final${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getKpiTotalFocosEstado(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_kpi_total_focos_estado${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getKpiMesMaiorFocos(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_kpi_mes_maior_focos${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getKpiRiscoMedioEstado(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_kpi_risco_medio_estado${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getKpiFocosPorSatelite(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_kpi_focos_por_satelite${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getGraficoEvolucaoTemporal(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_grafico_evolucao_temporal${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getGraficoComparacaoSatelite(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_grafico_comparacao_satelite${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getGraficoDistribuicaoEstado(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_grafico_distribuicao_estado${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
+  async getGraficoCorrelacaoRiscoFocos(estadoId?: number): Promise<any[]> {
+    const params = estadoId !== undefined ? [estadoId] : [];
+    const queryText = `SELECT * FROM vw_grafico_correlacao_risco_focos${estadoId !== undefined ? ' WHERE id_estado = $1' : ''}`;
+    const result = await query(queryText, params);
+    return result.rows;
+  }
+
   /**
    * Retorna as estatísticas de focos de calor por bioma
    */

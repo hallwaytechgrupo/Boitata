@@ -6,6 +6,9 @@ import { BiomaPattern } from '../patterns/BiomaPattern';
 import { QueimadaPattern } from '../patterns/QueimadaPattern';
 import { RiscoFogoPattern } from '../patterns/RiscoFogoPattern';
 import { patterns, PatternType } from '../types';
+import { biomeCoordinates } from '../utils/coordenadasBiomas';
+import { TilesetPattern } from '../patterns/TileSetPattern';
+import { EstadoPattern } from '../patterns/EstadoPattern';
 
 // Armazena o mapa globalmente para garantir que esteja sempre acessível
 let globalMapInstance: mapboxgl.Map | null = null;
@@ -15,13 +18,15 @@ const heatMapPattern = new HeatMapPattern();
 const biomaPattern = new BiomaPattern();
 const queimadaPattern = new QueimadaPattern();
 const riscoFogoPattern = new RiscoFogoPattern();
+const tilesetPattern = new TilesetPattern();
+const estadoPattern = new EstadoPattern();
 
 export const useMap = (initialOptions = {}) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [activeLayers, setActiveLayers] = useState<PatternType[]>([
-    PatternType.HEAT_MAP,
+    PatternType.BIOMA, // Adicionar bioma como camada ativa por padrão
   ]);
 
   // Rastrear quais padrões já foram inicializados
@@ -65,6 +70,7 @@ export const useMap = (initialOptions = {}) => {
 
         // Initialize all patterns
         initializePatterns(map);
+        
 
         // É importante garantir que isso é definido como true
         setIsMapLoaded(true);
@@ -91,52 +97,99 @@ export const useMap = (initialOptions = {}) => {
 
   // Initialize all patterns directly
   const initializePatterns = async (map: mapboxgl.Map) => {
+    const initResults = [];
+    
     try {
       // Inicializar HeatMap pattern
-      await heatMapPattern.initialize(map);
-      heatMapPattern.setVisibility(
-        map,
-        activeLayers.includes(PatternType.HEAT_MAP),
-      );
+      console.log('🔥 Iniciando HeatMapPattern...');
+      try {
+        await heatMapPattern.initialize(map);
+        heatMapPattern.setVisibility(
+          map,
+          activeLayers.includes(PatternType.HEAT_MAP),
+        );
+        console.log('🔥 HeatMapPattern inicializado com sucesso!');
+        initResults.push(PatternType.HEAT_MAP);
+      } catch (error) {
+        console.error('❌ Erro ao inicializar HeatMapPattern:', error);
+      }
 
-      // Inicializar Bioma pattern
-      // await biomaPattern.initialize(map);
-      // biomaPattern.setVisibility(map, activeLayers.includes(PatternType.BIOMA));
+      // Inicializar Bioma pattern primeiro (já que deve aparecer por padrão)
+      console.log('🌿 Iniciando BiomaPattern...');
+      try {
+        await biomaPattern.initialize(map);
+        console.log('🌿 BiomaPattern inicializado com sucesso!');
+        biomaPattern.setVisibility(map, true); // Deixar VISÍVEL por padrão
+        console.log('🌿 BiomaPattern visibilidade definida como true');
+        initResults.push(PatternType.BIOMA);
+      } catch (error) {
+        console.error('❌ Erro ao inicializar BiomaPattern:', error);
+      }
 
       // Inicializar Queimada pattern
-      await queimadaPattern.initialize(map);
-      queimadaPattern.setVisibility(
-        map,
-        activeLayers.includes(PatternType.QUEIMADA),
-      );
+      console.log('🔥 Iniciando QueimadaPattern...');
+      try {
+        await queimadaPattern.initialize(map);
+        queimadaPattern.setVisibility(
+          map,
+          activeLayers.includes(PatternType.QUEIMADA),
+        );
+        console.log('🔥 QueimadaPattern inicializado com sucesso!');
+        initResults.push(PatternType.QUEIMADA);
+      } catch (error) {
+        console.error('❌ Erro ao inicializar QueimadaPattern:', error);
+      }
 
-      // Inicializar RiscoFogo pattern
-      await riscoFogoPattern.initialize(map);
-      riscoFogoPattern.setVisibility(
-        map,
-        activeLayers.includes(PatternType.RISCO_FOGO),
-      );
+      // Inicializar Estado pattern
+      console.log('🏛️ Iniciando EstadoPattern...');
+      try {
+        await estadoPattern.initialize(map);
+        console.log('🏛️ EstadoPattern inicializado, aguardando um momento antes de definir visibilidade...');
+        
+        // Pequeno delay para garantir que a inicialização está completa
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
+        estadoPattern.setVisibility(
+          map,
+          activeLayers.includes(PatternType.ESTADO),
+        );
+        console.log('🏛️ EstadoPattern inicializado com sucesso!');
+        initResults.push(PatternType.ESTADO);
+      } catch (error) {
+        console.error('❌ Erro ao inicializar EstadoPattern:', error);
+      }
 
-      // Marcar todos os padrões como inicializados
-      setInitializedPatterns([
-        PatternType.HEAT_MAP,
-        PatternType.BIOMA,
-        PatternType.QUEIMADA,
-        PatternType.RISCO_FOGO,
-      ]);
+      // Inicializar Tileset pattern (por último, já que pode ser problemático)
+      console.log('🗺️ Iniciando TilesetPattern...');
+      try {
+        await tilesetPattern.initialize(map);
+        tilesetPattern.setVisibility(
+          map,
+          activeLayers.includes(PatternType.RISCO_FOGO),
+        );
+        console.log('🗺️ TilesetPattern inicializado com sucesso!');
+        initResults.push(PatternType.RISCO_FOGO);
+      } catch (error) {
+        console.error('❌ Erro ao inicializar TilesetPattern:', error);
+      }
 
+      // Marcar todos os padrões como inicializados (mesmo que alguns falharam)
+      setInitializedPatterns(initResults);
       setAllPatternsInitialized(true);
 
-      console.log('All patterns initialized successfully');
+      console.log('All patterns initialization completed. Initialized patterns:', initResults);
     } catch (error) {
-      console.error('Error initializing patterns:', error);
-      setMapError('Erro ao inicializar camadas do mapa.');
+      console.error('Error in pattern initialization process:', error);
+      // Ainda definir como inicializado para não bloquear a UI
+      setAllPatternsInitialized(true);
+      setMapError('Algumas camadas podem não estar disponíveis.');
     }
   };
 
   // Toggle layer visibility using pattern classes
   const toggleLayerVisibility = useCallback(
     (patternType: PatternType) => {
+      console.log('Tentando alternar visibilidade para:', patternType);
       if (!globalMapInstance || !isMapLoaded) {
         console.log('Mapa não está pronto para alternar visibilidade');
         return;
@@ -161,10 +214,17 @@ export const useMap = (initialOptions = {}) => {
             );
             break;
           case PatternType.RISCO_FOGO:
-            riscoFogoPattern.setVisibility(
+            // riscoFogoPattern.setVisibility(
+            //   globalMapInstance,
+            //   !isCurrentlyActive,
+            // );
+            tilesetPattern.setVisibility(
               globalMapInstance,
               !isCurrentlyActive,
             );
+            break;
+          case PatternType.ESTADO:
+            estadoPattern.setVisibility(globalMapInstance, !isCurrentlyActive);
             break;
         }
 
@@ -256,6 +316,10 @@ export const useMap = (initialOptions = {}) => {
           riscoFogoPattern.update(map, validData);
           riscoFogoPattern.setVisibility(map, true);
           break;
+        case PatternType.ESTADO:
+          estadoPattern.update(map, validData);
+          estadoPattern.setVisibility(map, true);
+          break;
       }
 
       // Atualizar o estado para refletir que a camada está ativa
@@ -312,6 +376,22 @@ export const useMap = (initialOptions = {}) => {
     }
   }, []);
 
+  const flyToBioma = useCallback((biomaId: number) => {
+    if (!globalMapInstance || !biomeCoordinates[biomaId]) return;
+
+    try {
+      const { latitude, longitude } = biomeCoordinates[biomaId];
+      globalMapInstance.flyTo({
+        center: [longitude, latitude],
+        zoom: 5,
+        essential: true,
+        duration: 1500,
+      });
+    } catch (error) {
+      console.error('Error flying to bioma:', error);
+    }
+  }, []);
+
   // Reset map view
   const resetMapView = useCallback(() => {
     if (!globalMapInstance) return;
@@ -334,6 +414,7 @@ export const useMap = (initialOptions = {}) => {
     isMapLoaded,
     mapError,
     flyToState,
+    flyToBioma,
     resetMapView,
     activeLayers,
     toggleLayerVisibility,

@@ -1,6 +1,5 @@
 import mapboxgl from 'mapbox-gl';
 import type { LocationType, MapPattern } from '../types';
-import { getBiomasShp } from '../services/api';
 
 export class BiomaPattern implements MapPattern {
   id = 'bioma';
@@ -26,118 +25,44 @@ export class BiomaPattern implements MapPattern {
     // Create and store the initialization promise
     this.initializationPromise = this._initialize(map);
     return this.initializationPromise;
-  }
-
-  private async _initialize(map: mapboxgl.Map): Promise<void> {
+  }  private async _initialize(map: mapboxgl.Map): Promise<void> {
     try {
       console.log('Starting BiomaPattern initialization...');
-      const geojson = await getBiomasShp();
-
-      // Wait for the map to be loaded
-      if (!map.loaded()) {
-        await new Promise<void>((resolve) => {
-          map.once('load', () => resolve());
-        });
+      console.log('Map loaded status:', map.loaded());
+      
+      // O mapa já deve estar carregado quando chegamos aqui
+      // Não precisamos aguardar novamente// Carrega os dados do bioma
+      console.log('Loading bioma data...');
+      const response = await fetch('bioma.json');
+      if (!response.ok) {
+        console.error('Failed to fetch bioma.json:', response.status, response.statusText);
+        throw new Error(`Failed to load biomas.geojson: ${response.status}`);
       }
 
-      // Adiciona a fonte de dados
+      const geojson = await response.json();
+      console.log('Biomas GeoJSON loaded successfully:', {
+        type: geojson.type,
+        featuresCount: geojson.features?.length || 0,
+        firstFeature: geojson.features?.[0]
+      });      // Adiciona a fonte de dados com os dados carregados
       if (!map.getSource(this.sourceId)) {
+        console.log('Adding bioma source to map...');
         map.addSource(this.sourceId, {
           type: 'geojson',
           data: geojson,
-          promoteId: 'id',
+          promoteId: 'id_bioma',
         });
         console.log('Added BiomaPattern source to map');
+      } else {
+        console.log('Bioma source already exists, updating data...');
+        const source = map.getSource(this.sourceId) as mapboxgl.GeoJSONSource;
+        source.setData(geojson);
       }
 
-      const biomaColors = {
-        1: '#1E8449', // Amazônia - Verde escuro
-        2: '#F39C12', // Caatinga - Laranja
-        3: '#27AE60', // Cerrado - Verde
-        4: '#2ECC71', // Mata Atlântica - Verde claro
-        5: '#F1C40F', // Pampa - Amarelo
-        6: '#3498DB', // Pantanal - Azul
-      };
+      // Adiciona as camadas diretamente
+      console.log('Adding bioma layers...');
+      this.addLayers(map);
 
-      // Adiciona camada de preenchimento
-      if (!map.getLayer(this.fillLayerId)) {
-        map.addLayer({
-          id: this.fillLayerId,
-          type: 'fill',
-          source: this.sourceId,
-          layout: {
-            visibility: 'visible',
-          },
-          paint: {
-            'fill-color': [
-              'match',
-              ['get', 'id'],
-              1,
-              biomaColors[1],
-              2,
-              biomaColors[2],
-              3,
-              biomaColors[3],
-              4,
-              biomaColors[4],
-              5,
-              biomaColors[5],
-              6,
-              biomaColors[6],
-              '#CCC',
-            ],
-            'fill-opacity': 0.2,
-            'fill-outline-color': '#000',
-          },
-        });
-      }
-
-      // Adiciona camada de rótulos
-      if (!map.getLayer(this.labelLayerId)) {
-        map.addLayer({
-          id: this.labelLayerId,
-          type: 'symbol',
-          source: this.sourceId,
-          layout: {
-            'text-field': ['get', 'nome_bioma'],
-            'text-size': 12,
-            'text-allow-overlap': true,
-            visibility: 'visible',
-          },
-          paint: {
-            'text-color': '#000',
-            'text-halo-color': '#fff',
-            'text-halo-width': 2,
-          },
-        });
-      }
-
-      // Adiciona interatividade
-      map.on('mouseenter', this.fillLayerId, () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      map.on('mouseleave', this.fillLayerId, () => {
-        map.getCanvas().style.cursor = '';
-      });
-
-      map.on('click', this.fillLayerId, (e) => {
-        if (e.features && e.features.length > 0) {
-          const bioma = e.features[0].properties as LocationType | null;
-          if (!bioma) return;
-
-          new mapboxgl.Popup()
-            .setLngLat(e.lngLat)
-            .setHTML(`
-              <h3>${bioma.nome}</h3>
-              <p>ID: ${bioma.id}</p>
-            `)
-            .addTo(map);
-        }
-      });
-
-      // Set initialized flag to true after everything is complete
-      this.initialized = true;
       console.log('BiomaPattern initialization completed successfully');
     } catch (error) {
       console.error('Erro ao carregar os biomas:', error);
@@ -145,6 +70,104 @@ export class BiomaPattern implements MapPattern {
       this.initializationPromise = null;
       throw error;
     }
+  }
+  private addLayers(map: mapboxgl.Map): void {
+    const biomaColors = {
+      1: '#1E8449', // Amazônia - Verde escuro
+      2: '#F39C12', // Caatinga - Laranja
+      3: '#27AE60', // Cerrado - Verde
+      4: '#2ECC71', // Mata Atlântica - Verde claro
+      5: '#F1C40F', // Pampa - Amarelo
+      6: '#3498DB', // Pantanal - Azul
+    };
+
+    // Adiciona camada de preenchimento
+    if (!map.getLayer(this.fillLayerId)) {
+      map.addLayer({
+        id: this.fillLayerId,
+        type: 'fill',
+        source: this.sourceId,
+        layout: {
+          visibility: 'visible', // Garantir que inicia visível
+        },
+        paint: {
+          'fill-color': [
+            'match',
+            ['get', 'id_bioma'],
+            1,
+            biomaColors[1],
+            2,
+            biomaColors[2],
+            3,
+            biomaColors[3],
+            4,
+            biomaColors[4],
+            5,
+            biomaColors[5],
+            6,
+            biomaColors[6],
+            '#CCC',
+          ],
+          'fill-opacity': 0.3, // Aumentar opacidade para melhor visualização
+          'fill-outline-color': '#000',
+        },
+      }, 'admin-0-boundary');
+      console.log('Added bioma fill layer with visibility: visible');
+    }
+
+    // Adiciona camada de rótulos
+    if (!map.getLayer(this.labelLayerId)) {
+      map.addLayer({
+        id: this.labelLayerId,
+        type: 'symbol',
+        source: this.sourceId,
+        layout: {
+          'text-field': ['get', 'bioma'],
+          'text-size': 12,
+          'text-allow-overlap': false, // Evitar sobreposição excessiva
+          visibility: 'visible', // Garantir que inicia visível
+        },
+        paint: {
+          'text-color': '#000',
+          'text-halo-color': '#fff',
+          'text-halo-width': 2, // Aumentar halo para melhor legibilidade
+        },
+      }, 'admin-1-boundary');
+      console.log('Added bioma label layer with visibility: visible');
+    }
+
+    // Adiciona interatividade
+    this.addInteractivity(map);
+    
+    // Set initialized flag to true after everything is complete
+    this.initialized = true;
+    console.log('BiomaPattern layers added and initialized successfully');
+  }
+
+  private addInteractivity(map: mapboxgl.Map): void {
+    map.on('mouseenter', this.fillLayerId, () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.on('mouseleave', this.fillLayerId, () => {
+      map.getCanvas().style.cursor = '';
+    });
+
+    map.on('click', this.fillLayerId, (e) => {
+      if (e.features && e.features.length > 0) {
+        const bioma = e.features[0].properties as { bioma: string; id_bioma: number };
+        console.log('Clicked on bioma:', bioma);
+        if (!bioma) return;
+
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(`
+            <p>ID: ${bioma.id_bioma}</p>
+            <h3>${bioma.bioma}</h3>
+          `)
+          .addTo(map);
+      }
+    });
   }
 
   async setVisibility(map: mapboxgl.Map, visible: boolean): Promise<void> {
@@ -198,7 +221,6 @@ export class BiomaPattern implements MapPattern {
       source.setData(data);
     }
   }
-
   cleanup(map: mapboxgl.Map): void {
     try {
       if (map.getLayer(this.labelLayerId)) {
@@ -206,9 +228,8 @@ export class BiomaPattern implements MapPattern {
       }
 
       if (map.getLayer(this.fillLayerId)) {
-        map.off('mouseenter', this.fillLayerId);
-        map.off('mouseleave', this.fillLayerId);
-        map.off('click', this.fillLayerId);
+        // Remove all listeners for this layer
+        map.getCanvas().style.cursor = '';
         map.removeLayer(this.fillLayerId);
       }
 
@@ -217,6 +238,7 @@ export class BiomaPattern implements MapPattern {
       }
 
       this.initialized = false;
+      this.initializationPromise = null;
     } catch (error) {
       console.error('Error cleaning up bioma layers:', error);
     }

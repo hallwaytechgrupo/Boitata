@@ -27,6 +27,7 @@ import {
 } from './filtros-styled';
 import cidadesPorEstado from '../../../utils/cidades';
 import { useModal } from '../../../contexts/ModalContext';
+import styled from 'styled-components';
 
 // ED.04 Algoritmos de busca em vetores
 const findEstadoById = (
@@ -126,11 +127,12 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
     try {
       setIsLoading(true);
 
-      // Se for RISCO_FOGO, garantimos que as datas são iguais
+      // Se for RISCO_FOGO, garantimos que usa a data fixa
       if (isRiscoFogo) {
+        const fixedDate = '2025-06-16';
         setDateRange({
-          startDate: tempStartDate,
-          endDate: tempStartDate, // Mesma data para início e fim
+          startDate: fixedDate,
+          endDate: fixedDate,
         });
       } else {
         setDateRange({
@@ -153,8 +155,8 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
         estado,
         cidade,
         bioma,
-        tempStartDate,
-        tempEndDate,
+        isRiscoFogo ? '2025-06-16' : tempStartDate,
+        isRiscoFogo ? '2025-06-16' : tempEndDate,
         patternType
       );
 
@@ -171,14 +173,22 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
     }
   };
   
-  const handlePatternTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePatternTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedValue = e.target.value;
     if (selectedValue) {
       setPatternType(selectedValue as PatternType);
       
-      // Se o tipo selecionado for RISCO_FOGO, definimos a data final igual à inicial
+      // Se o tipo selecionado for RISCO_FOGO, definimos uma data fixa
       if (selectedValue === PatternType.RISCO_FOGO) {
-        setTempEndDate(tempStartDate);
+        const fixedDate = '2025-06-16';
+        setTempStartDate(fixedDate);
+        setTempEndDate(fixedDate);
+      }
+      
+      // Se o tipo selecionado for QUEIMADA e há município selecionado, voltar para estado
+      if (selectedValue === PatternType.QUEIMADA && cidade) {
+        setCidade(null);
+        setFilterType(FilterType.ESTADO);
       }
     } else {
       setPatternType(null);
@@ -288,7 +298,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
 
   // Let's try a different approach to styling tabs
   return (
-    <ModalBase title="Filtros" onClose={onClose} compact={true}>
+    <ModalBase title="Filtros" onClose={onClose} compact={true} customWidth='60vw' customHeight='99vh'>
       <AnimatePresence>
         {hasActiveFilters && (
           <ActiveFiltersContainer
@@ -417,6 +427,51 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
       >
         <Section variants={itemVariants}>
           <SectionTitle>
+            <Layers size={14} color="#FF7300" />
+            Visualização
+          </SectionTitle>
+          
+          <RadioGroup>
+            <RadioOption $isSelected={patternType === PatternType.HEAT_MAP}>
+              <RadioInput
+                type="radio"
+                id="heat-map"
+                name="patternType"
+                value={PatternType.HEAT_MAP}
+                checked={patternType === PatternType.HEAT_MAP}
+                onChange={handlePatternTypeChange}
+              />
+              <RadioLabel>Mapa de Calor</RadioLabel>
+            </RadioOption>
+            
+            <RadioOption $isSelected={patternType === PatternType.QUEIMADA}>
+              <RadioInput
+                type="radio"
+                id="queimada"
+                name="patternType"
+                value={PatternType.QUEIMADA}
+                checked={patternType === PatternType.QUEIMADA}
+                onChange={handlePatternTypeChange}
+              />
+              <RadioLabel>Área Queimada</RadioLabel>
+            </RadioOption>
+            
+            <RadioOption $isSelected={patternType === PatternType.RISCO_FOGO}>
+              <RadioInput
+                type="radio"
+                id="risco-fogo"
+                name="patternType"
+                value={PatternType.RISCO_FOGO}
+                checked={patternType === PatternType.RISCO_FOGO}
+                onChange={handlePatternTypeChange}
+              />
+              <RadioLabel>Risco de Fogo</RadioLabel>
+            </RadioOption>
+          </RadioGroup>
+        </Section>
+
+        <Section variants={itemVariants}>
+          <SectionTitle>
             <MapIcon size={14} color="#FF7300" />
             Localização
           </SectionTitle>
@@ -462,6 +517,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                   <FilterSelect
                     value={estado?.id || ''}
                     onChange={handleEstadoChange}
+                    disabled={!patternType}
                   >
                     <option value="">Selecione um estado</option>
                     {estadosOrdenados.map(
@@ -476,12 +532,13 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                   </FilterSelect>
                 </FilterContainer>
 
-                {estado && (
+                {estado && patternType !== PatternType.QUEIMADA && (
                   <FilterContainer>
                     <FilterLabel>Município</FilterLabel>
                     <FilterSelect
                       value={cidade?.id || ''}
                       onChange={handleCidadeChange}
+                      disabled={!patternType || !estado}
                     >
                       <option value="">Selecione um município</option>
                       {getMunicipios(estado.id).map((m) => (
@@ -508,6 +565,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                   <FilterSelect
                     value={bioma?.id || ''}
                     onChange={handleBiomaChange}
+                    disabled={!patternType}
                   >
                     <option value="">Selecione um bioma</option>
                     {biomas.map((b) => (
@@ -533,21 +591,20 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
               <FilterLabel>{isRiscoFogo ? "Data do Risco" : "Data Inicial"}</FilterLabel>
               <FilterInput
                 type="date"
-                value={tempStartDate}
+                value={isRiscoFogo ? '2025-06-16' : tempStartDate}
                 onChange={(e) => {
-                  const newStartDate = e.target.value;
-                  setTempStartDate(newStartDate);
+                  if (!isRiscoFogo) {
+                    const newStartDate = e.target.value;
+                    setTempStartDate(newStartDate);
 
-                  // Se for RISCO_FOGO, a data final é sempre igual à inicial
-                  if (isRiscoFogo) {
-                    setTempEndDate(newStartDate);
-                  } else if (tempEndDate && newStartDate > tempEndDate) {
-                    setTempEndDate(newStartDate);
+                    if (tempEndDate && newStartDate > tempEndDate) {
+                      setTempEndDate(newStartDate);
+                    }
                   }
                 }}
                 min={MIN_DATE}
                 max={MAX_DATE}
-                disabled={!estado && !bioma && !cidade}
+                disabled={isRiscoFogo || !patternType || (!estado && !bioma)}
               />
             </FilterContainer>
             
@@ -561,31 +618,11 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
                   onChange={(e) => setTempEndDate(e.target.value)}
                   min={tempStartDate || MIN_DATE}
                   max={MAX_DATE}
-                  disabled={(!estado && !bioma && !cidade) || !tempStartDate}
+                  disabled={!patternType || (!estado && !bioma) || !tempStartDate}
                 />
               </FilterContainer>
             )}
           </FilterGrid>
-        </Section>
-        
-        <Section variants={itemVariants}>
-          <SectionTitle>
-            <Layers size={14} color="#FF7300" />
-            Visualização
-          </SectionTitle>
-          
-          <FilterContainer>
-            <FilterSelect
-              value={patternType || ''}
-              onChange={handlePatternTypeChange}
-              disabled={!estado && !bioma && !cidade}
-            >
-              <option value="">Selecione o tipo de visualização</option>
-              <option value={PatternType.HEAT_MAP}>Mapa de Calor</option>
-              <option value={PatternType.QUEIMADA}>Área Queimada</option>
-              <option value={PatternType.RISCO_FOGO}>Risco de Fogo</option>
-            </FilterSelect>
-          </FilterContainer>
         </Section>
       </motion.div>
       
@@ -602,7 +639,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
         </ResetButton>
         <ApplyButton
           onClick={handleApplyFilter}
-          disabled={isLoading || (!estado && !bioma && !cidade) || !patternType}
+          disabled={isLoading || !patternType || (!estado && !bioma) || !tempStartDate || (!isRiscoFogo && !tempEndDate)}
         >
           {isLoading ? 'Carregando...' : 'Aplicar Filtro'}
         </ApplyButton>
@@ -612,3 +649,56 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
 };
 
 export default ModalFiltro;
+
+// Add new styled components for radio buttons
+const RadioGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+`;
+
+const RadioOption = styled.label<{ $isSelected?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 2px solid ${props => props.$isSelected ? '#FF7300' : 'transparent'};
+  background-color: ${props => props.$isSelected ? 'rgba(255, 115, 0, 0.1)' : 'transparent'};
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 0;
+  
+  &:hover {
+    background-color: ${props => props.$isSelected ? 'rgba(255, 115, 0, 0.15)' : 'rgba(255, 255, 255, 0.05)'};
+    border-color: ${props => props.$isSelected ? '#FF7300' : 'rgba(255, 255, 255, 0.1)'};
+  }
+`;
+
+const RadioInput = styled.input`
+  width: 16px;
+  height: 16px;
+  accent-color: #FF7300;
+  cursor: pointer;
+`;
+
+const RadioLabel = styled.span`
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;

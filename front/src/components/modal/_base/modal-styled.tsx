@@ -36,6 +36,7 @@ export const ModalContainer = styled.div<ModalContainerProps>`
   border-radius: 0.5rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   max-width: ${(props) => props.customWidth || "32rem"};
+  max-height: ${(props) => props.$customHeight || "98vh"};
   width: 100%;
   margin: 0 auto;
   overflow: hidden;

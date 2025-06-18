@@ -38,6 +38,7 @@ interface ModalProviderProps {
   toggleLayerVisibility: (patternType: PatternType) => void;
   activeLayers: PatternType[];
   flyToState: (estadoId: number) => void;
+  flyToBioma?: (biomaId: number) => void;
   showToast: (message: string) => void;
 }
 
@@ -49,6 +50,7 @@ export function ModalProvider({
   toggleLayerVisibility,
   activeLayers,
   flyToState,
+  flyToBioma,
   showToast,
 }: ModalProviderProps) {
   const {resetMapView} = useMap();
@@ -185,6 +187,57 @@ export function ModalProvider({
         if (estado) {
           flyToState(estado.id);
         }
+
+        // Carregar contorno do estado
+        try {
+          // Busca a geometria do estado via IBGE GeoJSON API
+          const response = await fetch(
+            `https://servicodados.ibge.gov.br/api/v2/malhas/${estadoId}?formato=application/vnd.geo+json`
+          );
+          if (!response.ok) {
+            throw new Error(`Erro ao buscar geometria do estado: ${response.statusText}`);
+          }
+          const geojson = await response.json();
+
+          // O endpoint retorna um objeto Geometry, não Feature ou FeatureCollection
+          // Precisamos embrulhar em um Feature e FeatureCollection manualmente
+          let estadoFeature;
+          if (geojson.type === "FeatureCollection") {
+            estadoFeature = geojson.features[0];
+          } else if (geojson.type === "Feature") {
+            estadoFeature = geojson;
+          } else if (geojson.type === "MultiPolygon" || geojson.type === "Polygon") {
+            estadoFeature = {
+              type: "Feature",
+              geometry: geojson,
+              properties: { id: estadoId, nome: estado.nome }
+            };
+          }
+
+          if (estadoFeature && estadoFeature.geometry) {
+            const estadoData = {
+              type: "FeatureCollection",
+              features: [estadoFeature],
+            };
+
+            console.log('Contorno do estado encontrado:', estadoData);
+
+            // Aguardar um momento para garantir que o pattern está inicializado
+            setTimeout(() => {
+              updateLayerData(PatternType.ESTADO, estadoData);
+              if (!activeLayers.includes(PatternType.ESTADO)) {
+                toggleLayerVisibility(PatternType.ESTADO);
+              }
+            }, 100);
+            
+            console.log('Contorno do estado carregado:', estadoData);
+          } else {
+            console.warn(`⚠ Nenhum dado de geometria encontrado para o estado ${estado.nome}.`);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar o contorno do estado:', error);
+          showToast('Erro ao carregar o contorno do estado.');
+        }
         
         setFilterType(FilterType.ESTADO);
       }
@@ -276,7 +329,11 @@ export function ModalProvider({
           // Implementação futura para dados de área queimada
         }
         
-        resetMapView(); // Reset view to show all biomas
+        if (flyToBioma) {
+          flyToBioma(bioma.id);
+        }
+        
+        // resetMapView(); // Reset view to show all biomas
         setFilterType(FilterType.BIOMA);
       }
     } catch (error) {

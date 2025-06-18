@@ -21,12 +21,13 @@ import Toast from './components/search/Toast';
 
 // Componente interno que usa o contexto de modais
 const AppContent = () => {
-  const { estado, filterType } = useFilter();
+  const { estado, bioma, filterType } = useFilter();
   const { 
     mapContainerRef, 
     isMapLoaded, 
     mapError, 
     flyToState, 
+    flyToBioma,
     resetMapView,
     activeLayers,
     toggleLayerVisibility,
@@ -64,6 +65,9 @@ const AppContent = () => {
   useEffect(() => {
     if (estado && isMapLoaded && filterType === FilterType?.ESTADO) {
       flyToState(estado.id);
+    }
+    if (bioma && isMapLoaded && filterType === FilterType?.BIOMA) {
+      flyToBioma(bioma.id);
     }
   }, [estado, isMapLoaded, flyToState, filterType]);
 
@@ -140,6 +144,7 @@ const AppContent = () => {
 function App() {
   const { 
     flyToState,
+    flyToBioma,
     activeLayers,
     toggleLayerVisibility,
     updateLayerData
@@ -158,6 +163,7 @@ function App() {
       toggleLayerVisibility={toggleLayerVisibility}
       activeLayers={activeLayers}
       flyToState={flyToState}
+      flyToBioma={flyToBioma}
       showToast={showToast}
     >
       <AppContent />

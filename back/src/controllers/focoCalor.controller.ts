@@ -151,4 +151,112 @@ export class FocoCalorController {
         .json({ error: 'Erro interno do servidor', details: error.message });
     }
   }
+
+  async getEstatisticasEstadoFinal(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getEstatisticasEstadoFinal(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar estatísticas finais do estado:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getKpiTotalFocosEstado(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getKpiTotalFocosEstado(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar KPI total de focos do estado:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getKpiMesMaiorFocos(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getKpiMesMaiorFocos(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar KPI mês com maior número de focos:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getKpiRiscoMedioEstado(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getKpiRiscoMedioEstado(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar KPI risco médio do estado:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getKpiFocosPorSatelite(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getKpiFocosPorSatelite(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar KPI focos por satélite:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getGraficoEvolucaoTemporal(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getGraficoEvolucaoTemporal(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar gráfico de evolução temporal:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getGraficoComparacaoSatelite(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getGraficoComparacaoSatelite(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar gráfico de comparação de satélite:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getGraficoDistribuicaoEstado(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getGraficoDistribuicaoEstado(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar gráfico de distribuição do estado:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
+
+  async getGraficoCorrelacaoRiscoFocos(req: Request, res: Response) {
+    try {
+      const { estadoId } = req.params;
+      const id = estadoId ? Number.parseInt(estadoId) : undefined;
+      const result = await focoCalorService.getGraficoCorrelacaoRiscoFocos(id);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao buscar gráfico de correlação risco-focos:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+    }
+  }
 }
