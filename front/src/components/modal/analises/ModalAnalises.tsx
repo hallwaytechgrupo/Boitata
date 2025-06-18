@@ -51,7 +51,7 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
       case PatternType.ESTADO:
         return 'Análise por Estado';
       default:
-        return 'Análise Geral';
+        return '';
     }
   };
 
@@ -123,15 +123,15 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
 
   return (
     <Modal
-      title={`Análise por ${
+      title={`Análise de ${getPatternLabel()} no ${
       filterType === FilterType.ESTADO
-        ? `Estado${estado ? ` ${estado.nome}` : ""}`
+        ? `Estado${estado ? ` de ${estado.nome}` : ""}`
         : filterType === FilterType.MUNICIPIO
-        ? `Município${cidade ? ` ${cidade.nome}` : ""}`
+        ? `Município${cidade ? ` de ${cidade.nome}` : ""}`
         : filterType === FilterType.BIOMA
-        ? `Bioma${bioma ? ` ${bioma.nome}` : ""}`
+        ? `Bioma${bioma ? ` de ${bioma.nome}` : ""}`
         : "Geral"
-      } em ${getPatternLabel()}`}
+      }`}
       onClose={onClose}
       customHeight="98vh"
       customWidth="70vw"
