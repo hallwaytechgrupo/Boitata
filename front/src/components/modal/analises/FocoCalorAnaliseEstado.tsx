@@ -159,9 +159,6 @@ export default function FocoCalorAnaliseEstado() {
         </>
       ) : (
         <>
-          <SectionTitle>🔥 Estatísticas do Estado: {estado.nome}</SectionTitle>
-          <InfoText>📊 Análise: {patternLabel}</InfoText>
-          
           {/* Grid de KPIs Melhorado */}
           <KpiGrid>
             {estadoStats && estadoStats.length > 0 && (

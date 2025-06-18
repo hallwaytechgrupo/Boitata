@@ -28,6 +28,7 @@ import {
 import cidadesPorEstado from '../../../utils/cidades';
 import { useModal } from '../../../contexts/ModalContext';
 import styled from 'styled-components';
+import { useMap } from '../../../hooks/useMap';
 
 // ED.04 Algoritmos de busca em vetores
 const findEstadoById = (
@@ -100,6 +101,7 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
 
   // Acesso direto ao useMap para atualizar os dados
   const { handleFiltrosConfirm } = useModal();
+  const {resetMapView} = useMap();
 
   // ED.03 Algoritmos de ordenação (vetores numéricos, cadeias, etc.)
   const estadosOrdenados = quickSortEstados([...estados]);
@@ -178,11 +180,14 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
     if (selectedValue) {
       setPatternType(selectedValue as PatternType);
       
-      // Se o tipo selecionado for RISCO_FOGO, definimos uma data fixa
+      // Se o tipo selecionado for RISCO_FOGO, definimos uma data fixa e estado padrão
       if (selectedValue === PatternType.RISCO_FOGO) {
         const fixedDate = '2025-06-16';
         setTempStartDate(fixedDate);
         setTempEndDate(fixedDate);
+        setFilterType(FilterType.ESTADO);
+        setEstado(estadosOrdenados[0]);
+        resetMapView(); // Resetar a visualização do mapa
       }
       
       // Se o tipo selecionado for QUEIMADA e há município selecionado, voltar para estado
@@ -470,115 +475,117 @@ const ModalFiltro: React.FC<FiltrosModalProps> = ({ onClose, onConfirm }) => {
           </RadioGroup>
         </Section>
 
-        <Section variants={itemVariants}>
-          <SectionTitle>
-            <MapIcon size={14} color="#FF7300" />
-            Localização
-          </SectionTitle>
-          
-          <TabsContainer>
-            <Tab
-              onClick={() => handleTabChange('estado')}
-              $isActive={activeTab === 'estado'}
-              whileHover={{ backgroundColor: 'rgba(55, 65, 81, 0.3)' }}
-              whileTap={{ scale: 0.95 }}
-              style={{ 
-                backgroundColor: activeTab === 'estado' ? 'rgba(255, 115, 0, 0.9)' : 'transparent',
-                color: activeTab === 'estado' ? '#fff' : 'rgba(255, 255, 255, 0.7)'
-              }}
-            >
-              Estado
-            </Tab>
-            <Tab
-              onClick={() => handleTabChange('bioma')}
-              $isActive={activeTab === 'bioma'}
-              whileHover={{ backgroundColor: 'rgba(55, 65, 81, 0.3)' }}
-              whileTap={{ scale: 0.95 }}
-              style={{ 
-                backgroundColor: activeTab === 'bioma' ? 'rgba(255, 115, 0, 0.9)' : 'transparent',
-                color: activeTab === 'bioma' ? '#fff' : 'rgba(255, 255, 255, 0.7)'
-              }}
-            >
-              Bioma
-            </Tab>
-          </TabsContainer>
-
-          <AnimatePresence mode="wait">
-            {activeTab === 'estado' && (
-              <motion.div
-                key="estado-tab"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                transition={{ duration: 0.2 }}
+        {patternType !== PatternType.RISCO_FOGO && (
+          <Section variants={itemVariants}>
+            <SectionTitle>
+              <MapIcon size={14} color="#FF7300" />
+              Localização
+            </SectionTitle>
+            
+            <TabsContainer>
+              <Tab
+                onClick={() => handleTabChange('estado')}
+                $isActive={activeTab === 'estado'}
+                whileHover={{ backgroundColor: 'rgba(55, 65, 81, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+                style={{ 
+                  backgroundColor: activeTab === 'estado' ? 'rgba(255, 115, 0, 0.9)' : 'transparent',
+                  color: activeTab === 'estado' ? '#fff' : 'rgba(255, 255, 255, 0.7)'
+                }}
               >
-                <FilterContainer>
-                  <FilterLabel>Estado</FilterLabel>
-                  <FilterSelect
-                    value={estado?.id || ''}
-                    onChange={handleEstadoChange}
-                    disabled={!patternType}
-                  >
-                    <option value="">Selecione um estado</option>
-                    {estadosOrdenados.map(
-                      (
-                        e, // Use estadosOrdenados em vez de estados
-                      ) => (
-                        <option key={e.id} value={e.id}>
-                          {e.nome}
-                        </option>
-                      ),
-                    )}
-                  </FilterSelect>
-                </FilterContainer>
+                Estado
+              </Tab>
+              <Tab
+                onClick={() => handleTabChange('bioma')}
+                $isActive={activeTab === 'bioma'}
+                whileHover={{ backgroundColor: 'rgba(55, 65, 81, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+                style={{ 
+                  backgroundColor: activeTab === 'bioma' ? 'rgba(255, 115, 0, 0.9)' : 'transparent',
+                  color: activeTab === 'bioma' ? '#fff' : 'rgba(255, 255, 255, 0.7)'
+                }}
+              >
+                Bioma
+              </Tab>
+            </TabsContainer>
 
-                {estado && patternType !== PatternType.QUEIMADA && (
+            <AnimatePresence mode="wait">
+              {activeTab === 'estado' && (
+                <motion.div
+                  key="estado-tab"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <FilterContainer>
-                    <FilterLabel>Município</FilterLabel>
+                    <FilterLabel>Estado</FilterLabel>
                     <FilterSelect
-                      value={cidade?.id || ''}
-                      onChange={handleCidadeChange}
-                      disabled={!patternType || !estado}
+                      value={estado?.id || ''}
+                      onChange={handleEstadoChange}
+                      disabled={!patternType}
                     >
-                      <option value="">Selecione um município</option>
-                      {getMunicipios(estado.id).map((m) => (
-                        <option key={m.id} value={m.id}>
-                          {m.nome}
+                      <option value="">Selecione um estado</option>
+                      {estadosOrdenados.map(
+                        (
+                          e, // Use estadosOrdenados em vez de estados
+                        ) => (
+                          <option key={e.id} value={e.id}>
+                            {e.nome}
+                          </option>
+                        ),
+                      )}
+                    </FilterSelect>
+                  </FilterContainer>
+
+                  {estado && patternType !== PatternType.QUEIMADA && (
+                    <FilterContainer>
+                      <FilterLabel>Município</FilterLabel>
+                      <FilterSelect
+                        value={cidade?.id || ''}
+                        onChange={handleCidadeChange}
+                        disabled={!patternType || !estado}
+                      >
+                        <option value="">Selecione um município</option>
+                        {getMunicipios(estado.id).map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.nome}
+                          </option>
+                        ))}
+                      </FilterSelect>
+                    </FilterContainer>
+                  )}
+                </motion.div>
+              )}
+
+              {activeTab === 'bioma' && (
+                <motion.div
+                  key="bioma-tab"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <FilterContainer>
+                    <FilterLabel>Bioma</FilterLabel>
+                    <FilterSelect
+                      value={bioma?.id || ''}
+                      onChange={handleBiomaChange}
+                      disabled={!patternType}
+                    >
+                      <option value="">Selecione um bioma</option>
+                      {biomas.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.nome}
                         </option>
                       ))}
                     </FilterSelect>
                   </FilterContainer>
-                )}
-              </motion.div>
-            )}
-
-            {activeTab === 'bioma' && (
-              <motion.div
-                key="bioma-tab"
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                <FilterContainer>
-                  <FilterLabel>Bioma</FilterLabel>
-                  <FilterSelect
-                    value={bioma?.id || ''}
-                    onChange={handleBiomaChange}
-                    disabled={!patternType}
-                  >
-                    <option value="">Selecione um bioma</option>
-                    {biomas.map((b) => (
-                      <option key={b.id} value={b.id}>
-                        {b.nome}
-                      </option>
-                    ))}
-                  </FilterSelect>
-                </FilterContainer>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Section>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Section>
+        )}
 
         <Section variants={itemVariants}>
           <SectionTitle>

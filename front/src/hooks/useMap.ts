@@ -96,63 +96,108 @@ export const useMap = (initialOptions = {}) => {
   }, []);
 
   // Initialize all patterns directly
-  const initializePatterns = (map: mapboxgl.Map) => {
+  const initializePatterns = async (map: mapboxgl.Map) => {
+    console.log('🚀 Starting pattern initialization...');
+    
     const patternInitializers = [
+      {
+        type: PatternType.BIOMA,
+        pattern: biomaPattern,
+        visible: true,
+        priority: 1
+      },
       {
         type: PatternType.HEAT_MAP,
         pattern: heatMapPattern,
         visible: activeLayers.includes(PatternType.HEAT_MAP),
-      },
-      {
-        type: PatternType.BIOMA,
-        pattern: biomaPattern,
-        visible: true, // Sempre visível por padrão
-      },
-      {
-        type: PatternType.QUEIMADA,
-        pattern: queimadaPattern,
-        visible: activeLayers.includes(PatternType.QUEIMADA),
+        priority: 2
       },
       {
         type: PatternType.ESTADO,
         pattern: estadoPattern,
         visible: activeLayers.includes(PatternType.ESTADO),
+        priority: 3
+      },
+      {
+        type: PatternType.QUEIMADA,
+        pattern: queimadaPattern,
+        visible: activeLayers.includes(PatternType.QUEIMADA),
+        priority: 4
       },
       {
         type: PatternType.RISCO_FOGO,
         pattern: tilesetPattern,
         visible: activeLayers.includes(PatternType.RISCO_FOGO),
+        priority: 5
       },
     ];
 
-    Promise.all(
-      patternInitializers.map(async ({ type, pattern, visible }) => {
-        try {
-          await pattern.initialize(map);
-          // Pequeno delay para EstadoPattern
-          if (type === PatternType.ESTADO) {
-            await new Promise((resolve) => setTimeout(resolve, 50));
+    patternInitializers.sort((a, b) => a.priority - b.priority);
+
+    const results: (PatternType | null)[] = [];
+
+    // Initialize patterns sequentially with extended delays for problematic patterns
+    for (const { type, pattern, visible } of patternInitializers) {
+      try {
+        console.log(`🔄 Initializing ${type}...`);
+        
+        // Special handling for EstadoPattern
+        if (type === PatternType.ESTADO) {
+          console.log('🏛️ Special initialization for EstadoPattern...');
+          
+          // Wait extra time before initializing EstadoPattern
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          
+          // Verify map is still ready
+          if (!map.loaded() || !map.isStyleLoaded()) {
+            console.error('🏛️ Map not ready for EstadoPattern initialization');
+            throw new Error('Map not ready for EstadoPattern');
           }
-          pattern.setVisibility(map, visible);
-          console.log(`${type} inicializado com sucesso!`);
-          return type;
-        } catch (error) {
-          console.error(`Erro ao inicializar ${type}:`, error);
-          return null;
+          
+          console.log('🏛️ Map verified ready, proceeding with EstadoPattern init...');
         }
-      })
-    )
-      .then((results) => {
-        const initialized = results.filter(Boolean) as PatternType[];
-        setInitializedPatterns(initialized);
-        setAllPatternsInitialized(true);
-        console.log('All patterns initialization completed. Initialized patterns:', initialized);
-      })
-      .catch((error) => {
-        console.error('Error in pattern initialization process:', error);
-        setAllPatternsInitialized(true);
-        setMapError('Algumas camadas podem não estar disponíveis.');
-      });
+        
+        await pattern.initialize(map);
+        
+        // Extended delay after EstadoPattern initialization
+        const delay = type === PatternType.ESTADO ? 300 : 100;
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        
+        pattern.setVisibility(map, visible);
+        console.log(`✅ ${type} inicializado com sucesso!`);
+        results.push(type);
+        
+      } catch (error) {
+        console.error(`❌ Erro ao inicializar ${type}:`, error);
+        
+        // For EstadoPattern, try once more
+        if (type === PatternType.ESTADO) {
+          console.log('🏛️ Tentando reinicializar EstadoPattern...');
+          try {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await pattern.initialize(map);
+            pattern.setVisibility(map, visible);
+            console.log(`✅ ${type} inicializado com sucesso na segunda tentativa!`);
+            results.push(type);
+          } catch (retryError) {
+            console.error(`❌ EstadoPattern falhou na segunda tentativa:`, retryError);
+            results.push(null);
+          }
+        } else {
+          results.push(null);
+        }
+      }
+    }
+
+    const initialized = results.filter(Boolean) as PatternType[];
+    setInitializedPatterns(initialized);
+    setAllPatternsInitialized(true);
+    
+    console.log('🎉 Pattern initialization completed. Results:', {
+      initialized,
+      failed: results.filter(r => r === null).length,
+      total: results.length
+    });
   };
 
   // Toggle layer visibility using pattern classes

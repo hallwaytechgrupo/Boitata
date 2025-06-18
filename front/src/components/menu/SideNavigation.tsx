@@ -12,6 +12,7 @@ export default function SideNavigation({ openModal, activeLayer }: SideNavigatio
   const handleLayerButtonClick = (layer: string, modal: ModalType) => {
     // Para debug
     console.log("Clicou no botão:", layer, modal);
+console.log(activeLayer, "- camada ativa")    // Para debug
     
     // Se a camada já está ativa, apenas abra o modal
     if (activeLayer === layer) {

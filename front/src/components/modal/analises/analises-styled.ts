@@ -16,6 +16,8 @@ export const Section = styled.div`
 export const SectionTitle = styled.h4`
   font-size: 1rem;
   font-weight: 500;
+  margin-top: 0rem;
+  margin-bottom: 1rem;
   color: white;
 `;
 
@@ -312,7 +314,7 @@ export const BarChartCard = styled(ChartCard)`
 `;
 
 export const ScatterChartCard = styled(ChartCard)`
-  background: linear-gradient(135deg, #581c87 0%, #7c3aed 50%, #a855f7 100%);
+  background:  #374151;
 `;
 
 export const ChartIcon = styled.span`

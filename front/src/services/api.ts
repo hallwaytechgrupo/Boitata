@@ -287,10 +287,19 @@ export async function getAreaQueimadaByEstadoId(
 export const getBiomasShp = async () => {
   try {
     const response = await api.get('biomas');
-
     return response.data;
   } catch (error) {
-    console.error('Error fetching focosCalor:', error);
+    console.error('Error fetching biomas:', error);
+    throw error;
+  }  
+};
+
+export const getEstadosShp = async () => {
+  try {
+    const response = await api.get('estados');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching estados:', error);
     throw error;
   }  
 };
@@ -322,5 +331,136 @@ export async function getEstatisticasAreaQueimadaEstado() {
     } catch (error) {
       console.error('Erro na requisição do ranking de estados por área queimada:', error);
       throw error;
+    }
+  }
+
+  export async function getKpiBioma() {
+    try {
+      const response = await api.get('focos_calor/bioma/kpi');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar KPI dos biomas:', error);
+      throw error;
+    }
+  }
+
+  export async function getDistribuicaoFocosPorBioma() {
+    try {
+      const response = await api.get('focos_calor/bioma/distribuicao-focos');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar distribuição de focos por bioma:', error);
+      throw error;
+    }
+  }
+
+  export async function getDispersaoFrpMedioPorDia() {
+    try {
+      const response = await api.get('focos_calor/bioma/dispersao-frp-medio');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar dispersão FRP médio por dia nos biomas:', error);
+      throw error;
+    }
+  }
+
+  export async function getTop5DiasMaisFocosPorBioma() {
+    try {
+      const response = await api.get('focos_calor/bioma/top5-dias-mais-focos');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar top 5 dias com mais focos por bioma:', error);
+      throw error;
+    }
+  }
+
+  export async function getCrescimentoFocosDiariosTop5Biomas() {
+    try {
+      const response = await api.get('focos_calor/bioma/crescimento-focos-diarios-top5');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar crescimento de focos diários dos top 5 biomas:', error);
+      throw error;
+    }
+  }
+
+  export async function getMediaDiariaFocosBioma(biomaId: string) {
+    try {
+      const response = await api.get(`focos_calor/bioma/media-diaria/${biomaId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar média diária de focos do bioma:', error);
+      return []; // Return empty array instead of throwing
+    }
+  }
+
+  export async function getEvolucaoHistoricaBioma(biomaId: string) {
+    try {
+      const response = await api.get(`focos_calor/bioma/evolucao-historica/${biomaId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar evolução histórica do bioma:', error);
+      return []; // Return empty array instead of throwing
+    }
+  }
+
+  export async function refreshEstatisticasBioma() {
+    try {
+      const response = await api.post('focos_calor/bioma/refresh-estatisticas');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao atualizar estatísticas dos biomas:', error);
+      throw error;
+    }
+  }
+
+  // Additional biome-specific endpoints for better error handling
+  export async function getKpiBiomaWithFallback() {
+    try {
+      const response = await api.get('focos_calor/bioma/kpi');
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro ao buscar KPI dos biomas:', error);
+      return [];
+    }
+  }
+
+  export async function getDistribuicaoFocosPorBiomaWithFallback() {
+    try {
+      const response = await api.get('focos_calor/bioma/distribuicao-focos');
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro ao buscar distribuição de focos por bioma:', error);
+      return [];
+    }
+  }
+
+  export async function getDispersaoFrpMedioPorDiaWithFallback() {
+    try {
+      const response = await api.get('focos_calor/bioma/dispersao-frp-medio');
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro ao buscar dispersão FRP médio por dia nos biomas:', error);
+      return [];
+    }
+  }
+
+  export async function getTop5DiasMaisFocosPorBiomaWithFallback() {
+    try {
+      const response = await api.get('focos_calor/bioma/top5-dias-mais-focos');
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro ao buscar top 5 dias com mais focos por bioma:', error);
+      return [];
+    }
+  }
+
+  export async function getCrescimentoFocosDiariosTop5BiomasWithFallback() {
+    try {
+      const response = await api.get('focos_calor/bioma/crescimento-focos-diarios-top5');
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro ao buscar crescimento de focos diários dos top 5 biomas:', error);
+      return [];
     }
   }

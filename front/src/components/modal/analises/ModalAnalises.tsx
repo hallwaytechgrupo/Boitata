@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import Modal from '../_base/ModalBase';
-import { Loader } from "lucide-react";
-import { Container, Section, SectionTitle, InfoText, LoadingContainer } from './analises-styled';
+import { Container, Section, SectionTitle, InfoText } from './analises-styled';
 import { useFilter } from "../../../contexts/FilterContext";
 import { FilterType, PatternType } from "../../../types";
 
 // Import dos subcomponentes
 import FocoCalorAnaliseEstado from "./FocoCalorAnaliseEstado";
-import AreaQueimadaAnaliseEstado from "./AreaQueimadaAnaliseEstado";
 import AnaliseNaoDisponivel from "./AnaliseNaoDisponivel";
+import FocoCalorAnaliseBioma from "./FocoCalorAnaliseBioma";
 
 interface AnalisesModalProps {
   onClose: () => void;
@@ -42,7 +41,7 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
   const getPatternLabel = () => {
     switch (patternType) {
       case PatternType.HEAT_MAP:
-        return 'Mapa de Calor';
+        return 'Foco de Calor';
       case PatternType.BIOMA:
         return 'Análise por Bioma';
       case PatternType.QUEIMADA:
@@ -83,31 +82,31 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
           case PatternType.HEAT_MAP:
             return <FocoCalorAnaliseEstado />;
           default:
-            return <AnaliseNaoDisponivel />;;
+            return <AnaliseNaoDisponivel />;
         }
 
       case FilterType.MUNICIPIO:
         switch (patternType) {
           case PatternType.QUEIMADA:
-            return <AnaliseNaoDisponivel />;;
+            return <AnaliseNaoDisponivel />;
           case PatternType.RISCO_FOGO:
-            return <AnaliseNaoDisponivel />;;
+            return <AnaliseNaoDisponivel />;
           case PatternType.HEAT_MAP:
             return <FocoCalorAnaliseEstado />;
           default:
-            return <AnaliseNaoDisponivel />;;
+            return <AnaliseNaoDisponivel />;
         }
 
       case FilterType.BIOMA:
         switch (patternType) {
           case PatternType.QUEIMADA:
-            return <AnaliseNaoDisponivel />;;
+            return <AnaliseNaoDisponivel />;
           case PatternType.RISCO_FOGO:
-            return <AnaliseNaoDisponivel />;;
+            return <AnaliseNaoDisponivel />;
           case PatternType.HEAT_MAP:
-            return <AnaliseNaoDisponivel />;;
+            return <FocoCalorAnaliseBioma />
           default:
-            return <AnaliseNaoDisponivel />;;
+            return <AnaliseNaoDisponivel />;
         }
 
       default:
@@ -123,9 +122,22 @@ export default function ModalAnalises({ onClose }: AnalisesModalProps) {
   };
 
   return (
-    <Modal title="Análises" onClose={onClose} customHeight="80vh" customWidth="70vw">
+    <Modal
+      title={`Análise por ${
+      filterType === FilterType.ESTADO
+        ? `Estado${estado ? ` ${estado.nome}` : ""}`
+        : filterType === FilterType.MUNICIPIO
+        ? `Município${cidade ? ` ${cidade.nome}` : ""}`
+        : filterType === FilterType.BIOMA
+        ? `Bioma${bioma ? ` ${bioma.nome}` : ""}`
+        : "Geral"
+      } em ${getPatternLabel()}`}
+      onClose={onClose}
+      customHeight="98vh"
+      customWidth="70vw"
+    >
       <Container>
-        {renderConteudo()}
+      {renderConteudo()}
       </Container>
     </Modal>
   );
