@@ -1,0 +1,89 @@
+/* Estilo geral do modal */
+.modal-estado-content {
+  font-family: 'Arial', sans-serif;
+  border-radius: 6px;
+  padding: 15px;
+  color: #333;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Título principal */
+.modal-estado-content h3 {
+  font-size: 1.5rem;
+  color: #0052B4;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+}
+
+/* Informações gerais */
+.modal-estado-content p {
+  font-size: 0.9rem;
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.modal-estado-content p strong {
+  color: #0052B4;
+}
+
+/* Informações na mesma linha */
+.modal-estado-content .info-inline {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+}
+
+.modal-estado-content .info-inline p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Subtítulos */
+.modal-estado-content h4 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-top: 15px;
+  margin-bottom: 6px;
+}
+
+/* Lista de cidades */
+.modal-estado-content ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-estado-content ul li {
+  font-size: 0.9rem;
+  margin: 3px 0;
+  padding: 4px;
+  background-color: #f4f4f4;
+  border-radius: 4px;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.modal-estado-content ul li:hover {
+  background-color: #e0e0e0;
+}
+
+/* Última atualização */
+.modal-estado-content p:last-child {
+  font-style: italic;
+  color: #666;
+  margin-top: 10px;
+}
+
+/* Cartões de informações */
+.card-info {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 10px;
+}

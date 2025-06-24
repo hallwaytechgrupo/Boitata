@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS temp_focos_calor;
 
 CREATE TEMP TABLE temp_focos_calor (
-    id TEXT,
+    id TEXT UNIQUE,
     lat NUMERIC,
     lon NUMERIC,
     data_hora_gmt TIMESTAMP,
@@ -23,7 +23,7 @@ CREATE TEMP TABLE temp_focos_calor (
 );
 
 -- Execute no PSQL
-\copy temp_focos_calor FROM 'DIRETORIO_FOCOS_CALOR' DELIMITER ',' CSV HEADER;
+\copy temp_focos_calor FROM 'C:/focos_v2.csv' DELIMITER ',' CSV HEADER ENCODING 'UTF8';
 
 INSERT INTO tb_focos_calor (
     id_foco, localizacao, data_hora, satelite, 

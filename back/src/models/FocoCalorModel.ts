@@ -1,5 +1,5 @@
-import { FocoCalor } from "../types/FocoCalor";
-import * as GeoJSON from "geojson";
+import type { FocoCalor } from '../types/FocoCalor';
+import type * as GeoJSON from 'geojson';
 
 export class FocoCalorModel implements FocoCalor {
   constructor(
@@ -10,12 +10,12 @@ export class FocoCalorModel implements FocoCalor {
     public satelite: string,
     public risco_fogo: number,
     public municipio_id: number,
-    public bioma_id: number
+    public bioma_id: number,
   ) {}
 
   getGeoPoint(): GeoJSON.Point {
     return {
-      type: "Point",
+      type: 'Point',
       coordinates: [this.lon, this.lat],
     };
   }
@@ -27,40 +27,40 @@ export class FocoCalorModel implements FocoCalor {
 
   static filtrarPorEstado(
     id_estado: number,
-    dados: FocoCalorModel[]
+    dados: FocoCalorModel[],
   ): FocoCalorModel[] {
     return dados.filter((foco) => foco.municipio_id === id_estado); // substitua por lógica geográfica real
   }
 
   static filtrarPorBioma(
     id_bioma: number,
-    dados: FocoCalorModel[]
+    dados: FocoCalorModel[],
   ): FocoCalorModel[] {
     return dados.filter((foco) => foco.bioma_id === id_bioma);
   }
 
   static filtrarPorData(data: Date, dados: FocoCalorModel[]): FocoCalorModel[] {
     return dados.filter(
-      (foco) => foco.data_hora_gmt.toDateString() === data.toDateString()
+      (foco) => foco.data_hora_gmt.toDateString() === data.toDateString(),
     );
   }
 
   static filtrarPorTriangulacao(
-    focos: FocoCalorModel[]
+    focos: FocoCalorModel[],
   ): GeoJSON.FeatureCollection {
     const features = focos.map((foco) => ({
-      type: "Feature" as const,
+      type: 'Feature' as const,
       geometry: foco.getGeoPoint(),
       properties: { id: foco.id_foco },
     }));
     return {
-      type: "FeatureCollection",
+      type: 'FeatureCollection',
       features,
     };
   }
 
   static gerarGraficoRiscoDeFogo(
-    focos: FocoCalorModel[]
+    focos: FocoCalorModel[],
   ): Record<string, number> {
     const classificacao: Record<string, number> = {
       Baixo: 0,
@@ -76,7 +76,7 @@ export class FocoCalorModel implements FocoCalor {
   }
 
   static gerarGraficoFocosCalor(
-    focos: FocoCalorModel[]
+    focos: FocoCalorModel[],
   ): Record<string, number> {
     const porSatelite: Record<string, number> = {};
     for (const foco of focos) {

@@ -4,6 +4,13 @@
   color: black;
 }
 
+mapboxgl-popup-close-button {
+  background-color: transparent;
+  border: none;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
 .mapboxgl-popup-content {
   font-family: "Poppins", system-ui, Avenir, Helvetica, Arial, sans-serif;
   color: #1d1b20;
